@@ -1,0 +1,23 @@
+ALIGN 4; PAU_infoWindowTSA:
+#incbin "infoWindow.tsa"      // Compressed.
+
+// Replace skill icons.
+PUSH
+
+  // Replace skill icon for pair-up gauge sword icon.
+  ORG (SkillIconAddress & 0xF7FFFFFF) + (PAU_gaugeSwordIconSkillIDdef << 7)
+  #incext Png2Dmp "GaugeSwordIcon.png"
+
+  // Replace skill icon for pair-up gauge shield icon.
+  ORG (SkillIconAddress & 0xF7FFFFFF) + (PAU_gaugeShieldIconSkillIDdef << 7)
+  #incext Png2Dmp "GaugeShieldIcon.png"
+  
+  // Replace skill icon with Dual Guard icon.
+  ORG (SkillIconAddress & 0xF7FFFFFF) + (PAU_dualGuardSkillIDdef << 7)
+  #incext Png2Dmp "DualGuardIcon.png"
+  
+  // Replace skill icon with Dual Strike icon.
+  ORG (SkillIconAddress & 0xF7FFFFFF) + (PAU_dualStrikeSkillIDdef << 7)
+  #incext Png2Dmp "DualStrikeIcon.png"
+
+POP

@@ -801,7 +801,7 @@
 
 //Dragon Fang: 1.5x damage. (Skill% activation)
 //By Sme
-#define DragonFangID 33
+#define DragonFangID 255
 
 //Eclipse: Leave opponent with 1 HP. (Skill % activation)
 //By Sme
@@ -869,11 +869,15 @@
 
 //Great Shield: Negate all damage. (Defense % activation)
 //By Sme
-#define GreatShieldID 8
+#define GreatShieldID 255
 
 //Vengeance: Add half of damage taken to damage dealt. (Skill % activation)
 //By Sme
 #define VengeanceID 38
+
+// Dual Guard: TODO description.
+// By Huichelaar.
+#define DualGuardID 8
 
 //Range Skills
 
@@ -958,6 +962,11 @@
 // Advantage Chaser: Unit always doubles when attacking with WTA.
 // By Jopettajah
 #define AdvantageChaserID 255
+
+// Dual Strike: TODO description goes here.
+// By Huichelaar.
+#define DualStrikeID 33
+
 
 //Stat Modifier Skills
 

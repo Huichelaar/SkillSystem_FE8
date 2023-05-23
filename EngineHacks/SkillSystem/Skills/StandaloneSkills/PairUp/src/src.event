@@ -1,0 +1,40 @@
+#include "C/main.lyn.event"
+#include "asm/asm.event"
+#include "menu/menu.event"
+#include "EMS/EMS.event"
+
+PUSH
+  
+  // Replace MakeBattleRound with our own, which handles pairup gauge stuff.
+  ORG 0x2B018
+    jumpToHack(PAU_battleGenerateRoundHits)
+  
+  // Clear pair-up gauges and unset pair-up flag at chapter end.
+  // We replace sub_8019108 for this. Couldn't find a good place to hook.
+  ORG 0x19108
+    jumpToHack(PAU_clearRescueAndPairUpData)
+  
+  ORG procDragonFangAddress+0x19
+    BYTE 0xE0 // Makes first branch unconditional. Skips to end of function.
+  ORG procGreatShieldAddress+0x19
+    BYTE 0xE0 // Makes first branch unconditional. Skips to end of function.
+  
+  // Add action routine for Pair-Up.
+  ORG pActionRoutineTable + (PAU_actionIDdef<<2)
+    POIN PAU_actionPairUp|1
+  // Add PostActionCalcLoop routine for hiding unit that initiated pair-up.
+  ORG PostActionCalcLoopRedundantRoutine
+    POIN PAU_postActionPairUp|1
+
+POP
+
+// Target selection routine list for Pair-Up menu command.
+ALIGN 4; PAU_targetSelectionDefinition:
+POIN PAU_selectionOnConstruction  // onInit.
+WORD 0                            // onEnd.
+WORD 0                            // onInitTarget.
+POIN PAU_selectionOnChange        // onSwitchIn.
+WORD 0                            // onSwitchOut.
+POIN PAU_selectionOnSelect        // onAPress.
+POIN PAU_selectionOnCancel        // onBPress.
+POIN PAU_selectionOnHelp          // onRPress.

@@ -1,0 +1,36 @@
+PUSH
+  
+  // Add check for Pair-Up before applying support bonuses.
+  ORG 0x2862E
+    SHORT 0x46C0
+    jumpToHack(PAU_checkIfSupportBonus)
+  
+  // Replace ProcSkills' procStart and procDevil function.
+  ORG battleProcCalcLoopListAddress
+    POIN PAU_procStart|1    // Forces hit if Dual Strike.
+    POIN PAU_procDevil|1    // Prevents Devil effect if Dual Strike.
+  
+  // Copy pair-up gauge to battle pair-up gauge.
+  ORG 0x2A39C
+    jumpToHack(PAU_battleCopyGauge)
+  // Write battle pair-up gauge back to pair-up gauge atfer combat.
+  ORG 0x2A2F6
+    SHORT 0x46C0
+    callHack_r0(PAU_battleApplyGaugeUpdates)
+    SHORT 0x46C0
+
+POP
+
+ALIGN 4; PAU_checkIfSupportBonus:
+#include "checkIfSupportBonus.lyn.event"
+
+ALIGN 4; PAU_procStart:
+#include "procStart.lyn.event"
+ALIGN 4; PAU_procDevil:
+#include "procDevil.lyn.event"
+WORD SkillTester DevilsLuckID DevilsPactID DevilsWhimID
+
+ALIGN 4; PAU_battleCopyGauge:
+#include "battleCopyGauge.lyn.event"
+ALIGN 4; PAU_battleApplyGaugeUpdates:
+#include "battleApplyGaugeUpdates.lyn.event"

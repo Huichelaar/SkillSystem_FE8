@@ -1,0 +1,18 @@
+// Menu stuff for pair-up. As action menu's commands get repointed by SkillSys, this location might be outdated.
+
+PUSH
+  // Redundant menu command, repurposed for Pair-up command.
+  ORG 0xB82438
+    POIN  0xD7D94                   // Japanese name pointer. Set to nonzero in-case it'll otherwise be seen as terminator.
+    SHORT PairUpCommandID           // commandName.
+    SHORT PairUpHelpID              // helpText.
+    BYTE  0x4                       // colour: Green.
+    BYTE  0x6C                      // menuCommandID. Picked one that's unused in vanilla.
+    SHORT 0x0                       // Padding.
+    POIN  PAU_pairUpUsability       // Usability routine.
+    WORD  0x0                       // Draw routine.
+    POIN  PAU_pairUpEffect          // Effect routine.
+    WORD  0x0                       // on hover.
+    WORD  0x0                       // on select.
+    WORD  0x0                       // on cancel.
+POP

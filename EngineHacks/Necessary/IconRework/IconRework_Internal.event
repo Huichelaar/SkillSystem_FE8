@@ -122,4 +122,9 @@ WRankIcons:
 // #incext Png2Dmp "bin/WRankIcons.png"
 #incbin "bin/WRankIcons.dmp"
 
+ALIGN 4
+MiscIcons:
+// #incext Png2Dmp "bin/MiscIcons.png"
+#incbin "bin/MiscIcons.dmp"
+
 #endif // HAX_ICON_REWORK_INTERNAL

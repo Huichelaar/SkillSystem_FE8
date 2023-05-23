@@ -1638,6 +1638,8 @@ HP by 10.[X]
 Reciprocal Aid: User and target[N]
 ally switch their current HP totals.[X]
 
+## SD_DualStrike
+Dual Strike: TODO description.[X]
 
-
-
+## SD_DualGuard
+Dual Guard: TODO description.[X]

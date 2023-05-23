@@ -131,3 +131,5 @@ ShrewdPotentialID_Link:
 WORD ShrewdPotentialID 
 ShrewdPotentialAmount_Link: 
 WORD 1
+
+#include "PairUp/PairUp.event"
