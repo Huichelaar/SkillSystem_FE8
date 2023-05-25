@@ -36,13 +36,13 @@ s8 PAU_battleGenerateRoundHits(struct BattleUnit* attacker, struct BattleUnit* d
     
     if ((i > 0) && (PAU_isPairedUp((Unit*)attacker) == PAU_PAIRUP_OFFENSE) && (PAU_getBattleGauge() >= PAU_gaugeSize)) {
       // Apply Dual Strike to hit.
-      ((struct NewBattleRound*)gBattleHitIterator)->skillID = PAU_dualStrikeSkillID;
+      ((struct NewBattleRound*)gBattleHitIterator)->skillID = (int)&DualStrikeID;
       gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_SURESHOT;
       PAU_setBattleGauge(0);                      // Reset battle pair-up gauge.
     }
     else if ((PAU_isPairedUp((Unit*)defender) == PAU_PAIRUP_DEFENSE) && (PAU_getBattleGauge() >= PAU_gaugeSize)) {
       // Apply Dual Guard to hit.
-      ((struct NewBattleRound*)gBattleHitIterator)->skillID = PAU_dualGuardSkillID;
+      ((struct NewBattleRound*)gBattleHitIterator)->skillID = (int)&DualGuardID;
       gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_GREATSHLD;
       PAU_setBattleGauge(0);                      // Reset battle pair-up gauge.
     }

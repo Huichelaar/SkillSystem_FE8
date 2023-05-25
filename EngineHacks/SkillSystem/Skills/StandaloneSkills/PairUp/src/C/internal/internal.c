@@ -7,9 +7,9 @@ u8 PAU_isPairedUp(Unit* unit) {
     return FALSE;
   
   Unit* rescuee = GetUnit(unit->rescueOtherUnit);
-  if (SkillTester(rescuee, PAU_dualStrikeSkillID))
+  if (SkillTester(rescuee, (int)&DualStrikeID))
     return PAU_PAIRUP_OFFENSE;
-  if (SkillTester(rescuee, PAU_dualGuardSkillID))
+  if (SkillTester(rescuee, (int)&DualGuardID))
     return PAU_PAIRUP_DEFENSE;
   return PAU_NOT_PAIREDUP;
 }

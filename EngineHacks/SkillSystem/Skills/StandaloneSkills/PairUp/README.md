@@ -1,4 +1,7 @@
 TODO:
+  - Client mentioned customizing statscreen, should be able to use MSS far more easily now that we're using buildfile.
+  - Client mentioned not wanting str/mag split. Just need to set the config option now that we're using buildfile.
+  - Talk bubble remains even after pairing up. Unsetting active unit works, but when rescuing, a non-unset active unit doesn't show talkbubble, what gives?
   - Expand MESSAGES to help find stuff (parameters) if anything moves at later points in ROMhack.
     - Put pair-up window TSA in messages.
     - Put statboost struct instances in messages.

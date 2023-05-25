@@ -14,6 +14,7 @@ POIN LungeUpdate
 #ifdef GAIDEN_MAGIC
 	POIN GaidenZeroOutSpellVariables
 #endif // GAIDEN_MAGIC
+POIN PAU_postActionPairUp
 
 
 

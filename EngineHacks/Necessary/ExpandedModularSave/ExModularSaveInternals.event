@@ -84,8 +84,16 @@ PUSH
 		WORD $46C046C0 // nop nop; don't save chapter state just yet
 	ORG $0A4F40
 		WORD $46C046C0 // nop nop; don't save bonus content claim flags just yet
-	ORG $0A4F44
-		SHORT $E022 // b later; don't save units just yet
+  
+  // Replaced below.  
+	//ORG $0A4F44
+		//SHORT $E022 // b later; don't save units just yet
+  
+  // Clear pair-up gauges and unset pair-up flag when starting a new game save.
+  ORG 0xA4F40
+    callHack_r0(PAU_clearPairUpData)
+    SHORT $E01E // b later; don't save units just yet
+  
 	ORG $0A412C
 		SHORT $E024 // b later; don't save bwl and chapter wins just yet
 	ORG $0A4F92

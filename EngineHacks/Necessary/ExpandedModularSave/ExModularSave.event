@@ -140,8 +140,11 @@ gGameSaveChunks:
 
 	// Save 62 blue units (62 * 0x2C = $0AA8)
 	DeclSaveChunk($0680, $0AA8, ESU_SaveGameUnits, ESU_LoadGameUnits, EMS_CHUNK_SAVEUNITS)
+  
+  // Save and load pair-up data.
+  DeclSaveChunk(0x1128, 0x2, PAU_savePairUpData, PAU_loadPairUpData)
 
-	// $1128
+	// $112A
 
 	// free up to $1344
 
@@ -196,9 +199,12 @@ gSuspendSaveChunks:
 
 	// Permanent eids (moved here because of a mistake in the previous allocation)
 	DeclSaveChunk($2DA8, $0019, $0A3150+1, $0A3198+1)
+  
+  // Save and load pair-up data.
+  DeclSaveChunk(0x2DC1, 0x2, PAU_savePairUpData, PAU_loadPairUpData)
 
-	// ends at $2DC1
-	// free up to $2E78 ($B7 free bytes)
+	// ends at $2DC3
+	// free up to $2E78 ($B5 free bytes)
 
 	DeclSaveChunk(0, 0, 0, MSu_LoadClaimFlagsFromParentSave) // Load Bonus Claim flags from parent save
 

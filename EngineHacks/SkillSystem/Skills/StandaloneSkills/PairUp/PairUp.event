@@ -1,5 +1,4 @@
 // All functionality for the PairUp Skill.
-/*
 #ifndef _FE8_
   ERROR "You're not assembling to an FE8 ROM!"
 #endif
@@ -8,33 +7,7 @@
 #include "EAstdlib.event"
 
 // Parameters, change these to fit your project.
-  // FreeSpace offset.
-  #ifndef FreeSpace
-    #define FreeSpace 0x11E2FA4
-    ORG FreeSpace
-  #endif
-
-  #define PAU_redundantMenuCommandsAddress 0xB82438       // Redundant commands in menu.
   
-  #define gGameSaveChunks1Address 0xB84064                // Need to repoint these to add...
-  #define gGameSaveChunks2Address 0xB8428C                // ...pair-up data saver and loader.
-  #define gGameSaveChunks3Address 0xB842F4
-  #define gSuspendSaveChunks1Address 0xB84088
-  #define gSuspendSaveChunks2Address 0xB84364
-  #define gSuspendSaveChunks3Address 0xB843A4
-  
-  #define battleProcCalcLoopListAddress 0xB82E28          // Further assumption that proc_start followed by
-                                                          // proc_devil are the first two functions in the BattleProcCalcLoop.
-  #define SkillIconAddress 0x8B61A98
-  #define SkillTester 0x8B60945
-  #define prMovGetter 0x8B7EA01
-  #define DevilsLuckID 0xB5                               // For repointed proc_devil routine.
-  #define DevilsPactID 0xB6                               // ^
-  #define DevilsWhimID 0xB7                               // ^
-  
-  #define procDragonFangAddress 0xB73FC8                  // Need to disallow this skill proccing naturally.
-  #define procGreatShieldAddress 0xB741C8                 // ^
-
   // This should point to a free byte in RAM.
   ALIGN 4; PAU_pairUpBitsRAMAddress:          // pair-up active and pair-upgauge.
   WORD 0x3000006
@@ -47,67 +20,23 @@
   PAU_gaugeSize:
   BYTE 10
   
-  // Pair-up action index. This is used by action data and post action calcloop.
-  // This should be an unused actionID.
+  // Pair-up action index. This is used by action data and PostActionCalcLoop.
+  // This should be an unused actionID. If changing this, need to change UnitActionRework.event to match.
   #define PAU_actionIDdef 0x28
   PAU_actionID:
   BYTE PAU_actionIDdef
-  // Unit Action Rework.
-  #define pActionRoutineTable 0xB3E8A8
-  // Post Action Calcloop.
-  #define PostActionCalcLoopRedundantRoutine 0xB82938
-  
-  
-  // Dual Strike skillID
-  #define PAU_dualStrikeSkillIDdef 0xFD
-  PAU_dualStrikeSkillID:
-  BYTE 0xFD     // Dragon Fang in LnLVer0.0.16.
-  // Dual Guard skillID
-  #define PAU_dualGuardSkillIDdef 0x6D
-  PAU_dualGuardSkillID:
-  BYTE 0x6D     // Great Shield in LnLVer0.0.16.
-  // Sword icon skillID.
-  #define PAU_gaugeSwordIconSkillIDdef 0x8C
-  PAU_gaugeSwordIconSkillID:
-  BYTE 0x8C     // Fury in LnLVer0.0.16.
-  // Shield icon skillID.
-  #define PAU_gaugeShieldIconSkillIDdef 0x51
-  PAU_gaugeShieldIconSkillID:
-  BYTE 0x51     // Life and Death in LnLVer0.0.16.
-  
-  PUSH
-    // Offensive Pair-up skill holder. Neoma.
-    ORG 0xB2F7EB
-    BYTE 0xFD
-    // Defensive Pair-up skill holder. Kylorde.
-    ORG 0xB2F7DD
-    BYTE 0x6D
-  POP
-  
-  // Description textIDs.
-  // If you change these, change their IDs in "text/text.txt"! Don't forget to assemble text again.
-  //#define PAU_dualStrikeDescID 0xF70          // Dragon Fang description in LnLVer0.0.16.
-  //#define PAU_dualGuardDescID 0xF46           // Great Shield description in LnLVer0.0.16.
-  #define PAU_freeTextEntries 0xD4C             // Unused in LnLVer0.0.16.
-  //#define PairUpCommandID     PAU_freeTextEntries+0
-  //#define PairUpHelpID        PAU_freeTextEntries+1
-  //#define PairUpBottomTextID  PAU_freeTextEntries+2
-  ALIGN 2; PairUpBottomTextIDLabel: SHORT PAU_freeTextEntries+2   // Need this for C to not misunderstand.
   
   // Stat boosts given by pair-up partners.
-  // Byte order: Str, Skl, Spd, Luk, Def, Res.
+  // Byte order: Pow, Skl, Spd, Luk, Def, Res.
   ALIGN 4; PAU_offStatBoost:
   BYTE 0 4 3 4 0 0
   ALIGN 4; PAU_defStatBoost:
   BYTE 3 0 0 0 3 3
-  
-  //Text table location.
-  #define TextTable 0x11DADAC
 
 // Includes.
-#include "text/Install Text Data.event"
 #include "src/src.event"
 #include "gfx/gfx.event"
+/*
 
 // Messages. Helps keep track where everything is,
 // should things need to move again.

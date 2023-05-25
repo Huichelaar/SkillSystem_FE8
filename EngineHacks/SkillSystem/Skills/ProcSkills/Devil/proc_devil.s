@@ -7,6 +7,7 @@
 .equ DevilsLuckID, SkillTester+4
 .equ DevilsPactID, DevilsLuckID+4
 .equ DevilsWhimID, DevilsPactID+4
+.equ DualStrikeID, DevilsWhimID+4
 .equ d100Result, 0x802a52c
 @ r0 is attacker, r1 is defender, r2 is current buffer, r3 is battle data
 push {r4-r7,lr}
@@ -26,6 +27,12 @@ mov r0, #4
 ldrsh r0, [r7, r0]
 cmp r0, #0
 ble End
+
+@ No devil effect if Dual Strike.
+ldr     r0, DualStrikeID
+ldrb    r1, [r6, #0x4]
+cmp     r0, r1
+beq     End
 
 @if the unit has DevilsLuck or DevilsPact, no devil effect
 mov	r0,r4
@@ -195,3 +202,4 @@ SkillTester:
 @WORD DevilsLuckID
 @WORD DevilsPactID
 @WORD DevilsWhimID
+@WORD DualStrikeID

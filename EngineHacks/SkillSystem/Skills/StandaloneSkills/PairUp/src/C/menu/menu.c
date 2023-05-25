@@ -11,8 +11,8 @@ void PAU_tryAddUnitToPairUpTargetList(struct Unit* unit) {
   }
   
   // Check if target unit can pair-up.
-  if (SkillTester(unit, PAU_dualStrikeSkillID) ||
-      SkillTester(unit, PAU_dualGuardSkillID))
+  if (SkillTester(unit, (int)&DualStrikeID) ||
+      SkillTester(unit, (int)&DualGuardID))
     AddTarget(unit->xPos, unit->yPos, unit->index, 0);
 }
 
@@ -63,7 +63,7 @@ void PAU_infoWindowDrawStats(struct PAU_InfoWindowDisplayProc* proc, int x, Unit
   
   // Determine statBoost instance (offensive or defensive).
   const s8* statBoost;
-  if (SkillTester(gActiveUnit, PAU_dualStrikeSkillID))
+  if (SkillTester(gActiveUnit, (int)&DualStrikeID))
     statBoost = PAU_offStatBoost;
   else
     statBoost = PAU_defStatBoost;
@@ -140,7 +140,7 @@ void PAU_selectionOnConstruction(struct PAU_TargetSelectionProc* proc) {
   for (int i = 0; i < 7; i++)
     Text_InitClear(&proc->infoWindowDisplayProc->lines[i], 8);
 
-  StartBottomHelpText((Proc*)proc, GetStringFromIndex(PairUpBottomTextIDLabel));
+  StartBottomHelpText((Proc*)proc, GetStringFromIndex((u16)(u32)&UM_PairUpBottom));
   
   // Replace yellow text colour with red.
   // Also set green to a consistent colour (shifter makes it vary otherwise).
@@ -176,13 +176,13 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
   
   // Draw pair-up skill icon.
   u16 gaugeIconID, skillIconID;
-  if (SkillTester(gActiveUnit, PAU_dualStrikeSkillID)) {
-    gaugeIconID = ((u16)PAU_gaugeSwordIconSkillID) | 0x100; // Icon rework puts skill icons on second sheet.
-    skillIconID = ((u16)PAU_dualStrikeSkillID) | 0x100;
+  if (SkillTester(gActiveUnit, (int)&DualStrikeID)) {
+    gaugeIconID = 0x600;  // Assumes gauge icons are first symbols on sheet 6 (misc icons sheet).
+    skillIconID = (int)&DualStrikeID | 0x100;   // Assumes skill icons are on sheet 1.
   }
   else {
-    gaugeIconID = ((u16)PAU_gaugeShieldIconSkillID) | 0x100;
-    skillIconID = ((u16)PAU_dualGuardSkillID) | 0x100;
+    gaugeIconID = 0x601;
+    skillIconID = (int)&DualGuardID | 0x100;
   }
   DrawIcon(gBg0MapBuffer + 42 + x, gaugeIconID, 0x4000);  // We do this merely to allocate this icon.
   DrawIcon(gBg0MapBuffer + 42 + x, skillIconID, 0x4000);
@@ -200,7 +200,6 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
 // Target select onAPress.
 // Draws mostly from Sme's refuge patch.
 u8 PAU_selectionOnSelect(TargetSelectionProc* proc, TargetEntry* target) {
-  
   // Target active location.
   Unit* unit = GetUnit(target->unitIndex);
   gActionData.xMove = (u8) unit->xPos;
@@ -217,7 +216,10 @@ u8 PAU_selectionOnSelect(TargetSelectionProc* proc, TargetEntry* target) {
   // Set pair-up flag and reset pair-up gauge.
   PAU_setPairUpFlag();
   PAU_setPairUpGauge(0);
-
+  
+  // Re-load gPal_UIFont to replace red colour with yellow again.
+  CopyToPaletteBuffer(gPal_UIFont, 0, 32);
+  
   return ME_DISABLE | ME_END | ME_PLAY_BEEP | ME_CLEAR_GFX;
 }
 
@@ -273,8 +275,8 @@ u8 PAU_pairUpUsability(MenuCommandDefinition* command, u8 commandId) {
   }
   
   // Check if gActiveUnit has pair-up skill (offense or defense).
-  if (!(SkillTester(gActiveUnit, PAU_dualStrikeSkillID) ||
-        SkillTester(gActiveUnit, PAU_dualGuardSkillID)))
+  if (!(SkillTester(gActiveUnit, (int)&DualStrikeID) ||
+        SkillTester(gActiveUnit, (int)&DualGuardID)))
     return MCA_NONUSABLE;
   
   PAU_makePairUpTargetList(gActiveUnit);

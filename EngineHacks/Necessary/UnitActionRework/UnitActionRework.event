@@ -72,11 +72,11 @@ pActionRoutineTable:
 	ActionRoutine(_prSwapAction+1)               // 0x25 ACTION_SWAP
 	ActionRoutine(_prPushAction+1)               // 0x26 ACTION_PUSH
 	ActionRoutine(_prSwapAction+1)               // 0x27 ACTION_SWARP
-	ActionRoutine(DrawBackAction) // 0x28 
+  ActionRoutine(DrawBackAction) // 0x28
 	ActionRoutine(SacrificeAction) // 0x29 
 	ActionRoutine(ArdentSacrificeAction) // 0x2A 
-	ActionRoutine(ReciprocalAidAction)  // 0x2B 
-	NoActionRoutine               // 0x2C FREE
+	ActionRoutine(ReciprocalAidAction)  // 0x2B
+  ActionRoutine(PAU_actionPairUp|1)            // 0x2C ACTION_PAIRUP
 	NoActionRoutine               // 0x2D FREE
 	NoActionRoutine               // 0x2E FREE
 	NoActionRoutine               // 0x2F FREE etc...

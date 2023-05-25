@@ -27,9 +27,9 @@ extern const s8 PAU_offStatBoost[6];  // stat boost given by offensive pair-up u
 // Params. These are defined in PairUp.event.
 extern u8 PAU_gaugeSize;
 extern u8 PAU_actionID;
-extern u16 PairUpBottomTextIDLabel;
-extern u8 PAU_dualStrikeSkillID;
-extern u8 PAU_dualGuardSkillID;
+extern u16 UM_PairUpBottom;
+extern u8 DualStrikeID;
+extern u8 DualGuardID;
 extern u8 PAU_gaugeSwordIconSkillID;
 extern u8 PAU_gaugeShieldIconSkillID;
 extern u8* PAU_pairUpBattleGaugeRAMAddress;

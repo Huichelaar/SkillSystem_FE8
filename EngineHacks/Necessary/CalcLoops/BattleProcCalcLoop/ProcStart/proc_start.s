@@ -21,6 +21,32 @@ lsr     r0,r0,#0xD        @Without damage data                @ 0802B40E 0B40
 mov r1, #2 @miss flag
 tst r0, r1
 bne EndLadder
+
+@ Force hit if Dual Strike will proc.
+@ SkillSys unsets miss flag for SureShot,
+@ which is a different approach from mine.
+@ Inconsistency may be inelegant, but this way
+@ I don't need to make a new proc routine for
+@ Dual Strike, so I'd rather do it like this.
+ldr     r0, =DualStrikeID
+lsl     r0, #0x5
+lsr     r0, #0x5
+ldrb    r1, [r6, #0x4]
+cmp     r0, r1
+beq     SuccessfulHit
+
+@ Set damage to zero if dual guard will proc.
+ldr     r0, =DualGuardID
+lsl     r0, #0x5
+lsr     r0, #0x5
+ldrb    r1, [r6, #0x4]
+cmp     r0, r1
+bne     L1
+  mov     r0, #0x0
+  strh    r0, [r7, #0x4]
+  b       EndLadder
+L1:
+
 @if we missed, don't bother doing anything
 @removed sure shot check, just unset the miss flag if needed.
 ldrh    r0,[r7,#0xA]      @final hit rate                @ 0802B41A 8960     
