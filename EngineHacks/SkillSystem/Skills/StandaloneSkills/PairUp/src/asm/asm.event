@@ -18,6 +18,10 @@ PUSH
   // unit with either Dual Strike or Dual Guard skill.
   ORG 0x18384
     callHack_r0(PAU_dropClearPairUpData)
+  
+  // Don't allow "Give" or "Take" if target is paired-up.
+  ORG 0x1833C
+    jumpToHack(PAU_canUnitRescue)
 
 POP
 
@@ -31,3 +35,5 @@ ALIGN 4; PAU_battleApplyGaugeUpdates:
 
 ALIGN 4; PAU_dropClearPairUpData:
 #include "dropClearPairUpData.lyn.event"
+ALIGN 4; PAU_canUnitRescue:
+#include "canUnitRescue.lyn.event"

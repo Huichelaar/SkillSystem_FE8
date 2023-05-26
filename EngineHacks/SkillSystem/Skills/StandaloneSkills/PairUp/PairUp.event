@@ -29,9 +29,9 @@
   // Stat boosts given by pair-up partners.
   // Byte order: Pow, Skl, Spd, Luk, Def, Res.
   ALIGN 4; PAU_offStatBoost:
-  BYTE 0 4 3 4 0 0
+  BYTE 0 4 3 0 0 3
   ALIGN 4; PAU_defStatBoost:
-  BYTE 3 0 0 0 3 3
+  BYTE 3 0 0 4 3 0
 
 // Includes.
 #include "src/src.event"

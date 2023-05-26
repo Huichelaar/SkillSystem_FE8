@@ -12,7 +12,8 @@ u8 PAU_isPairedUp(Unit* unit);
 enum {
   PAU_NOT_PAIREDUP = 0,
   PAU_PAIRUP_OFFENSE = 1,
-  PAU_PAIRUP_DEFENSE = 2
+  PAU_PAIRUP_DEFENSE = 2,
+  PAU_PAIRUP_BACKUP = 3
 };
 
 void PAU_setPairUpFlag();

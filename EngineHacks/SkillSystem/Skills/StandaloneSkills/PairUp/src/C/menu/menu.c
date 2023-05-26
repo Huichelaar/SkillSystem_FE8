@@ -59,7 +59,7 @@ void PAU_infoWindowDrawStats(struct PAU_InfoWindowDisplayProc* proc, int x, Unit
   int y = 3;
   int dist = 72, col = 3, sym = 0x26;   // For drawing plus or minus symbol.
   s8 val;
-  u16 textIDs[7] = {0x4FE, 0x4EC, 0x4ED, 0x4EE, 0x4EF, 0x4F0, 0x4F6}; // Assumes no mag boost.
+  u16 textIDs[7] = {0x4F3, 0x4EC, 0x4ED, 0x4EE, 0x4EF, 0x4F0, 0x4F6}; // Assumes no str/mag split.
   
   // Determine statBoost instance (offensive or defensive).
   const s8* statBoost;

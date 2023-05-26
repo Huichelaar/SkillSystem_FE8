@@ -1,16 +1,24 @@
 #include "internal.h"
 
-// Return 1 if unit is in offense pair-up mode, return 2 if in defense pair-up mode.
+// Return 1 if unit is in offense pair-up mode, return 2 if in defense pair-up mode,
+// return 3 if unit is backup (paired-up but not active).
 // Return 0 otherwise.
 u8 PAU_isPairedUp(Unit* unit) {
-  if (!(unit->state & US_RESCUING) && (unit->rescueOtherUnit != 0) && PAU_getPairUpFlag())
-    return FALSE;
+  if (!((unit->state & (US_RESCUING | US_RESCUED)) && (unit->rescueOtherUnit != 0) && PAU_getPairUpFlag()))
+    return PAU_NOT_PAIREDUP;
   
-  Unit* rescuee = GetUnit(unit->rescueOtherUnit);
-  if (SkillTester(rescuee, (int)&DualStrikeID))
+  if (unit->state & (US_RESCUED)) {
+    if (SkillTester(unit, (int)&DualStrikeID) | SkillTester(unit, (int)&DualGuardID))
+      return PAU_PAIRUP_BACKUP;
+    return PAU_NOT_PAIREDUP;
+  }
+  
+  Unit* traveller = GetUnit(unit->rescueOtherUnit);
+  if (SkillTester(traveller, (int)&DualStrikeID))
     return PAU_PAIRUP_OFFENSE;
-  if (SkillTester(rescuee, (int)&DualGuardID))
+  if (SkillTester(traveller, (int)&DualGuardID))
     return PAU_PAIRUP_DEFENSE;
+  
   return PAU_NOT_PAIREDUP;
 }
 
