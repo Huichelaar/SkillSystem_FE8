@@ -11,6 +11,7 @@ pMovModifiers: // Movement
 	POIN StairsMoveDebuff
 	#endif
 	POIN prNullifyIfFreeze prNullifyIfGuardAI
+  POIN PAU_minMov
 	#ifdef DEBUFFS_MIN_ZERO
 	POIN prMinZero
 	#endif

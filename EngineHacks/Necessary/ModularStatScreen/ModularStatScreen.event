@@ -212,9 +212,7 @@
 
   ALIGN 4
   Rescue_Arrows:
-    #incbin "asm/CheckRescueArrows.dmp"
-    POIN SkillTester
-    WORD SaviorID
+    #include "asm/CheckRescueArrows.lyn.event"
 
   ALIGN 4
   Get_Palette_Index:

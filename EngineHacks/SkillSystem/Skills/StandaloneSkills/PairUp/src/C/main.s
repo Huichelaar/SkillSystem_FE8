@@ -579,13 +579,11 @@ PAU_infoWindowDrawStats:
 	movs	r4, r0
 	ldr	r0, [r3]
 	bl	.L51
-	lsls	r1, r4, #24
-	lsls	r2, r0, #24
 	adds	r3, r4, #0
-	lsrs	r1, r1, #24
-	lsrs	r2, r2, #24
+	lsls	r2, r4, #24
+	lsls	r1, r0, #24
 	cmp	r1, r2
-	bls	.L78
+	bge	.L78
 	adds	r3, r0, #0
 .L78:
 	subs	r4, r3, r4
@@ -1570,9 +1568,56 @@ PAU_clearRescueAndPairUpData:
 	.word	RefreshEntityBmMaps
 	.word	SMS_UpdateFromGameData
 	.size	PAU_clearRescueAndPairUpData, .-PAU_clearRescueAndPairUpData
+	.align	1
+	.global	PAU_minMov
+	.syntax unified
+	.code	16
+	.thumb_func
+	.fpu softvfp
+	.type	PAU_minMov, %function
+PAU_minMov:
+	@ Function supports interworking.
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 0, uses_anonymous_args = 0
+	push	{r4, r5, r6, lr}
+	movs	r4, r0
+	movs	r0, r1
+	movs	r5, r1
+	bl	PAU_isPairedUp
+	subs	r0, r0, #1
+	lsls	r0, r0, #24
+	lsrs	r0, r0, #24
+	cmp	r0, #1
+	bhi	.L189
+	ldr	r3, .L191
+	ldrb	r0, [r5, #27]
+	bl	.L18
+	ldr	r3, .L191+4
+	bl	.L18
+	lsls	r3, r0, #24
+	adds	r2, r0, #0
+	asrs	r3, r3, #24
+	cmp	r3, r4
+	ble	.L190
+	adds	r2, r4, #0
+.L190:
+	lsls	r2, r2, #24
+	asrs	r4, r2, #24
+.L189:
+	movs	r0, r4
+	@ sp needed
+	pop	{r4, r5, r6}
+	pop	{r1}
+	bx	r1
+.L192:
+	.align	2
+.L191:
+	.word	GetUnit
+	.word	prMovGetter
+	.size	PAU_minMov, .-PAU_minMov
 	.global	PAU_infoWindowDisplayProcInstr
 	.section	.rodata.str1.1,"aMS",%progbits,1
-.LC125:
+.LC127:
 	.ascii	"PAU_InfoWindowDisplayProc\000"
 	.section	.rodata
 	.align	2
@@ -1581,9 +1626,9 @@ PAU_clearRescueAndPairUpData:
 	.short	1267
 	.short	1260
 	.short	1261
-	.short	1262
 	.short	1263
 	.short	1264
+	.short	1262
 	.short	1270
 	.space	2
 	.type	PAU_infoWindowDisplayProcInstr, %object
@@ -1591,7 +1636,7 @@ PAU_clearRescueAndPairUpData:
 PAU_infoWindowDisplayProcInstr:
 	.short	1
 	.short	0
-	.word	.LC125
+	.word	.LC127
 	.short	3
 	.short	0
 	.word	PAU_infoWindowLoop

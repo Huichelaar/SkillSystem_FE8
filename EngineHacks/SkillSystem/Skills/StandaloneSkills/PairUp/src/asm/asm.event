@@ -37,3 +37,23 @@ ALIGN 4; PAU_dropClearPairUpData:
 #include "dropClearPairUpData.lyn.event"
 ALIGN 4; PAU_canUnitRescue:
 #include "canUnitRescue.lyn.event"
+
+// For use with MSG.
+ALIGN 4; prPAU_addAtk:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x0
+ALIGN 4; prPAU_addSkl:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x1
+ALIGN 4; prPAU_addSpd:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x2
+ALIGN 4; prPAU_addDef:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x3
+ALIGN 4; prPAU_addRes:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x4
+ALIGN 4; prPAU_addLuk:
+#include "addPairUpBonus.lyn.event"
+ALIGN 4; WORD 0x5

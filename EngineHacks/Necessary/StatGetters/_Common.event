@@ -4,7 +4,11 @@
 prHalveIfRescuing:
 	rIfUnitHasState(US_RESCUING)
 		rIfUnitHasNotSkill(SaviorID)
-			rHalved
+      rIfNot(PAU_isPairedUpWrapper)
+			  rHalved
+
+PAU_isPairedUpWrapper:
+  rCallExternal(PAU_isPairedUp&(-2))
 
 prHalveIfCapturing:
 	#incbin "_asm/HalveIfCapturing.bin"

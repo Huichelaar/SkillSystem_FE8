@@ -27,11 +27,14 @@
   BYTE PAU_actionIDdef
   
   // Stat boosts given by pair-up partners.
-  // Byte order: Pow, Skl, Spd, Luk, Def, Res.
+  // Byte order: Atk, Skl, Spd, Def, Res, Luk.
   ALIGN 4; PAU_offStatBoost:
-  BYTE 0 4 3 0 0 3
+  BYTE 0 4 3 0 3 0
   ALIGN 4; PAU_defStatBoost:
-  BYTE 3 0 0 4 3 0
+  BYTE 3 0 0 3 0 4
+  
+  // Temp, give EirikaLord different movement. For testing purposes.
+  // PUSH; ORG 0x8071CA; BYTE 3; POP
 
 // Includes.
 #include "src/src.event"
@@ -40,6 +43,7 @@
 
 // Messages. Helps keep track where everything is,
 // should things need to move again.
+// Reference README for which messages to put here.
 PUSH
 
   // For adding pair-up command to menu.

@@ -14,11 +14,12 @@ struct NewBattleRound {
   /*06*/  s16 popupDamage;
 };
 extern u8 SkillTester(Unit* unit, u8 skillID);
-extern u8 prMovGetter(Unit* unit);
+extern s8 prMovGetter(Unit* unit);
 
 int PAU_getBattleHitCount(BattleUnit* unit);
 s8 PAU_battleGenerateRoundHits(struct BattleUnit* attacker, struct BattleUnit* defender);
 void PAU_clearRescueAndPairUpData();
+s8 PAU_minMov(s8 mov, Unit* unit);
 
 // Stats boosted by pair-up.
 extern const s8 PAU_defStatBoost[6];  // stat boost given by defensive pair-up unit. Order: Str, Skl, Spd, Luk, Def, Res.

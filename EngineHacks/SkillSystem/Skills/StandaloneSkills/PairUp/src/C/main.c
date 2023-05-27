@@ -85,3 +85,17 @@ void PAU_clearRescueAndPairUpData() {
   RefreshEntityBmMaps();
   SMS_UpdateFromGameData();
 }
+
+// Use lowest mov of either of paired-up units.
+// Added to the movement-getter.
+s8 PAU_minMov(s8 mov1, Unit* unit) {
+  u8 pairedUp = PAU_isPairedUp(unit);
+  if (pairedUp != PAU_PAIRUP_OFFENSE && pairedUp != PAU_PAIRUP_DEFENSE)
+    return mov1;
+  
+  s8 mov2 = prMovGetter(GetUnit(unit->rescueOtherUnit));
+  
+  if (mov2 < mov1)
+    return mov2;
+  return mov1;
+}

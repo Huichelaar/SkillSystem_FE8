@@ -59,7 +59,7 @@ void PAU_infoWindowDrawStats(struct PAU_InfoWindowDisplayProc* proc, int x, Unit
   int y = 3;
   int dist = 72, col = 3, sym = 0x26;   // For drawing plus or minus symbol.
   s8 val;
-  u16 textIDs[7] = {0x4F3, 0x4EC, 0x4ED, 0x4EE, 0x4EF, 0x4F0, 0x4F6}; // Assumes no str/mag split.
+  u16 textIDs[7] = {0x4F3, 0x4EC, 0x4ED, 0x4EF, 0x4F0, 0x4EE, 0x4F6}; // Assumes no str/mag split.
   
   // Determine statBoost instance (offensive or defensive).
   const s8* statBoost;
@@ -76,9 +76,9 @@ void PAU_infoWindowDrawStats(struct PAU_InfoWindowDisplayProc* proc, int x, Unit
     
     // Stat value.
     if (i >= 6) {
-      u8 mov1 = prMovGetter(targetUnit);
-      u8 mov2 = prMovGetter(gActiveUnit);
-      val = (mov1 > mov2) ? (s8)mov2 : (s8)mov1;  // val = min(mov1, mov2);
+      s8 mov1 = prMovGetter(targetUnit);
+      s8 mov2 = prMovGetter(gActiveUnit);
+      val = (mov1 > mov2) ? mov2 : mov1;          // val = min(mov1, mov2);
       val -= mov1;                                // Difference between target's mov and min mov.
     }
     else

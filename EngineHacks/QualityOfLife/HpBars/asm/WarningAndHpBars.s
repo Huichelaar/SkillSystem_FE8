@@ -191,6 +191,10 @@ ldrb	r0,[r6,#0xB]
 mov		r1,#0xC0
 tst		r0,r1
 bne		UnitNotSelected			@selecting enemy/ally shouldn't do anything
+ldrb  r0,[r6,#0xC]			@status byte
+mov   r1,#0x20      @being rescued
+tst   r0,r1
+bne		UnitNotSelected     @if unit is rescued, shouldn't do anything
 
 ldrb	r0,[r6,#0xC]			@status byte
 mov		r1,#1					@do not display standing map sprite
