@@ -1,0 +1,18 @@
+// Battle animation related stuff.
+
+#ifndef jumpToHack_r0
+  #define jumpToHack_r0(offset) "BYTE 0x00 0x48 0x00 0x47; POIN (offset|0x1)"
+#endif
+
+PUSH
+
+  ORG 0x56A74
+    callHack_r0(PAU_bAnimInitScaleHook)
+  
+  ORG 0x56BC0
+    jumpToHack_r0(PAU_bAnimLoopScaleHook)
+
+POP
+
+ALIGN 4; PAU_bAnimInitScaleHook: #include "initScaleHook.lyn.event"
+ALIGN 4; PAU_bAnimLoopScaleHook: #include "loopScaleHook.lyn.event"

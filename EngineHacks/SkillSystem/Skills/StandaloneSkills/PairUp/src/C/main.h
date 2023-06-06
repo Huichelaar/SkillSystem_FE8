@@ -35,5 +35,7 @@ extern u8 PAU_gaugeSwordIconSkillID;
 extern u8 PAU_gaugeShieldIconSkillID;
 extern u8* PAU_pairUpBattleGaugeRAMAddress;
 extern u8* PAU_pairUpBitsRAMAddress;
+extern s16 PAU_bAnimDistX;
+extern s16 PAU_bAnimDistY;
 
 #endif // MAIN_H

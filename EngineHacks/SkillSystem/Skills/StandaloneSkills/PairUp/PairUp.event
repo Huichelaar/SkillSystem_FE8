@@ -33,6 +33,12 @@
   ALIGN 4; PAU_defStatBoost:
   BYTE 3 0 0 3 0 4
   
+  // Pixel offset between main attacker/defender and their pair-up partner.
+  ALIGN 2; PAU_bAnimDistX:
+  SHORT 16
+  ALIGN 2; PAU_bAnimDistY:
+  SHORT 8
+  
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
 

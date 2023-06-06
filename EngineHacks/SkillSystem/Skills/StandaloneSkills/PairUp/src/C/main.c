@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "main.h"
 #include "internal/internal.c"
+#include "banim/banim.c"
 #include "menu/menu.c"
 #include "save/save.c"
 

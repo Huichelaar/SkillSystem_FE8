@@ -1,0 +1,15 @@
+//#define KylordeAxeAnim 3
+{
+#include "Kylorde/3. Axe/lorm_sp1Installer.event"
+}
+//ALIGN 4; KylordeAnims:
+//AxeAnim(KylordeAxeAnim)
+//EndAnim
+
+//#define NeomaSwordAnim 1
+{
+#include "Neoma/1. Sword/lorf_sw1Installer.event"
+}
+//ALIGN 4; NeomaAnims:
+//SwordAnim(NeomaSwordAnim)
+//EndAnim

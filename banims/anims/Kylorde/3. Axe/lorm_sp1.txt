@@ -1,0 +1,228 @@
+@ UNCOMPFRAMEDATA
+@ UNCOMPOAMDATA
+@ HALFSIZESHEETS
+/// - Mode 1
+C03
+C07
+1 p- lorm_sp1_000.png
+2 p- lorm_sp1_001.png
+C1B
+2 p- lorm_sp1_002.png
+C41
+2 p- lorm_sp1_003.png
+2 p- lorm_sp1_004.png
+2 p- lorm_sp1_005.png
+6 p- lorm_sp1_006.png
+C37
+18 p- lorm_sp1_007.png
+5 p- lorm_sp1_008.png
+5 p- lorm_sp1_009.png
+5 p- lorm_sp1_010.png
+14 p- lorm_sp1_011.png
+C42
+2 p- lorm_sp1_012.png
+C21
+C04
+C1A
+4 p- lorm_sp1_013.png
+6 p- lorm_sp1_014.png
+5 p- lorm_sp1_015.png
+4 p- lorm_sp1_016.png
+3 p- lorm_sp1_017.png
+1 p- lorm_sp1_018.png
+C01
+2 p- lorm_sp1_019.png
+C42
+2 p- lorm_sp1_020.png
+2 p- lorm_sp1_021.png
+3 p- lorm_sp1_022.png
+3 p- lorm_sp1_023.png
+3 p- lorm_sp1_024.png
+C06
+3 p- lorm_sp1_025.png
+3 p- lorm_sp1_026.png
+C0D
+~~~
+/// - Mode 3
+C03
+C07
+1 p- lorm_sp1_000.png
+3 p- lorm_sp1_027.png
+2 p- lorm_sp1_028.png
+C42
+2 p- lorm_sp1_029.png
+2 p- lorm_sp1_030.png
+C38
+2 p- lorm_sp1_031.png
+2 p- lorm_sp1_032.png
+2 p- lorm_sp1_033.png
+2 p- lorm_sp1_034.png
+C37
+5 p- lorm_sp1_035.png
+22 p- lorm_sp1_036.png
+C25
+4 p- lorm_sp1_037.png
+C15
+2 p- lorm_sp1_038.png
+2 p- lorm_sp1_039.png
+2 p- lorm_sp1_040.png
+2 p- lorm_sp1_041.png
+4 p- lorm_sp1_042.png
+6 p- lorm_sp1_043.png
+2 p- lorm_sp1_044.png
+2 p- lorm_sp1_045.png
+2 p- lorm_sp1_046.png
+3 p- lorm_sp1_047.png
+C04
+C21
+C0C
+3 p- lorm_sp1_048.png
+2 p- lorm_sp1_049.png
+2 p- lorm_sp1_050.png
+2 p- lorm_sp1_051.png
+1 p- lorm_sp1_052.png
+C01
+C42
+4 p- lorm_sp1_053.png
+4 p- lorm_sp1_054.png
+2 p- lorm_sp1_055.png
+C25
+5 p- lorm_sp1_056.png
+5 p- lorm_sp1_057.png
+5 p- lorm_sp1_058.png
+5 p- lorm_sp1_059.png
+C06
+4 p- lorm_sp1_060.png
+4 p- lorm_sp1_000.png
+C0D
+~~~
+/// - Mode 5
+C03
+C07
+1 p- lorm_sp1_000.png
+2 p- lorm_sp1_027.png
+2 p- lorm_sp1_061.png
+C41
+2 p- lorm_sp1_062.png
+2 p- lorm_sp1_063.png
+5 p- lorm_sp1_064.png
+C05
+1 p- lorm_sp1_065.png
+C01
+2 p- lorm_sp1_064.png
+2 p- lorm_sp1_063.png
+C41
+2 p- lorm_sp1_061.png
+C06
+2 p- lorm_sp1_027.png
+2 p- lorm_sp1_000.png
+C0D
+~~~
+/// - Mode 6
+C03
+C07
+1 p- lorm_sp1_000.png
+2 p- lorm_sp1_027.png
+2 p- lorm_sp1_061.png
+C41
+2 p- lorm_sp1_062.png
+2 p- lorm_sp1_063.png
+5 p- lorm_sp1_064.png
+24 p- lorm_sp1_065.png
+2 p- lorm_sp1_066.png
+2 p- lorm_sp1_067.png
+2 p- lorm_sp1_066.png
+2 p- lorm_sp1_067.png
+2 p- lorm_sp1_066.png
+2 p- lorm_sp1_067.png
+C05
+1 p- lorm_sp1_065.png
+C01
+2 p- lorm_sp1_064.png
+2 p- lorm_sp1_063.png
+C41
+2 p- lorm_sp1_061.png
+C06
+2 p- lorm_sp1_027.png
+2 p- lorm_sp1_000.png
+C0D
+~~~
+/// - Mode 7
+C02
+1 p- lorm_sp1_000.png
+C0E
+2 p- lorm_sp1_068.png
+2 p- lorm_sp1_069.png
+25 p- lorm_sp1_070.png
+C01
+2 p- lorm_sp1_069.png
+2 p- lorm_sp1_068.png
+3 p- lorm_sp1_000.png
+C0D
+~~~
+/// - Mode 8
+C02
+1 p- lorm_sp1_000.png
+C0E
+2 p- lorm_sp1_068.png
+2 p- lorm_sp1_069.png
+25 p- lorm_sp1_070.png
+C01
+2 p- lorm_sp1_069.png
+2 p- lorm_sp1_068.png
+3 p- lorm_sp1_000.png
+C0D
+~~~
+/// - Mode 9
+1 p- lorm_sp1_000.png
+C01
+~~~
+/// - Mode 10
+1 p- lorm_sp1_000.png
+C01
+~~~
+/// - Mode 11
+1 p- lorm_sp1_000.png
+C01
+~~~
+/// - Mode 12
+C03
+C07
+1 p- lorm_sp1_000.png
+2 p- lorm_sp1_001.png
+C1B
+2 p- lorm_sp1_002.png
+C41
+2 p- lorm_sp1_003.png
+2 p- lorm_sp1_004.png
+2 p- lorm_sp1_005.png
+6 p- lorm_sp1_006.png
+C37
+18 p- lorm_sp1_007.png
+5 p- lorm_sp1_008.png
+5 p- lorm_sp1_009.png
+5 p- lorm_sp1_010.png
+14 p- lorm_sp1_011.png
+C42
+2 p- lorm_sp1_071.png
+C04
+4 p- lorm_sp1_072.png
+6 p- lorm_sp1_073.png
+5 p- lorm_sp1_074.png
+4 p- lorm_sp1_075.png
+3 p- lorm_sp1_076.png
+1 p- lorm_sp1_077.png
+C01
+2 p- lorm_sp1_078.png
+C42
+2 p- lorm_sp1_020.png
+2 p- lorm_sp1_021.png
+3 p- lorm_sp1_022.png
+3 p- lorm_sp1_023.png
+3 p- lorm_sp1_024.png
+C06
+3 p- lorm_sp1_025.png
+3 p- lorm_sp1_026.png
+C0D
+~~~
+/// - End of animation
