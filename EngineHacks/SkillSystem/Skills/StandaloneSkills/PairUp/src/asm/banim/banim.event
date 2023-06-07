@@ -11,8 +11,12 @@ PUSH
   
   ORG 0x56BC0
     jumpToHack_r0(PAU_bAnimLoopScaleHook)
+    
+  ORG 0x59DE8
+    jumpToHack(PAU_bAnimInitHook)
 
 POP
 
 ALIGN 4; PAU_bAnimInitScaleHook: #include "initScaleHook.lyn.event"
 ALIGN 4; PAU_bAnimLoopScaleHook: #include "loopScaleHook.lyn.event"
+ALIGN 4; PAU_bAnimInitHook: #include "initHook.lyn.event"

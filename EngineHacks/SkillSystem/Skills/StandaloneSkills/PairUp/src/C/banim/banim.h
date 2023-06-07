@@ -28,8 +28,50 @@ struct KakudaiProc {
 };
 extern const int GetValueFromEasingFunction(u8 rateFunction, int startX, int endX, u32 currentT, u32 endT); //! FE8U = 0x8012DCD
 extern const void AffineSetOAMData(void* oamDataScript, void* affineOAMDataBuffer, u16 scaleX, u16 scaleY, u8 unk4);  //! FE8U = 0x807180D
+// Array of these at 0x8C00008
+struct BattleAnim {
+  /* 00 */ char abbr[12];
+  /* 0C */ int *modes;
+  /* 10 */ char *script;
+  /* 14 */ char *oam_r;
+  /* 18 */ char *oam_l;
+  /* 1C */ char *pal;
+};
+extern const struct BattleAnim* battleAnims[];
+struct BanimRoundScripts {
+  /* 00 */ u8 frame_front;
+  /* 01 */ u8 priority_front;
+  /* 02 */ u8 frame_back;
+  /* 03 */ u8 priority_back;
+};
+extern const struct BanimRoundScripts gBattleAnimModeLookupMaybe[];
+extern const u32 gAISFrames_DummyNoFrames; //! FE8U = 0x85B9D5C
+extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
+extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
+
+// Custom,
+extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
+extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
 
 u16 PAU_findPairUpBAnimID(Unit* unit);
-void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AnimationInterpreter* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
+void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
+void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8 aisSubjectID);
+
+struct PAU_aisProc {
+  /* 00 */ PROC_HEADER;
+  
+  /* 2C */ AIStruct* leftFrontAIS;
+  /* 30 */ AIStruct* leftBackAIS;
+  /* 34 */ AIStruct* rightFrontAIS;
+  /* 38 */ AIStruct* rightBackAIS;
+  
+  /* 3C */ AIStruct* puLeftFrontAIS;
+  /* 40 */ AIStruct* puLeftBackAIS;
+  /* 44 */ AIStruct* puRightFrontAIS;
+  /* 48 */ AIStruct* puRightBackAIS;
+};
+const ProcInstruction PAU_aisProcInstr[];
+void PAU_haltBAnims(struct PAU_aisProc* proc);
+void PAU_adjustBAnimLocs(struct PAU_aisProc* proc);
 
 #endif // BANIM_H

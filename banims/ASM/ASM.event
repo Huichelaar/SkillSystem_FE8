@@ -123,6 +123,7 @@ PUSH
   callHack_r2(BA2_switchOAMData)
   
   // Use two palettes instead of one, when updating palettes.
+  /*
   ORG 0x59A72       // When initially loading palettes.
   BYTE 0x10
   ORG 0x59B54
@@ -161,6 +162,7 @@ PUSH
   POIN BA2_WhitePalette
   ORG 0x54880
   POIN BA2_WhitePalette
+  */
   
 POP
 
