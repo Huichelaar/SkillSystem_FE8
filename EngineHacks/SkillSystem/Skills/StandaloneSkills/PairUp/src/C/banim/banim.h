@@ -44,7 +44,7 @@ struct BanimRoundScripts {
   /* 02 */ u8 frame_back;
   /* 03 */ u8 priority_back;
 };
-extern const struct BanimRoundScripts gBattleAnimModeLookupMaybe[];
+extern const struct BanimRoundScripts gBattleAnimModeLookupMaybe[]; //! FE8U = 0x80DAEF0
 extern const u32 gAISFrames_DummyNoFrames; //! FE8U = 0x85B9D5C
 extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
@@ -52,6 +52,8 @@ extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
 // Custom,
 extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
 extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
+
+extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event
 
 u16 PAU_findPairUpBAnimID(Unit* unit);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);

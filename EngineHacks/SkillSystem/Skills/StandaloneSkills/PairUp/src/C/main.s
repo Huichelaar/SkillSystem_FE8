@@ -853,14 +853,16 @@ PAU_initPairUpPartner:
 	beq	.L110
 	ldr	r3, [r6, #20]
 .L111:
-	ldr	r6, .L122+36
 	str	r3, [r4, #48]
+	ldr	r3, .L122+36
+	bl	.L38
+	ldr	r6, .L122+40
+	ldr	r3, .L122+44
 	movs	r0, r6
-	ldr	r3, .L122+40
 	bl	.L38
 	cmp	r0, #0
 	bne	.L112
-	ldr	r3, .L122+44
+	ldr	r3, .L122+48
 	movs	r1, #5
 	movs	r0, r6
 	bl	.L38
@@ -868,13 +870,13 @@ PAU_initPairUpPartner:
 	lsls	r3, r3, #18
 	ldr	r3, [r3]
 	str	r3, [r0, #44]
-	ldr	r3, .L122+48
-	ldr	r3, [r3]
-	str	r3, [r0, #48]
 	ldr	r3, .L122+52
 	ldr	r3, [r3]
-	str	r3, [r0, #52]
+	str	r3, [r0, #48]
 	ldr	r3, .L122+56
+	ldr	r3, [r3]
+	str	r3, [r0, #52]
+	ldr	r3, .L122+60
 	ldr	r3, [r3]
 	str	r3, [r0, #56]
 	movs	r3, #0
@@ -910,11 +912,12 @@ PAU_initPairUpPartner:
 	.word	battleAnims
 	.word	BA2_AB_UNCOMPFRAMEDATA
 	.word	BA2_AB_UNCOMPOAMDATA
-	.word	gBattleAnimModeLookupMaybe
+	.word	PAU_backupBAnimRoundScripts
 	.word	gAISFrames_DummyNoFrames
 	.word	CreateAIS
 	.word	PAU_bAnimDistX
 	.word	PAU_bAnimDistY
+	.word	SortAISs
 	.word	.LANCHOR0
 	.word	ProcFind
 	.word	ProcStart
@@ -2124,10 +2127,10 @@ PAU_minMov:
 	.size	PAU_minMov, .-PAU_minMov
 	.global	PAU_infoWindowDisplayProcInstr
 	.section	.rodata.str1.1,"aMS",%progbits,1
-.LC146:
+.LC147:
 	.ascii	"PAU_InfoWindowDisplayProc\000"
 	.global	PAU_aisProcInstr
-.LC147:
+.LC148:
 	.ascii	"PAU_AISProc\000"
 	.section	.rodata
 	.align	2
@@ -2137,7 +2140,7 @@ PAU_minMov:
 PAU_aisProcInstr:
 	.short	1
 	.short	0
-	.word	.LC147
+	.word	.LC148
 	.short	14
 	.short	1
 	.word	0
@@ -2164,7 +2167,7 @@ PAU_aisProcInstr:
 PAU_infoWindowDisplayProcInstr:
 	.short	1
 	.short	0
-	.word	.LC146
+	.word	.LC147
 	.short	3
 	.short	0
 	.word	PAU_infoWindowLoop

@@ -9,6 +9,7 @@ TODO:
     - Test pair-up banim at 2-range (heal and combat).
     - Test pair-up banim at long-range (heal and combat).
     - Test Silencer and Triangle attack I guess.
+    - Test with paired-up unit missing and with non-paired-up unit missing.
   
 
 Notes:

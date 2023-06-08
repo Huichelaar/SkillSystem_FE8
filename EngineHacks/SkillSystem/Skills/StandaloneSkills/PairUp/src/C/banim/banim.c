@@ -62,7 +62,7 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     return;
   
   // Create Front AIS.
-  struct BanimRoundScripts banimRoundScripts = gBattleAnimModeLookupMaybe[frontAIS->currentRoundType];
+  struct BanimRoundScripts banimRoundScripts = PAU_backupBAnimRoundScripts[frontAIS->currentRoundType];
   const u32* script = &gAISFrames_DummyNoFrames;
   u32 frameOffs = 0;
   if (banimRoundScripts.frame_front != 255) {
@@ -88,7 +88,7 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     newFrontAIS->pStartObjData = bAnim->oam_l;
   
   // Create Back AIS.
-  banimRoundScripts = gBattleAnimModeLookupMaybe[backAIS->currentRoundType];
+  banimRoundScripts = PAU_backupBAnimRoundScripts[backAIS->currentRoundType];
   script = &gAISFrames_DummyNoFrames;
   frameOffs = 0;
   if (banimRoundScripts.frame_back != 255) {
@@ -109,6 +109,8 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     newBackAIS->pStartObjData = bAnim->oam_r;
   else
     newBackAIS->pStartObjData = bAnim->oam_l;
+  
+  SortAISs();
   
   // Start custom AISProc.
   struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
