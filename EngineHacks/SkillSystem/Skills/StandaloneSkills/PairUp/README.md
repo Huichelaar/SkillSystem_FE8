@@ -8,6 +8,7 @@ TODO:
     - Test pair-up banim when one anim, (fortify staff).
     - Test pair-up banim at 2-range (heal and combat).
     - Test pair-up banim at long-range (heal and combat).
+    - Test Silencer and Triangle attack I guess.
   
 
 Notes:
@@ -15,6 +16,7 @@ Notes:
   - Replaced these skills:
     - Dragon Fang has been replaced with offensive pair up/Dual Strike skill.
     - Great Shield has been replaced with defensive pair up/Dual Guard skill.
+  - Mention last four bytes in banim name string need to be left alone.
     
 Credits TODO:
   - Sme for her Refuge patch.
