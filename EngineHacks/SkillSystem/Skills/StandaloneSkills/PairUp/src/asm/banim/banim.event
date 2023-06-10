@@ -14,9 +14,19 @@ PUSH
     
   ORG 0x59DE8
     jumpToHack(PAU_bAnimInitHook)
+  
+  // Command 0x6. Starts opponent's turn.
+  ORG 0x59020
+    jumpToHack(PAU_bAnimCommand6Hook)
+  
+  // Command 0xD. End current turn.
+  ORG 0x591F4
+    jumpToHack(PAU_bAnimCommandDHook)
 
 POP
 
 ALIGN 4; PAU_bAnimInitScaleHook: #include "initScaleHook.lyn.event"
 ALIGN 4; PAU_bAnimLoopScaleHook: #include "loopScaleHook.lyn.event"
 ALIGN 4; PAU_bAnimInitHook: #include "initHook.lyn.event"
+ALIGN 4; PAU_bAnimCommand6Hook: #include "command6Hook.lyn.event"
+ALIGN 4; PAU_bAnimCommandDHook: #include "commandDHook.lyn.event"

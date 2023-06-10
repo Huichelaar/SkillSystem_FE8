@@ -28,6 +28,10 @@ PUSH
   ORG 0x59308
   jumpToHack(BA2_commandDOAMData)
 
+  // Don't move data past OBJ VRAM in RegisterAISSheetGraphics.
+  ORG 0x59958
+  jumpToHack(BA2_registerHalfSizeSheets)
+
   // During LoadBattleAnimePalette, load FrameData, whether compressed or uncompressed.
   // Left AIS.
   ORG 0x59A22
@@ -173,6 +177,7 @@ ALIGN 4; #include "bAnimInitHooks.lyn.event"
 ALIGN 4; #include "decompBAnimHooks.lyn.event"
 ALIGN 4; #include "switchRoundHooks.lyn.event"
 ALIGN 4; #include "commandDHook.lyn.event"
+ALIGN 4; BA2_registerHalfSizeSheets: #include "registerHalfSizeSheets.lyn.event"
 ALIGN 4; BA2_bAnimScaleHook: #include "bAnimScaleHook.lyn.event"
 ALIGN 4; BA2_dummyTerminatorHook: #include "dummyTerminatorHook.lyn.event"
 

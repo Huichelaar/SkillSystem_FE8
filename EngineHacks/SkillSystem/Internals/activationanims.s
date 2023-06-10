@@ -6,10 +6,28 @@
 push  {r4-r7}
 mov   r7, r0
 
-
+@ Don't activate skill anim if dualStrike or
+@ dualGuard already procced.
 ldr   r3, =GetAISSubjectId
 bl    GOTO_R3
 mov   r5, r0
+ldr   r0, =PAU_aisProcInstr
+ldr   r3, =ProcFind
+bl    GOTO_R3
+mov   r4, r0
+cmp   r4, #0x0
+beq   L3
+  mov   r0, #0x2B
+  ldrb  r0, [r4, r0]
+  mov   r1, #0x2
+  lsl   r1, r5
+  lsl   r1, r5
+  tst   r1, r0
+  beq   L3
+    b     NoAnim
+
+@ Check if OffensiveSkill or DefensiveSkill procced.
+L3:
 ldrh  r0, [r7, #0xE]
 sub   r0, #0x1
 lsl   r0, #0x1

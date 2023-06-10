@@ -37,7 +37,7 @@
   ALIGN 2; PAU_bAnimDistX:
   SHORT 16
   ALIGN 2; PAU_bAnimDistY:
-  SHORT 8
+  SHORT (-8)
   
   // BanimRoundScripts for the paired-up unit.
   // Based on the default ones at 0x80DAEF0,
@@ -54,6 +54,13 @@
   BYTE 0x09 0x27 0xFF 0x26
   BYTE 0x0A 0x27 0xFF 0x26
   BYTE 0x0B 0x27 0xFF 0x26
+  
+  // These sounds play when the battle anims swap
+  // when dual strike or dual guard trigger.
+  ALIGN 2; PAU_dualStrikeSkillActivationSound:
+  SHORT 0x3D1
+  ALIGN 2; PAU_dualGuardSkillActivationSound:
+  SHORT 0x3D1
   
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP

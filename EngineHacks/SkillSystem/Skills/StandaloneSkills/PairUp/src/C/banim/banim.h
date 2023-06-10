@@ -46,21 +46,34 @@ struct BanimRoundScripts {
 };
 extern const struct BanimRoundScripts gBattleAnimModeLookupMaybe[]; //! FE8U = 0x80DAEF0
 extern const u32 gAISFrames_DummyNoFrames; //! FE8U = 0x85B9D5C
+extern const void StartEfxSureShotAnime(AIStruct* ais); //! FE8U = 0x806E311
+extern const void StartEfxGenericAnime(AIStruct* ais); //! FE8U = 0x806E58D
+extern const void PlaySoundAt(u16 songID, u16 unk1, s16 x, u8 unk3); //! FE8U = 0x80729A5
+extern const void SwitchAISFrameDataFromBARoundType(AIStruct* ais, u8 roundType); //! FE8U = 0x805A07D
 extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
+extern u16 gBattleAnimAnimationIndex[2]; //! FE8U = 0x203E182
+extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
 
 // Custom,
 extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
 extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
 
 extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event
+extern u16 PAU_dualStrikeSkillActivationSound;                        // In PairUp.event
+extern u16 PAU_dualGuardSkillActivationSound;                         // In PairUp.event
 
 u16 PAU_findPairUpBAnimID(Unit* unit);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
 void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8 aisSubjectID);
+void PAU_dualStrikeAnim(AIStruct* AIS); // called by Skill Activation things.
 
 struct PAU_aisProc {
   /* 00 */ PROC_HEADER;
+  
+  /* 29 */ u8 timer;
+  /* 2A */ u8 limit;
+  /* 2B */ u8 state;
   
   /* 2C */ AIStruct* leftFrontAIS;
   /* 30 */ AIStruct* leftBackAIS;
@@ -72,8 +85,17 @@ struct PAU_aisProc {
   /* 44 */ AIStruct* puRightFrontAIS;
   /* 48 */ AIStruct* puRightBackAIS;
 };
+enum
+{
+	// state flags.
+	SWAPPINGLEFT = (1 << 0),    // Indicates left AISes are swapping
+  SWAPPEDLEFT = (1 << 1),     // Indicates left backup and main AISes have swapped.
+	SWAPPINGRIGHT = (1 << 2),
+  SWAPPEDRIGHT = (1 << 3),
+};
 const ProcInstruction PAU_aisProcInstr[];
 void PAU_haltBAnims(struct PAU_aisProc* proc);
 void PAU_adjustBAnimLocs(struct PAU_aisProc* proc);
+void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right);
 
 #endif // BANIM_H

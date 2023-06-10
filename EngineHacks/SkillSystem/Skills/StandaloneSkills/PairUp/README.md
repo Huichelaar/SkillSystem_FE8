@@ -10,6 +10,9 @@ TODO:
     - Test pair-up banim at long-range (heal and combat).
     - Test Silencer and Triangle attack I guess.
     - Test with paired-up unit missing and with non-paired-up unit missing.
+    - Test when DualGuard is triggered in the first round.
+    - Test enemy proccing skill immediately after Dual Strike round.
+  - During level-up screen, paired-up unit is in front of partner (seems to be OAM priority, not AIS depth). Paired-up unit has priority 2, partner has priority 3. Change paired-up unit's oam2base.
   
 
 Notes:
