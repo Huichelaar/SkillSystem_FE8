@@ -37,7 +37,7 @@ struct BattleAnim {
   /* 18 */ char *oam_l;
   /* 1C */ char *pal;
 };
-extern const struct BattleAnim* battleAnims[];
+extern const struct BattleAnim* battleAnims;
 struct BanimRoundScripts {
   /* 00 */ u8 frame_front;
   /* 01 */ u8 priority_front;
@@ -50,6 +50,7 @@ extern const void StartEfxSureShotAnime(AIStruct* ais); //! FE8U = 0x806E311
 extern const void StartEfxGenericAnime(AIStruct* ais); //! FE8U = 0x806E58D
 extern const void PlaySoundAt(u16 songID, u16 unk1, s16 x, u8 unk3); //! FE8U = 0x80729A5
 extern const void SwitchAISFrameDataFromBARoundType(AIStruct* ais, u8 roundType); //! FE8U = 0x805A07D
+extern const u16 GetBattleAnimationId(Unit* unit, const void* pBattleAnimDef, u16 item, u32 *unk3); //! FE8U = 0x8058849
 extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
 extern u16 gBattleAnimAnimationIndex[2]; //! FE8U = 0x203E182
@@ -59,9 +60,10 @@ extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
 extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
 extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
 
-extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event
-extern u16 PAU_dualStrikeSkillActivationSound;                        // In PairUp.event
-extern u16 PAU_dualGuardSkillActivationSound;                         // In PairUp.event
+extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event.
+extern const u16 PAU_dualStrikeSkillActivationSound;                  // In PairUp.event.
+extern const u16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
+extern const u8 PAU_dualBAnimSwapTime;                                // In PairUp.event.
 
 u16 PAU_findPairUpBAnimID(Unit* unit);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
@@ -84,6 +86,18 @@ struct PAU_aisProc {
   /* 40 */ AIStruct* puLeftBackAIS;
   /* 44 */ AIStruct* puRightFrontAIS;
   /* 48 */ AIStruct* puRightBackAIS;
+  
+  /* 4C */ s16 leftOriginX;
+  /* 4E */ s16 leftOriginY;
+  /* 50 */ s16 rightOriginX;
+  /* 52 */ s16 rightOriginY;
+  
+  /* 54 */ s16 slope;
+  /* 56 */ s16 radius;
+  /* 58 */ u8 leftMainAngle;
+  /* 59 */ u8 leftBackAngle;
+  /* 5A */ u8 rightMainAngle;
+  /* 5B */ u8 rightBackAngle;
 };
 enum
 {

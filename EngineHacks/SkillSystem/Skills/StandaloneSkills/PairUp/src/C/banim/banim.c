@@ -1,8 +1,11 @@
 #include "banim.h"
 
-// TODO, implement.
 u16 PAU_findPairUpBAnimID(Unit* unit) {
-  return 0;
+  u16 item = GetUnitEquippedWeapon(unit);
+  // TODO, make up an item if no equipped weapon.
+  u32 returnval2 = 0;
+  u16 animID = GetBattleAnimationId(unit, unit->pClassData->pBattleAnimDef, item, &returnval2);
+  return animID;
 }
 
 // Scales another AIS during Kakudai proc.
@@ -51,11 +54,11 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     return;
   
   u16 bAnimID = PAU_findPairUpBAnimID(GetUnit(unit->rescueOtherUnit));
-  const struct BattleAnim* bAnim = battleAnims[bAnimID];
-  u32 flags = ((u32)bAnim->abbr[8]) |
-              (((u32)bAnim->abbr[9])<<8) |
-              (((u32)bAnim->abbr[10])<<16) |
-              (((u32)bAnim->abbr[11])<<24);
+  const struct BattleAnim bAnim = battleAnims[bAnimID];
+  u32 flags = ((u32)bAnim.abbr[8]) |
+              (((u32)bAnim.abbr[9])<<8) |
+              (((u32)bAnim.abbr[10])<<16) |
+              (((u32)bAnim.abbr[11])<<24);
   
   // Don't create AISes if either frameData or OAMData is compressed.
   if ((!(flags & (1 << BA2_AB_UNCOMPFRAMEDATA))) || (!(flags & (1 << BA2_AB_UNCOMPOAMDATA))))
@@ -66,8 +69,8 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
   const u32* script = &gAISFrames_DummyNoFrames;
   u32 frameOffs = 0;
   if (banimRoundScripts.frame_front != 255) {
-    frameOffs = bAnim->modes[banimRoundScripts.frame_front];
-    script = (u32*)((u32)(bAnim->script) + frameOffs);
+    frameOffs = bAnim.modes[banimRoundScripts.frame_front];
+    script = (u32*)((u32)(bAnim.script) + frameOffs);
   }
   AIStruct* newFrontAIS = CreateAIS(script, banimRoundScripts.priority_front);
   
@@ -83,17 +86,17 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
   newFrontAIS->currentRoundType = frontAIS->currentRoundType;
   newFrontAIS->pSheetBuffer = frontAIS->pSheetBuffer + 0x1000;
   if (aisSubjectID)
-    newFrontAIS->pStartObjData = bAnim->oam_r;
+    newFrontAIS->pStartObjData = bAnim.oam_r;
   else
-    newFrontAIS->pStartObjData = bAnim->oam_l;
+    newFrontAIS->pStartObjData = bAnim.oam_l;
   
   // Create Back AIS.
   banimRoundScripts = PAU_backupBAnimRoundScripts[backAIS->currentRoundType];
   script = &gAISFrames_DummyNoFrames;
   frameOffs = 0;
   if (banimRoundScripts.frame_back != 255) {
-    frameOffs = bAnim->modes[banimRoundScripts.frame_back];
-    script = (u32*)((u32)(bAnim->script) + frameOffs);
+    frameOffs = bAnim.modes[banimRoundScripts.frame_back];
+    script = (u32*)((u32)(bAnim.script) + frameOffs);
   }
   AIStruct* newBackAIS = CreateAIS(script, banimRoundScripts.priority_back);
   
@@ -106,9 +109,9 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
   newBackAIS->currentRoundType = backAIS->currentRoundType;
   newBackAIS->pSheetBuffer = backAIS->pSheetBuffer + 0x1000;
   if (aisSubjectID)
-    newBackAIS->pStartObjData = bAnim->oam_r;
+    newBackAIS->pStartObjData = bAnim.oam_r;
   else
-    newBackAIS->pStartObjData = bAnim->oam_l;
+    newBackAIS->pStartObjData = bAnim.oam_l;
   
   // Start custom AISProc.
   struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
@@ -122,18 +125,53 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     proc->puLeftBackAIS = 0;
     proc->puRightFrontAIS = 0;
     proc->puRightBackAIS = 0;
+    
+    proc->leftOriginX = 0;
+    proc->leftOriginY = 0;
+    proc->rightOriginX = 0;
+    proc->rightOriginY = 0;
+    proc->leftMainAngle = 0;
+    proc->leftBackAngle = 0;
+    proc->rightMainAngle = 0;
+    proc->rightBackAngle = 0;
+    
     proc->timer = 0;
     proc->limit = 0;
     proc->state = 0;
   }
+  
+  s16 a, absA, b, absB, c;
   if (aisSubjectID) {
     proc->puRightFrontAIS = newFrontAIS;
     proc->puRightBackAIS = newBackAIS;
+    
+    proc->rightOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1);
+    proc->rightOriginY = newFrontAIS->yPosition + ((frontAIS->yPosition - newFrontAIS->yPosition)>>1);
+    
+    a = frontAIS->xPosition - newFrontAIS->xPosition;
+    b = frontAIS->yPosition - newFrontAIS->yPosition;
+    absA = a < 0 ? -a : a;
+    absB = b < 0 ? -b : b;
+    proc->rightBackAngle = ArcTan2(absA>>1, absB>>1)>>8;
+    proc->rightMainAngle = proc->rightBackAngle + 0x80;
   }
   else {
     proc->puLeftFrontAIS = newFrontAIS;
     proc->puLeftBackAIS = newBackAIS;
+    
+    proc->leftOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1);
+    proc->leftOriginY = newFrontAIS->yPosition + ((frontAIS->yPosition - newFrontAIS->yPosition)>>1);
+    
+    a = frontAIS->xPosition - newFrontAIS->xPosition;
+    b = frontAIS->yPosition - newFrontAIS->yPosition;
+    absA = a < 0 ? -a : a;
+    absB = b < 0 ? -b : b;
+    proc->leftBackAngle = ArcTan2(absA>>1, absB>>1)>>8;
+    proc->leftMainAngle = proc->leftBackAngle + 0x80;
   }
+  c = Sqrt(a * a + b * b);        // Pythagoras.
+  proc->radius = c>>1;
+  proc->slope = 0x2000 / c;
 }
 
 void PAU_dualStrikeAnim(AIStruct* ais) {
@@ -146,7 +184,7 @@ void PAU_dualStrikeAnim(AIStruct* ais) {
   
   proc->state |= (1 << (aisSubjectID << 1));  // Set SWAPPING bit.
   proc->timer = 0;
-  proc->limit = 60;
+  proc->limit = PAU_dualBAnimSwapTime;
   
   // Camera, or just BG1 position.
   if (gSomethingRelatedToAnimAndDistance) {
@@ -158,29 +196,10 @@ void PAU_dualStrikeAnim(AIStruct* ais) {
   // TODO movebattlecameraonto
   
   // Halt all AISes.
-  proc->leftFrontAIS->state3 |= 0x20;
   proc->leftFrontAIS->state |= 0x8;
-  proc->leftBackAIS->state3 |= 0x20;
   proc->leftBackAIS->state |= 0x8;
-  proc->rightFrontAIS->state3 |= 0x20;
   proc->rightFrontAIS->state |= 0x8;
-  proc->rightBackAIS->state3 |= 0x20;
   proc->rightBackAIS->state |= 0x8;
-  
-  /*
-  if (proc->puLeftFrontAIS) {
-    proc->puLeftFrontAIS->state3 |= 0x20;
-    proc->puLeftFrontAIS->state |= 0x8;
-    proc->puLeftBackAIS->state3 |= 0x20;
-    proc->puLeftBackAIS->state |= 0x8;
-  }
-  if (proc->puRightFrontAIS) {
-    proc->puRightFrontAIS->state3 |= 0x20;
-    proc->puRightFrontAIS->state |= 0x8;
-    proc->puRightBackAIS->state3 |= 0x20;
-    proc->puRightBackAIS->state |= 0x8;
-  }
-  */
   
   PlaySoundAt(PAU_dualStrikeSkillActivationSound, 0x100, ais->xPosition, 1);
 };
@@ -282,52 +301,56 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
   
   // Swap depths at halfway point.
   u16 temp;
-  s16 temp2;
   if (proc->timer == (proc->limit>>1)) {
     temp = mainFrontAIS->drawLayerPriority;
     mainFrontAIS->drawLayerPriority = backupFrontAIS->drawLayerPriority;
     backupFrontAIS->drawLayerPriority = temp;
-    
-    temp2 = mainFrontAIS->xPosition;
-    mainFrontAIS->xPosition = backupFrontAIS->xPosition;
-    backupFrontAIS->xPosition = temp2;
-    temp2 = mainFrontAIS->yPosition;
-    mainFrontAIS->yPosition = backupFrontAIS->yPosition;
-    backupFrontAIS->yPosition = temp2;
-    
+
     temp = mainBackAIS->drawLayerPriority;
     mainBackAIS->drawLayerPriority = backupBackAIS->drawLayerPriority;
     backupBackAIS->drawLayerPriority = temp;
-    
-    temp2 = mainBackAIS->xPosition;
-    mainBackAIS->xPosition = backupBackAIS->xPosition;
-    backupBackAIS->xPosition = temp2;
-    temp2 = mainBackAIS->yPosition;
-    mainBackAIS->yPosition = backupBackAIS->yPosition;
-    backupBackAIS->yPosition = temp2;
-    
+
     SortAISs();
   }
   
-  // Change some relevant RAM locations on end.
-  if (proc->timer >= proc->limit) {
+  if (proc->timer < proc->limit) {
+    s16 xOffs, yOffs;
+    u8 angle = GetValueFromEasingFunction(0, 0, 0x80, proc->timer, proc->limit);
+    if (right) {
+      xOffs = gCosLookup[(angle + proc->rightMainAngle) & 0xFF] / proc->slope;
+      mainFrontAIS->xPosition = proc->rightOriginX + xOffs;
+      yOffs = -gSinLookup[(angle + proc->rightMainAngle) & 0xFF] / proc->slope;
+      mainFrontAIS->yPosition = proc->rightOriginY + yOffs;
+      xOffs = gCosLookup[(angle + proc->rightBackAngle) & 0xFF] / proc->slope;
+      backupFrontAIS->xPosition = proc->rightOriginX + xOffs;
+      yOffs = -gSinLookup[(angle + proc->rightBackAngle) & 0xFF] / proc->slope;
+      backupFrontAIS->yPosition = proc->rightOriginY + yOffs;
+    }
+    else {
+      xOffs = gCosLookup[(angle + proc->leftMainAngle) & 0xFF] / proc->slope;
+      mainFrontAIS->xPosition = proc->leftOriginX + xOffs;
+      yOffs = -gSinLookup[(angle + proc->leftMainAngle) & 0xFF] / proc->slope;
+      mainFrontAIS->yPosition = proc->leftOriginY + yOffs;
+      xOffs = gCosLookup[(angle + proc->leftBackAngle) & 0xFF] / proc->slope;
+      backupFrontAIS->xPosition = proc->leftOriginX + xOffs;
+      yOffs = -gSinLookup[(angle + proc->leftBackAngle) & 0xFF] / proc->slope;
+      backupFrontAIS->yPosition = proc->leftOriginY + yOffs;
+    }
+  }
+  else {    // Finish up.
+    // Change some relevant RAM locations on end.
     // Swap out AISes in 0x2000000
     *(AIStruct**)(0x2000000 + (right<<3)) = backupFrontAIS;
     *(AIStruct**)(0x2000004 + (right<<3)) = backupBackAIS;
     
     u16 bAnimID = PAU_findPairUpBAnimID(unit);
     gBattleAnimAnimationIndex[right] = bAnimID;
-    gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID]->modes;      // SectionData.
+    gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID].modes;       // SectionData.
     
-    // state3 +0x40 might mean don't activate skill?
     // state +0x8 indicates pausing AIS.
-    (*(AIStruct**)0x2000000)->state3 |= 0x40;
     (*(AIStruct**)0x2000000)->state &= ~8;
-    (*(AIStruct**)0x2000004)->state3 |= 0x40;
     (*(AIStruct**)0x2000004)->state &= ~8;
-    (*(AIStruct**)0x2000008)->state3 |= 0x40;
     (*(AIStruct**)0x2000008)->state &= ~8;
-    (*(AIStruct**)0x200000C)->state3 |= 0x40;
     (*(AIStruct**)0x200000C)->state &= ~8;
     
     SwitchAISFrameDataFromBARoundType(backupFrontAIS, mainFrontAIS->currentRoundType);
@@ -336,17 +359,27 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     backupBackAIS->nextRoundId = mainBackAIS->nextRoundId;
     
     proc->timer = 0;
-    if (!right) {
-      proc->state &= ~SWAPPINGLEFT;
-      proc->state ^= SWAPPEDLEFT;
-    }
-    else {
+    if (right) {
+      mainFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1);
+      mainFrontAIS->yPosition = proc->rightOriginY + (PAU_bAnimDistY>>1);
+      backupFrontAIS->xPosition = proc->rightOriginX - (PAU_bAnimDistX>>1);
+      backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
+      
       proc->state &= ~SWAPPINGRIGHT;
       proc->state ^= SWAPPEDRIGHT;
     }
+    else {
+      mainFrontAIS->xPosition = proc->leftOriginX - (PAU_bAnimDistX>>1);
+      mainFrontAIS->yPosition = proc->leftOriginY + (PAU_bAnimDistY>>1);
+      backupFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1);
+      backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
+      
+      proc->state &= ~SWAPPINGLEFT;
+      proc->state ^= SWAPPEDLEFT;
+    }
+    mainBackAIS->xPosition = mainFrontAIS->xPosition;
+    mainBackAIS->yPosition = mainFrontAIS->yPosition;
+    backupBackAIS->xPosition = backupFrontAIS->xPosition;
+    backupBackAIS->yPosition = backupFrontAIS->yPosition;
   }
 };
-
-
-
-

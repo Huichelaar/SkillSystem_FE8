@@ -26,6 +26,18 @@ beq   Return
     mov   r1, #0x8
     orr   r0, r1
     strh  r0, [r7]          @ Halt anim.
+    mov   r0, r7
+    ldr   r3, =GetAISNextBattleAnimRoundType
+    bl    GOTO_R3
+    mov   r1, #0x0
+    sub   r1, #0x1
+    cmp   r0, r1
+    beq   dontIncrRound
+      strh  r0, [r7, #0x12] @ CurrentRoundType.
+      ldrh  r0, [r7, #0xE]
+      add   r0, #0x1
+      strh  r0, [r7, #0xE]  @ Increment round if next round exists.
+    dontIncrRound:
     pop   {r4-r5}
     ldr   r0, =0x80596D7    @ Skip the other stuff, including other queued commands, as well.
     bx    r0

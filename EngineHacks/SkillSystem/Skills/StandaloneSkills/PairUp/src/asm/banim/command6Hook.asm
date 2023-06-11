@@ -47,10 +47,10 @@ bne   Return        @ Ignore if back layer.
         ldr   r1, [r0]
         cmp   r1, #0x0
         beq   L2
-          ldrh  r2, [r1, #0x10]
-          mov   r3, #0x20
-          orr   r2, r3
-          strh  r2, [r1, #0x10]
+          @ldrh  r2, [r1, #0x10]
+          @mov   r3, #0x20
+          @orr   r2, r3
+          @strh  r2, [r1, #0x10]
           ldrh  r2, [r1]
           mov   r3, #0x8
           orr   r2, r3

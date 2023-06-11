@@ -58,9 +58,14 @@
   // These sounds play when the battle anims swap
   // when dual strike or dual guard trigger.
   ALIGN 2; PAU_dualStrikeSkillActivationSound:
-  SHORT 0x3D1
+  SHORT 0xCB
   ALIGN 2; PAU_dualGuardSkillActivationSound:
-  SHORT 0x3D1
+  SHORT 0xCB
+  
+  // Amount of frames it takes for backup and main
+  // battle sprites to swap when dual skills trigger.
+  PAU_dualBAnimSwapTime:
+  BYTE 10
   
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
