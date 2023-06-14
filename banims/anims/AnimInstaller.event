@@ -1,15 +1,32 @@
-//#define KylordeAxeAnim 3
-{
-#include "Kylorde/3. Axe/lorm_sp1Installer.event"
-}
-//ALIGN 4; KylordeAnims:
-//AxeAnim(KylordeAxeAnim)
-//EndAnim
+#define KylordeAxeAnim 1
+#define KylordeHandaxeAnim 0xCA
+#define KylordeUnarmedAnim 2
+#define NeomaSwordAnim 3
+#define NeomaUnarmedAnim 4
 
-//#define NeomaSwordAnim 1
 {
-#include "Neoma/1. Sword/lorf_sw1Installer.event"
+ALIGN 4; #include "Kylorde/3. Axe/lorm_sp1Installer.event"
 }
-//ALIGN 4; NeomaAnims:
-//SwordAnim(NeomaSwordAnim)
-//EndAnim
+{
+ALIGN 4; #include "Kylorde/4. Handaxe/lorm_sp1Installer.event"
+}
+{
+ALIGN 4; #include "Kylorde/8. Unarmed/lorm_sp1Installer.event"
+}
+
+ALIGN 4; KylordeAnims:
+AxeAnim(KylordeAxeAnim)
+HandaxeAnim(KylordeHandaxeAnim)
+UnarmedAnim(KylordeUnarmedAnim)
+EndAnim
+
+{
+ALIGN 4; #include "Neoma/1. Sword/lorf_sw1Installer.event"
+}
+{
+ALIGN 4; #include "Neoma/8. Unarmed/lorf_sw1Installer.event"
+}
+ALIGN 4; NeomaAnims:
+SwordAnim(NeomaSwordAnim)
+UnarmedAnim(NeomaUnarmedAnim)
+EndAnim

@@ -40,6 +40,7 @@ bx    r3
 @   r4: procState* Kakudai.
 PAU_decompSheet:
 push  {r5-r7, r14}
+sub   sp, #0x4
 mov   r5, r0
 
 mov   r0, #0x0
@@ -64,7 +65,8 @@ bl    notPairedUp
   ldr   r3, =GetUnit
   bl    GOTO_R3
   mov   r7, r0
-  bl    PAU_findPairUpBAnimID
+  mov   r1, sp
+  bl    PAU_findPairUpBAnim
   lsl   r0, #0x5
   ldr   r1, =0x8059BD8      @ Pointer to battle animation struct array.
   ldr   r1, [r1]
@@ -208,6 +210,7 @@ bl    notPairedUp
     swi   #0x11               @ Decompress.
 notPairedUp:
 
+add   sp, #0x4
 pop   {r5-r7}
 pop   {r0}
 bx    r0

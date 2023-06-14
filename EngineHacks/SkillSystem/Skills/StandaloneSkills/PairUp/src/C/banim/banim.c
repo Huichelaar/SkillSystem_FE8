@@ -1,11 +1,47 @@
 #include "banim.h"
 
-u16 PAU_findPairUpBAnimID(Unit* unit) {
-  u16 item = GetUnitEquippedWeapon(unit);
-  // TODO, make up an item if no equipped weapon.
-  u32 returnval2 = 0;
-  u16 animID = GetBattleAnimationId(unit, unit->pClassData->pBattleAnimDef, item, &returnval2);
-  return animID;
+// Returns animID and corresponding spellAnimID (1 = Thrown Axe, 2 = Arrow, etc.) in spellAnimID.
+u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
+  u8 item = GetUnitEquippedWeapon(unit) & 0xFF;
+  u8 weaponType = GetItemType(item);
+  const u16 *anim_instr = unit->pClassData->pBattleAnimDef;
+  u16 specification;
+  
+  for (int i = 0; ; i++) {
+    specification = anim_instr[i*2] >> 8;
+    if (item) {
+       if (specification == 0) {
+         if (item == (anim_instr[i*2] & 0xFF)) {
+           *spellAnimID = GetSpellAssocStructPtr(item)->type;
+           if (*spellAnimID == -1)
+             *spellAnimID = PAU_defaultMagicAnimsTable[weaponType];
+           return anim_instr[i*2 + 1]-1;
+         }
+       }
+       else if (specification == 1) {
+         if (weaponType == (anim_instr[i*2] & 0xFF)) {
+           *spellAnimID = GetSpellAssocStructPtr(item)->type;
+           if (*spellAnimID == -1)
+             *spellAnimID = PAU_defaultMagicAnimsTable[weaponType];
+           return anim_instr[i*2 + 1]-1;
+         }
+       }
+    }
+    else {
+       if (specification == 0) {
+         *spellAnimID = GetSpellAssocStructPtr(anim_instr[i*2] & 0xFF)->type;
+         if (*spellAnimID == -1)
+           *spellAnimID = PAU_defaultMagicAnimsTable[GetItemType((u8)anim_instr[i*2] & 0xFF)];
+         return anim_instr[i*2 + 1]-1;
+       }
+       else if (specification == 1) {
+         if (!((anim_instr[i*2] & 0xFF) == 4) && !((anim_instr[i*2] & 0xFF) == 9)) {      // Ignore staff and unarmed animations.
+           *spellAnimID = PAU_defaultMagicAnimsTable[anim_instr[i*2] >> 8];
+           return anim_instr[i*2 + 1]-1;
+         }
+       }
+    }
+  }
 }
 
 // Scales another AIS during Kakudai proc.
@@ -53,7 +89,8 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
   if (!PAU_isPairedUp(unit))
     return;
   
-  u16 bAnimID = PAU_findPairUpBAnimID(GetUnit(unit->rescueOtherUnit));
+  s16 temp;
+  u16 bAnimID = PAU_findPairUpBAnim(GetUnit(unit->rescueOtherUnit), &temp);
   const struct BattleAnim bAnim = battleAnims[bAnimID];
   u32 flags = ((u32)bAnim.abbr[8]) |
               (((u32)bAnim.abbr[9])<<8) |
@@ -343,7 +380,8 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     *(AIStruct**)(0x2000000 + (right<<3)) = backupFrontAIS;
     *(AIStruct**)(0x2000004 + (right<<3)) = backupBackAIS;
     
-    u16 bAnimID = PAU_findPairUpBAnimID(unit);
+    s16 temp;
+    u16 bAnimID = PAU_findPairUpBAnim(unit, &temp);
     gBattleAnimAnimationIndex[right] = bAnimID;
     gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID].modes;       // SectionData.
     

@@ -6,7 +6,7 @@
 #endif
 
 PUSH
-  AnimTableEntry(1)
+  AnimTableEntry(NeomaSwordAnim)
   String("CoolAnim")
   WORD 6
   POIN Anim_lorf_sw1_sectiondata

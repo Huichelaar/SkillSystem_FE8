@@ -6,7 +6,7 @@
 #endif
 
 PUSH
-  AnimTableEntry(3)
+  AnimTableEntry(KylordeAxeAnim)
   String("CoolAnim")
   WORD 6
   POIN Anim_lorm_sp1_sectiondata

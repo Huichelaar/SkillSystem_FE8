@@ -22,11 +22,18 @@ PUSH
   // Command 0xD. End current turn.
   ORG 0x591F4
     jumpToHack(PAU_bAnimCommandDHook)
+  
+  // Command 0x5. Run spell animation.
+  ORG 0x5B3D6
+    SHORT 0x46C0
+    jumpToHack(PAU_bAnimCommand5Hook)
+  
 
 POP
 
 ALIGN 4; PAU_bAnimInitScaleHook: #include "initScaleHook.lyn.event"
 ALIGN 4; PAU_bAnimLoopScaleHook: #include "loopScaleHook.lyn.event"
 ALIGN 4; PAU_bAnimInitHook: #include "initHook.lyn.event"
+ALIGN 4; PAU_bAnimCommand5Hook: #include "command5Hook.lyn.event"
 ALIGN 4; PAU_bAnimCommand6Hook: #include "command6Hook.lyn.event"
 ALIGN 4; PAU_bAnimCommandDHook: #include "commandDHook.lyn.event"

@@ -26,6 +26,7 @@ Notes:
     - Great Shield has been replaced with defensive pair up/Dual Guard skill.
   - Mention last four bytes in banim name string need to be left alone.
   - Mention that animDistX & animDistY should be even numbers or battle anims might misalign a little when swapping.
+  - Mention it's best for specific weapon specifications to go before general weapontype specification in banimstruct, explain why (PAU_findPairUpBAnim).
     
 Credits TODO:
   - Sme for her Refuge patch.

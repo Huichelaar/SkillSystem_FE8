@@ -67,6 +67,27 @@
   PAU_dualBAnimSwapTime:
   BYTE 10
   
+  // Table of magic animations corresponding to default weapon types.
+  // If Dual Striker doesn't have an equippable weapon, the first non-staff
+  // non-unarmed battle animation of their class animation struct is picked,
+  // and its weapontype is used as an index to this table to find a corresponding magicAnimationID.
+  ALIGN 4; PAU_defaultMagicAnimsTable:
+  SHORT 0x1F          // 0  Sword   -> 0x1F Lightning (mimicking Light Brand).
+  SHORT 0x3           // 1  Lance   -> 0x3  javelin#1.
+  SHORT 0x1           // 2  Axe     -> 0x1  Hand Axe.
+  SHORT 0x2           // 3  Bow     -> 0x2  Arrow.
+  SHORT 0xFFFF        // 4  Staff   -> -1   None. Not ever picked.
+  SHORT 0x16          // 5  Anima   -> 0x16 Fire.
+  SHORT 0x1F          // 6  Light   -> 0x1F Lightning.
+  SHORT 0x1D          // 7  Dark    -> 0x1D Flux.
+  SHORT 0x2           // 8  unk     -> 0x2  Arrow. Default for unks.
+  SHORT 0xFFFF        // 9  Unarmed -> -1   None. Not ever picked.
+  SHORT 0x2           // 10 unk     -> 0x2  Arrow. Default for unks.
+  SHORT 0x43          // 11 Monster -> 0x43 Evil Eye.
+  SHORT 0xE           // 12 Ring    -> 0xE  Dance/Play.
+  SHORT 0 0 0 0 0 0 0 0   // Redundancy for potential future weapontypes.
+  
+  
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
 

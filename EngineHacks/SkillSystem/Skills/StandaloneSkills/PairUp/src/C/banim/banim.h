@@ -28,6 +28,17 @@ struct KakudaiProc {
 };
 extern const int GetValueFromEasingFunction(u8 rateFunction, int startX, int endX, u32 currentT, u32 endT); //! FE8U = 0x8012DCD
 extern const void AffineSetOAMData(void* oamDataScript, void* affineOAMDataBuffer, u16 scaleX, u16 scaleY, u8 unk4);  //! FE8U = 0x807180D
+// Instance gSpellAssocData in Vanilla at 0x8AFBD8.
+struct SpellAssoc {
+    /* 00 */ u16 item;
+    /* 02 */ u8 count;
+    /* 04 */ s16 type;
+    /* 08 */ struct ProcCmd *pcmd_manim;
+    /* 0C */ u8 stat;
+    /* 0D */ u8 facing;
+    /* 0E */ u8 flash_color;
+};
+extern struct SpellAssoc* GetSpellAssocStructPtr(u16 item); //! FE8U = 0x8078215
 // Array of these at 0x8C00008
 struct BattleAnim {
   /* 00 */ char abbr[12];
@@ -64,8 +75,9 @@ extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In Pair
 extern const u16 PAU_dualStrikeSkillActivationSound;                  // In PairUp.event.
 extern const u16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
 extern const u8 PAU_dualBAnimSwapTime;                                // In PairUp.event.
+extern const u16 PAU_defaultMagicAnimsTable[];                        // In PairUp.event.
 
-u16 PAU_findPairUpBAnimID(Unit* unit);
+u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
 void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8 aisSubjectID);
 void PAU_dualStrikeAnim(AIStruct* AIS); // called by Skill Activation things.
