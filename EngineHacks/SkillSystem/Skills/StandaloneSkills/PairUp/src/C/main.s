@@ -1224,45 +1224,51 @@ PAU_swapBAnimLocs:
 	ldrb	r3, [r2]
 	adds	r3, r3, #1
 	strb	r3, [r2]
+	ldr	r3, .L162
+	ldr	r3, [r3]
+	lsls	r3, r3, #16
+	lsrs	r3, r3, #16
+	str	r3, [sp, #16]
 	movs	r3, r0
 	adds	r3, r3, #43
 	movs	r4, r0
 	ldrb	r3, [r3]
 	cmp	r1, #0
 	bne	.L148
-	ldr	r2, .L158
-	ldr	r6, [r2]
+	ldr	r2, .L162+4
+	ldr	r2, [r2]
+	str	r2, [sp, #24]
 	ldr	r2, [r0, #60]
-	str	r2, [sp, #12]
-	ldr	r2, [r0, #64]
 	ldr	r7, [r0, #44]
 	ldr	r5, [r0, #48]
-	str	r2, [sp, #16]
+	str	r2, [sp, #12]
+	ldr	r6, [r0, #64]
 	lsls	r3, r3, #30
 	bmi	.L149
-.L156:
-	ldrb	r0, [r6, #27]
-	ldr	r3, .L158+4
+.L158:
+	ldr	r3, [sp, #24]
+	ldrb	r0, [r3, #27]
+	ldr	r3, .L162+8
 	bl	.L27
-	ldr	r3, [sp, #16]
-	str	r5, [sp, #16]
+	movs	r3, r6
+	movs	r6, r5
 	movs	r5, r3
 	ldr	r3, [sp, #12]
-	movs	r6, r0
+	str	r0, [sp, #24]
 	str	r7, [sp, #12]
 	movs	r7, r3
 	b	.L149
 .L148:
-	ldr	r2, .L158+8
-	ldr	r6, [r2]
+	ldr	r2, .L162+12
+	ldr	r2, [r2]
+	str	r2, [sp, #24]
 	ldr	r2, [r0, #68]
-	str	r2, [sp, #12]
-	ldr	r2, [r0, #72]
 	ldr	r7, [r0, #52]
 	ldr	r5, [r0, #56]
-	str	r2, [sp, #16]
+	str	r2, [sp, #12]
+	ldr	r6, [r0, #72]
 	lsls	r3, r3, #28
-	bpl	.L156
+	bpl	.L158
 .L149:
 	movs	r3, r4
 	movs	r2, r4
@@ -1279,42 +1285,39 @@ PAU_swapBAnimLocs:
 	ldr	r1, [sp, #12]
 	strh	r2, [r1, #10]
 	strh	r3, [r7, #10]
-	ldr	r3, [sp, #16]
+	ldrh	r3, [r6, #10]
 	ldrh	r2, [r5, #10]
-	ldrh	r3, [r3, #10]
-	ldr	r1, [sp, #16]
-	strh	r2, [r1, #10]
+	strh	r2, [r6, #10]
 	strh	r3, [r5, #10]
-	ldr	r3, .L158+12
+	ldr	r3, .L162+16
 	bl	.L27
 .L150:
 	movs	r3, r4
 	movs	r2, r4
 	adds	r3, r3, #41
-	str	r3, [sp, #24]
 	adds	r2, r2, #42
 	ldrb	r3, [r3]
 	ldrb	r2, [r2]
 	cmp	r3, r2
-	bcc	.LCB1343
+	bcc	.LCB1347
 	b	.L151	@long jump
-.LCB1343:
+.LCB1347:
 	movs	r1, #0
 	str	r2, [sp]
 	movs	r0, r1
 	movs	r2, #128
-	ldr	r5, .L158+16
+	ldr	r5, .L162+20
 	bl	.L28
 	lsls	r3, r0, #24
 	lsrs	r3, r3, #24
-	str	r3, [sp, #16]
+	str	r3, [sp, #24]
 	ldr	r3, [sp, #20]
 	cmp	r3, #0
 	beq	.L152
 	movs	r3, r4
 	adds	r3, r3, #90
 	ldrb	r5, [r3]
-	ldr	r3, [sp, #16]
+	ldr	r3, [sp, #24]
 	adds	r5, r3, r5
 	movs	r3, r4
 	adds	r3, r3, #84
@@ -1323,18 +1326,22 @@ PAU_swapBAnimLocs:
 	movs	r3, r4
 	adds	r3, r3, #80
 	ldrh	r3, [r3]
+	ldr	r2, [sp, #16]
+	subs	r3, r3, r2
 	lsls	r5, r5, #24
+	lsls	r3, r3, #16
 	lsrs	r5, r5, #24
-	str	r3, [sp, #20]
+	lsrs	r3, r3, #16
+	str	r3, [sp, #16]
 	lsls	r3, r5, #1
 	str	r3, [sp, #28]
 	ldr	r2, [sp, #28]
-	ldr	r3, .L158+20
+	ldr	r3, .L162+24
 	movs	r1, r6
 	ldrsh	r0, [r2, r3]
-	ldr	r5, .L158+24
+	ldr	r5, .L162+28
 	bl	.L28
-	ldr	r3, [sp, #20]
+	ldr	r3, [sp, #16]
 	adds	r0, r3, r0
 	ldr	r3, [sp, #12]
 	strh	r0, [r3, #2]
@@ -1342,37 +1349,37 @@ PAU_swapBAnimLocs:
 	adds	r3, r3, #82
 	ldrh	r3, [r3]
 	ldr	r2, [sp, #28]
-	str	r3, [sp, #24]
-	ldr	r3, .L158+28
+	str	r3, [sp, #20]
+	ldr	r3, .L162+32
 	ldrsh	r0, [r2, r3]
 	movs	r1, r6
 	rsbs	r0, r0, #0
 	bl	.L28
-	ldr	r3, [sp, #24]
+	ldr	r3, [sp, #20]
 	adds	r0, r3, r0
 	ldr	r3, [sp, #12]
 	strh	r0, [r3, #4]
 	adds	r4, r4, #91
-.L157:
+.L161:
 	ldrb	r4, [r4]
-	ldr	r3, [sp, #16]
+	ldr	r3, [sp, #24]
 	adds	r4, r3, r4
 	lsls	r4, r4, #24
-	ldr	r3, .L158+20
+	ldr	r3, .L162+24
 	lsrs	r4, r4, #24
 	lsls	r4, r4, #1
 	movs	r1, r6
 	ldrsh	r0, [r4, r3]
 	bl	.L28
-	ldr	r3, [sp, #20]
+	ldr	r3, [sp, #16]
 	adds	r0, r3, r0
-	ldr	r3, .L158+28
+	ldr	r3, .L162+32
 	strh	r0, [r7, #2]
 	ldrsh	r0, [r4, r3]
 	movs	r1, r6
 	rsbs	r0, r0, #0
 	bl	.L28
-	ldr	r3, [sp, #24]
+	ldr	r3, [sp, #20]
 	adds	r0, r3, r0
 	strh	r0, [r7, #4]
 .L147:
@@ -1385,7 +1392,7 @@ PAU_swapBAnimLocs:
 	movs	r3, r4
 	adds	r3, r3, #88
 	ldrb	r5, [r3]
-	ldr	r3, [sp, #16]
+	ldr	r3, [sp, #24]
 	adds	r5, r3, r5
 	movs	r3, r4
 	adds	r3, r3, #84
@@ -1394,18 +1401,22 @@ PAU_swapBAnimLocs:
 	movs	r3, r4
 	adds	r3, r3, #76
 	ldrh	r3, [r3]
+	ldr	r2, [sp, #16]
+	subs	r3, r3, r2
 	lsls	r5, r5, #24
+	lsls	r3, r3, #16
 	lsrs	r5, r5, #24
-	str	r3, [sp, #20]
+	lsrs	r3, r3, #16
+	str	r3, [sp, #16]
 	lsls	r3, r5, #1
 	str	r3, [sp, #28]
 	ldr	r2, [sp, #28]
-	ldr	r3, .L158+20
+	ldr	r3, .L162+24
 	movs	r1, r6
 	ldrsh	r0, [r2, r3]
-	ldr	r5, .L158+24
+	ldr	r5, .L162+28
 	bl	.L28
-	ldr	r3, [sp, #20]
+	ldr	r3, [sp, #16]
 	adds	r0, r3, r0
 	ldr	r3, [sp, #12]
 	strh	r0, [r3, #2]
@@ -1413,140 +1424,168 @@ PAU_swapBAnimLocs:
 	adds	r3, r3, #78
 	ldrh	r3, [r3]
 	ldr	r2, [sp, #28]
-	str	r3, [sp, #24]
-	ldr	r3, .L158+28
+	str	r3, [sp, #20]
+	ldr	r3, .L162+32
 	ldrsh	r0, [r2, r3]
 	movs	r1, r6
 	rsbs	r0, r0, #0
 	bl	.L28
-	ldr	r3, [sp, #24]
+	ldr	r3, [sp, #20]
 	adds	r0, r3, r0
 	ldr	r3, [sp, #12]
 	adds	r4, r4, #89
 	strh	r0, [r3, #4]
-	b	.L157
+	b	.L161
 .L151:
 	movs	r2, #128
+	movs	r1, #14
 	ldr	r3, [sp, #20]
-	ldr	r1, .L158+32
-	lsls	r3, r3, #3
 	lsls	r2, r2, #18
+	lsls	r3, r3, #3
 	str	r7, [r3, r2]
-	str	r5, [r3, r1]
-	movs	r3, #14
-	add	r2, sp, #24
-	adds	r3, r3, r2
-	movs	r1, r3
-	movs	r0, r6
+	ldr	r2, .L162+36
+	str	r5, [r3, r2]
+	add	r3, sp, #24
+	adds	r1, r1, r3
+	ldr	r0, [sp, #24]
 	bl	PAU_findPairUpBAnim
 	ldr	r3, [sp, #20]
-	lsls	r2, r3, #1
-	ldr	r3, .L158+36
-	strh	r0, [r2, r3]
-	ldr	r3, [sp, #20]
-	lsls	r2, r3, #2
-	ldr	r3, .L158+40
-	ldr	r3, [r3]
-	lsls	r0, r0, #5
-	adds	r0, r3, r0
-	ldr	r1, [r0, #12]
-	ldr	r3, .L158+44
-	str	r1, [r2, r3]
-	movs	r2, #128
-	movs	r6, #8
-	lsls	r2, r2, #18
+	ldr	r2, .L162+40
+	lsls	r3, r3, #1
+	strh	r0, [r3, r2]
+	ldr	r2, .L162+44
 	ldr	r2, [r2]
-	ldrh	r3, [r2]
-	ldr	r1, .L158+32
-	bics	r3, r6
-	strh	r3, [r2]
-	ldr	r2, [r1]
-	ldrh	r3, [r2]
-	bics	r3, r6
-	strh	r3, [r2]
-	ldr	r3, .L158+48
+	lsls	r0, r0, #5
+	adds	r0, r2, r0
+	ldr	r3, [sp, #20]
+	ldr	r2, .L162+48
+	ldr	r1, [r0, #12]
+	lsls	r3, r3, #2
+	str	r1, [r3, r2]
+	movs	r3, r4
+	ldr	r2, [sp, #20]
+	adds	r3, r3, #43
+	ldrb	r3, [r3]
+	cmp	r2, #0
+	beq	.L154
+	lsls	r3, r3, #28
+	bmi	.L155
+.L159:
+	movs	r1, #4
+	ldr	r3, [sp, #12]
+	ldrh	r2, [r3, #16]
+	ldrh	r3, [r7, #16]
+	ands	r2, r1
+	orrs	r2, r3
+	strh	r2, [r7, #16]
+	ldrh	r3, [r6, #16]
+	ldrh	r2, [r5, #16]
+	ands	r3, r1
+	orrs	r3, r2
+	strh	r3, [r5, #16]
+	b	.L155
+.L154:
+	lsls	r3, r3, #30
+	bpl	.L159
+.L155:
+	movs	r3, #128
+	movs	r1, #8
+	lsls	r3, r3, #18
 	ldr	r2, [r3]
 	ldrh	r3, [r2]
-	bics	r3, r6
+	bics	r3, r1
 	strh	r3, [r2]
-	ldr	r3, .L158+52
+	ldr	r3, .L162+36
 	ldr	r2, [r3]
 	ldrh	r3, [r2]
-	bics	r3, r6
+	bics	r3, r1
+	strh	r3, [r2]
+	ldr	r3, .L162+52
+	ldr	r2, [r3]
+	ldrh	r3, [r2]
+	bics	r3, r1
+	strh	r3, [r2]
+	ldr	r3, .L162+56
+	ldr	r2, [r3]
+	ldrh	r3, [r2]
+	bics	r3, r1
 	strh	r3, [r2]
 	ldr	r3, [sp, #12]
 	movs	r0, r7
 	ldrb	r1, [r3, #18]
-	ldr	r3, .L158+56
+	ldr	r3, .L162+60
 	bl	.L27
-	ldr	r3, [sp, #16]
+	ldr	r3, .L162+60
 	movs	r0, r5
-	ldrb	r1, [r3, #18]
-	ldr	r3, .L158+56
+	ldrb	r1, [r6, #18]
 	bl	.L27
 	ldr	r3, [sp, #12]
 	ldrh	r3, [r3, #14]
 	strh	r3, [r7, #14]
-	ldr	r3, [sp, #16]
-	ldrh	r3, [r3, #14]
+	ldrh	r3, [r6, #14]
 	strh	r3, [r5, #14]
-	movs	r3, #0
-	movs	r0, r4
-	ldr	r2, [sp, #24]
-	strb	r3, [r2]
-	ldr	r2, [sp, #20]
-	ldr	r3, .L158+60
-	adds	r0, r0, #80
-	cmp	r2, #0
-	beq	.L154
-	ldrh	r2, [r0]
-	mov	ip, r2
-	movs	r2, #0
-	ldrsh	r2, [r3, r2]
-	mov	r3, ip
-	asrs	r2, r2, #1
-	lsls	r2, r2, #16
-	ldr	r1, [sp, #12]
-	lsrs	r2, r2, #16
-	adds	r3, r3, r2
-	strh	r3, [r1, #2]
 	movs	r3, r4
-	adds	r3, r3, #82
-	ldrh	r3, [r3]
-	str	r3, [sp, #20]
-	ldr	r3, .L158+64
-	movs	r1, #0
-	ldrsh	r3, [r3, r1]
+	movs	r2, #0
+	adds	r3, r3, #41
+	strb	r2, [r3]
+	ldr	r2, [sp, #20]
+	ldr	r3, .L162+64
+	cmp	r2, #0
+	beq	.L156
+	movs	r2, r4
+	adds	r2, r2, #80
+	ldrh	r2, [r2]
+	str	r2, [sp, #24]
+	movs	r2, #0
+	ldrsh	r3, [r3, r2]
 	asrs	r3, r3, #1
-	ldr	r1, [sp, #20]
+	ldr	r2, [sp, #16]
 	lsls	r3, r3, #16
 	lsrs	r3, r3, #16
+	str	r3, [sp, #20]
+	subs	r2, r3, r2
+	ldr	r3, [sp, #24]
+	ldr	r1, [sp, #12]
+	adds	r2, r3, r2
+	strh	r2, [r1, #2]
+	movs	r2, r4
+	adds	r2, r2, #82
+	ldrh	r1, [r2]
+	ldr	r2, .L162+68
+	movs	r3, #0
+	ldrsh	r2, [r2, r3]
+	asrs	r2, r2, #1
+	lsls	r2, r2, #16
+	lsrs	r2, r2, #16
+	adds	r0, r1, r2
+	mov	ip, r0
+	mov	r3, ip
 	ldr	r0, [sp, #12]
-	adds	r1, r1, r3
-	strh	r1, [r0, #4]
-	mov	r1, ip
 	subs	r2, r1, r2
-	strh	r2, [r7, #2]
-	ldr	r2, [sp, #20]
-	subs	r3, r2, r3
+	strh	r3, [r0, #4]
+	strh	r2, [r7, #4]
 	movs	r2, #4
-	strh	r3, [r7, #4]
+	movs	r1, #8
+	ldr	r0, [sp, #20]
+	ldr	r3, [sp, #16]
+	adds	r3, r3, r0
+	ldr	r0, [sp, #24]
+	subs	r3, r0, r3
+	strh	r3, [r7, #2]
 	adds	r4, r4, #43
 	ldrb	r3, [r4]
 	bics	r3, r2
-	eors	r6, r3
-	strb	r6, [r4]
-.L155:
+	eors	r3, r1
+.L160:
+	strb	r3, [r4]
 	ldr	r3, [sp, #12]
 	movs	r2, #2
 	ldrsh	r3, [r3, r2]
-	ldr	r2, [sp, #16]
-	strh	r3, [r2, #2]
+	strh	r3, [r6, #2]
 	ldr	r3, [sp, #12]
 	movs	r2, #4
 	ldrsh	r3, [r3, r2]
-	ldr	r2, [sp, #16]
-	strh	r3, [r2, #4]
+	strh	r3, [r6, #4]
 	movs	r2, #2
 	ldrsh	r3, [r7, r2]
 	strh	r3, [r5, #2]
@@ -1554,19 +1593,21 @@ PAU_swapBAnimLocs:
 	ldrsh	r3, [r7, r2]
 	strh	r3, [r5, #4]
 	b	.L147
-.L154:
+.L156:
 	movs	r2, #0
 	ldrsh	r3, [r3, r2]
 	movs	r2, r4
 	asrs	r3, r3, #1
+	ldr	r1, [sp, #16]
+	lsls	r3, r3, #16
 	adds	r2, r2, #76
 	ldrh	r2, [r2]
-	lsls	r3, r3, #16
-	ldr	r1, [sp, #12]
 	lsrs	r3, r3, #16
-	subs	r2, r2, r3
+	adds	r1, r1, r3
+	subs	r2, r2, r1
+	ldr	r1, [sp, #12]
 	strh	r2, [r1, #2]
-	ldr	r2, .L158+64
+	ldr	r2, .L162+68
 	movs	r1, #0
 	ldrsh	r2, [r2, r1]
 	movs	r1, r4
@@ -1574,12 +1615,16 @@ PAU_swapBAnimLocs:
 	adds	r1, r1, #78
 	ldrh	r1, [r1]
 	lsls	r2, r2, #16
+	ldr	r0, [sp, #12]
 	lsrs	r2, r2, #16
-	ldr	r6, [sp, #12]
 	adds	r1, r2, r1
-	strh	r1, [r6, #4]
-	ldrh	r1, [r0]
-	adds	r3, r3, r1
+	strh	r1, [r0, #4]
+	movs	r1, r4
+	ldr	r0, [sp, #16]
+	adds	r1, r1, #80
+	ldrh	r1, [r1]
+	subs	r3, r3, r0
+	adds	r3, r1, r3
 	strh	r3, [r7, #2]
 	movs	r3, r4
 	adds	r3, r3, #82
@@ -1593,11 +1638,11 @@ PAU_swapBAnimLocs:
 	movs	r2, r3
 	movs	r3, #2
 	eors	r3, r2
-	strb	r3, [r4]
-	b	.L155
-.L159:
+	b	.L160
+.L163:
 	.align	2
-.L158:
+.L162:
+	.word	bAnimCameraOffs
 	.word	gpUnitLeft_BattleStruct
 	.word	GetUnit
 	.word	gpUnitRight_BattleStruct
@@ -1631,81 +1676,81 @@ PAU_adjustBAnimLocs:
 	push	{r4, r5, r6, lr}
 	movs	r4, r0
 	cmp	r3, #0
-	beq	.L161
+	beq	.L165
 	movs	r2, r0
 	adds	r2, r2, #43
 	ldrb	r0, [r2]
 	lsls	r2, r0, #31
-	bpl	.L162
+	bpl	.L166
 	movs	r1, #0
 	movs	r0, r4
 	bl	PAU_swapBAnimLocs
-.L161:
+.L165:
 	ldr	r2, [r4, #68]
 	cmp	r2, #0
-	beq	.L160
+	beq	.L164
 	movs	r3, r4
 	adds	r3, r3, #43
 	ldrb	r5, [r3]
 	lsls	r3, r5, #29
-	bpl	.L165
+	bpl	.L169
 	movs	r1, #1
 	movs	r0, r4
 	bl	PAU_swapBAnimLocs
-.L160:
+.L164:
 	@ sp needed
 	pop	{r4, r5, r6}
 	pop	{r0}
 	bx	r0
-.L162:
-	ldr	r2, .L173
+.L166:
+	ldr	r2, .L177
 	ldrh	r5, [r2]
-	ldr	r2, .L173+4
+	ldr	r2, .L177+4
 	ldr	r1, [r4, #44]
 	ldrh	r2, [r2]
 	lsls	r0, r0, #30
-	bpl	.L163
+	bpl	.L167
 	ldrh	r0, [r3, #2]
 	subs	r0, r0, r5
 	strh	r0, [r1, #2]
 	ldrh	r3, [r3, #4]
 	adds	r2, r2, r3
 	strh	r2, [r1, #4]
-	b	.L161
-.L163:
+	b	.L165
+.L167:
 	ldrh	r0, [r1, #2]
 	subs	r0, r0, r5
 	strh	r0, [r3, #2]
 	ldrh	r1, [r1, #4]
 	adds	r2, r2, r1
 	strh	r2, [r3, #4]
-	b	.L161
-.L165:
-	ldr	r3, .L173
-	ldr	r1, .L173+4
+	b	.L165
+.L169:
+	ldr	r3, .L177
+	ldr	r1, .L177+4
 	ldr	r0, [r4, #52]
 	ldrh	r3, [r3]
 	ldrh	r1, [r1]
 	lsls	r4, r5, #28
-	bpl	.L166
+	bpl	.L170
 	ldrh	r4, [r2, #2]
 	adds	r3, r3, r4
 	strh	r3, [r0, #2]
 	ldrh	r3, [r2, #4]
 	adds	r1, r1, r3
 	strh	r1, [r0, #4]
-	b	.L160
-.L166:
+	b	.L164
+.L170:
 	ldrh	r4, [r0, #2]
 	adds	r3, r3, r4
 	strh	r3, [r2, #2]
 	ldrh	r3, [r0, #4]
 	adds	r1, r1, r3
 	strh	r1, [r2, #4]
-	b	.L160
-.L174:
+	b	.L164
+.L178:
 	.align	2
-.L173:
+.L177:
 	.word	PAU_bAnimDistX
 	.word	PAU_bAnimDistY
 	.size	PAU_adjustBAnimLocs, .-PAU_adjustBAnimLocs
@@ -1724,26 +1769,26 @@ PAU_makePairUpTargetList:
 	movs	r4, #16
 	@ sp needed
 	movs	r5, #17
-	ldr	r3, .L176
+	ldr	r3, .L180
 	ldrsb	r5, [r0, r5]
 	ldrsb	r4, [r0, r4]
 	str	r0, [r3]
-	ldr	r3, .L176+4
+	ldr	r3, .L180+4
 	movs	r1, #0
 	ldr	r0, [r3]
-	ldr	r3, .L176+8
+	ldr	r3, .L180+8
 	bl	.L27
 	movs	r1, r5
 	movs	r0, r4
-	ldr	r2, .L176+12
-	ldr	r3, .L176+16
+	ldr	r2, .L180+12
+	ldr	r3, .L180+16
 	bl	.L27
 	pop	{r4, r5, r6}
 	pop	{r0}
 	bx	r0
-.L177:
+.L181:
 	.align	2
-.L176:
+.L180:
 	.word	gUnitSubject
 	.word	gMapRange
 	.word	BmMapFill
@@ -1765,15 +1810,15 @@ PAU_infoWindowPositionUnit:
 	push	{r4, r5, r6, lr}
 	movs	r4, r0
 	ldrh	r0, [r3]
-	ldr	r3, .L182
+	ldr	r3, .L186
 	movs	r5, r1
 	bl	.L27
-	ldr	r3, .L182+4
+	ldr	r3, .L186+4
 	bl	.L27
 	cmp	r0, #39
-	bhi	.L179
-	ldr	r3, .L182+8
-.L181:
+	bhi	.L183
+	ldr	r3, .L186+8
+.L185:
 	@ sp needed
 	strh	r3, [r4, #42]
 	movs	r3, r4
@@ -1790,13 +1835,13 @@ PAU_infoWindowPositionUnit:
 	pop	{r4, r5, r6}
 	pop	{r0}
 	bx	r0
-.L179:
+.L183:
 	movs	r3, #128
 	lsls	r3, r3, #5
-	b	.L181
-.L183:
+	b	.L185
+.L187:
 	.align	2
-.L182:
+.L186:
 	.word	GetStringFromIndex
 	.word	Text_GetStringTextWidth
 	.word	6148
@@ -1814,46 +1859,46 @@ PAU_infoWindowDrawStats:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, lr}
 	movs	r4, r1
-	ldr	r1, .L201
+	ldr	r1, .L205
 	sub	sp, sp, #36
 	str	r2, [sp, #8]
-	ldr	r3, .L201+4
+	ldr	r3, .L205+4
 	movs	r2, #14
 	adds	r1, r1, #48
 	movs	r5, r0
 	add	r0, sp, #16
 	bl	.L27
-	ldr	r1, .L201+8
-	ldr	r3, .L201+12
+	ldr	r1, .L205+8
+	ldr	r3, .L205+12
 	lsls	r1, r1, #24
 	ldr	r0, [r3]
 	lsrs	r1, r1, #24
-	ldr	r3, .L201+16
+	ldr	r3, .L205+16
 	bl	.L27
-	ldr	r3, .L201+20
+	ldr	r3, .L205+20
 	str	r3, [sp, #4]
 	cmp	r0, #0
-	bne	.L185
-	ldr	r3, .L201+24
+	bne	.L189
+	ldr	r3, .L205+24
 	str	r3, [sp, #4]
-.L185:
+.L189:
 	movs	r7, #0
-	ldr	r3, .L201+28
+	ldr	r3, .L205+28
 	adds	r4, r4, #96
 	adds	r3, r3, #2
 	str	r4, [sp]
 	str	r3, [sp, #12]
 	adds	r5, r5, #52
-.L190:
+.L194:
 	movs	r0, r5
-	ldr	r3, .L201+32
+	ldr	r3, .L205+32
 	bl	.L27
 	add	r2, sp, #16
 	lsls	r3, r7, #1
 	ldrh	r0, [r3, r2]
-	ldr	r3, .L201+36
+	ldr	r3, .L205+36
 	bl	.L27
-	ldr	r3, .L201+40
+	ldr	r3, .L205+40
 	movs	r1, r0
 	movs	r0, r5
 	bl	.L27
@@ -1862,14 +1907,14 @@ PAU_infoWindowDrawStats:
 	ldr	r3, [sp, #12]
 	movs	r0, r5
 	adds	r1, r3, r1
-	ldr	r3, .L201+44
+	ldr	r3, .L205+44
 	bl	.L27
 	cmp	r7, #6
-	bne	.L186
-	ldr	r6, .L201+48
+	bne	.L190
+	ldr	r6, .L205+48
 	ldr	r0, [sp, #8]
 	bl	.L60
-	ldr	r3, .L201+12
+	ldr	r3, .L205+12
 	movs	r4, r0
 	ldr	r0, [r3]
 	bl	.L60
@@ -1877,39 +1922,39 @@ PAU_infoWindowDrawStats:
 	lsls	r2, r4, #24
 	lsls	r1, r0, #24
 	cmp	r1, r2
-	bge	.L187
+	bge	.L191
 	adds	r3, r0, #0
-.L187:
+.L191:
 	subs	r4, r3, r4
 	lsls	r4, r4, #24
 	asrs	r4, r4, #24
-.L188:
+.L192:
 	movs	r3, r4
 	adds	r3, r3, #99
-	blt	.L192
+	blt	.L196
 	movs	r3, r4
 	adds	r3, r3, #9
-	blt	.L193
+	blt	.L197
 	cmp	r4, #0
-	blt	.L194
+	blt	.L198
 	movs	r2, #21
 	cmp	r4, #0
-	beq	.L195
+	beq	.L199
 	movs	r6, #4
 	cmp	r4, #9
-	ble	.L199
+	ble	.L203
 	cmp	r4, #99
-	ble	.L197
-.L200:
+	ble	.L201
+.L204:
 	movs	r0, #5
-.L189:
+.L193:
 	ldr	r3, [sp]
 	adds	r0, r0, r3
-	ldr	r3, .L201+28
+	ldr	r3, .L205+28
 	lsls	r0, r0, #1
 	adds	r0, r0, r3
 	movs	r1, r6
-	ldr	r3, .L201+52
+	ldr	r3, .L205+52
 	bl	.L27
 	asrs	r2, r4, #31
 	adds	r3, r4, r2
@@ -1919,7 +1964,7 @@ PAU_infoWindowDrawStats:
 	lsrs	r3, r3, #24
 	movs	r2, r6
 	movs	r1, #56
-	ldr	r4, .L201+56
+	ldr	r4, .L205+56
 	bl	.L29
 	ldr	r3, [sp]
 	adds	r7, r7, #1
@@ -1927,38 +1972,38 @@ PAU_infoWindowDrawStats:
 	str	r3, [sp]
 	adds	r5, r5, #8
 	cmp	r7, #7
-	bne	.L190
+	bne	.L194
 	add	sp, sp, #36
 	@ sp needed
 	pop	{r4, r5, r6, r7}
 	pop	{r0}
 	bx	r0
-.L186:
+.L190:
 	ldr	r3, [sp, #4]
 	ldrsb	r4, [r3, r7]
-	b	.L188
-.L192:
+	b	.L192
+.L196:
 	movs	r2, #20
 	movs	r6, #3
-	b	.L200
-.L193:
-	movs	r2, #20
-	movs	r6, #3
+	b	.L204
 .L197:
-	movs	r0, #6
-	b	.L189
-.L194:
 	movs	r2, #20
 	movs	r6, #3
-.L199:
-	movs	r0, #7
-	b	.L189
-.L195:
-	movs	r6, r4
-	b	.L199
-.L202:
-	.align	2
 .L201:
+	movs	r0, #6
+	b	.L193
+.L198:
+	movs	r2, #20
+	movs	r6, #3
+.L203:
+	movs	r0, #7
+	b	.L193
+.L199:
+	movs	r6, r4
+	b	.L203
+.L206:
+	.align	2
+.L205:
 	.word	.LANCHOR0
 	.word	memcpy
 	.word	DualStrikeID
@@ -1987,63 +2032,63 @@ PAU_selectionOnConstruction:
 	@ args = 0, pretend = 0, frame = 16
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, lr}
-	ldr	r5, .L206
+	ldr	r5, .L210
 	movs	r4, r0
 	movs	r0, r5
 	movs	r1, r4
 	sub	sp, sp, #20
-	ldr	r3, .L206+4
+	ldr	r3, .L210+4
 	adds	r0, r0, #64
 	bl	.L27
-	ldr	r3, .L206+8
+	ldr	r3, .L210+8
 	str	r0, [r4, #60]
 	bl	.L27
 	ldr	r0, [r4, #60]
 	movs	r1, #6
-	ldr	r7, .L206+12
+	ldr	r7, .L210+12
 	adds	r0, r0, #44
-	bl	.L208
+	bl	.L212
 	movs	r6, #52
-.L204:
+.L208:
 	ldr	r3, [r4, #60]
 	movs	r1, #8
 	adds	r0, r3, r6
 	adds	r6, r6, #8
-	bl	.L208
+	bl	.L212
 	cmp	r6, #108
-	bne	.L204
-	ldr	r0, .L206+16
+	bne	.L208
+	ldr	r0, .L210+16
 	lsls	r0, r0, #16
-	ldr	r3, .L206+20
+	ldr	r3, .L210+20
 	lsrs	r0, r0, #16
 	bl	.L27
-	ldr	r3, .L206+24
+	ldr	r3, .L210+24
 	movs	r1, r0
 	movs	r0, r4
 	bl	.L27
 	movs	r1, r5
-	ldr	r3, .L206+28
+	ldr	r3, .L210+28
 	movs	r2, #12
 	adds	r1, r1, #88
 	add	r0, sp, #4
 	bl	.L27
-	ldr	r4, .L206+32
+	ldr	r4, .L210+32
 	add	r0, sp, #4
 	movs	r2, #12
 	movs	r1, #20
 	bl	.L29
 	movs	r2, #32
 	movs	r1, #128
-	ldr	r0, .L206+36
+	ldr	r0, .L210+36
 	bl	.L29
 	add	sp, sp, #20
 	@ sp needed
 	pop	{r4, r5, r6, r7}
 	pop	{r0}
 	bx	r0
-.L207:
+.L211:
 	.align	2
-.L206:
+.L210:
 	.word	.LANCHOR0
 	.word	ProcStart
 	.word	Text_ResetTileAllocation
@@ -2071,33 +2116,33 @@ PAU_selectionOnChange:
 	movs	r4, r0
 	ldrb	r1, [r1, #1]
 	ldrb	r0, [r5]
-	ldr	r3, .L214
+	ldr	r3, .L218
 	bl	.L27
 	ldrb	r0, [r5, #2]
-	ldr	r3, .L214+4
+	ldr	r3, .L218+4
 	bl	.L27
 	movs	r1, #13
-	ldr	r3, .L214+8
+	ldr	r3, .L218+8
 	movs	r5, r0
 	bl	.L27
 	movs	r6, r0
-	ldr	r3, .L214+12
+	ldr	r3, .L218+12
 	bl	.L27
-	ldr	r7, .L214+16
-	ldr	r0, .L214+20
+	ldr	r7, .L218+16
+	ldr	r0, .L218+20
 	movs	r1, r7
-	ldr	r3, .L214+24
+	ldr	r3, .L218+24
 	bl	.L27
-	ldr	r0, .L214+28
+	ldr	r0, .L218+28
 	lsls	r3, r6, #1
 	movs	r1, r7
 	movs	r2, #0
 	adds	r0, r3, r0
 	str	r3, [sp, #4]
-	ldr	r3, .L214+32
+	ldr	r3, .L218+32
 	bl	.L27
 	ldr	r0, [r4, #60]
-	ldr	r3, .L214+36
+	ldr	r3, .L218+36
 	adds	r0, r0, #44
 	bl	.L27
 	movs	r2, r5
@@ -2109,70 +2154,70 @@ PAU_selectionOnChange:
 	adds	r3, r3, #43
 	ldrb	r1, [r3]
 	adds	r0, r0, #44
-	ldr	r3, .L214+40
+	ldr	r3, .L218+40
 	bl	.L27
 	ldr	r3, [r5]
 	ldrh	r0, [r3]
-	ldr	r3, .L214+44
+	ldr	r3, .L218+44
 	ldr	r7, [r4, #60]
 	bl	.L27
 	adds	r7, r7, #44
 	movs	r1, r0
-	ldr	r3, .L214+48
+	ldr	r3, .L218+48
 	movs	r0, r7
 	bl	.L27
-	ldr	r3, .L214+52
+	ldr	r3, .L218+52
 	ldr	r0, [r4, #60]
 	lsls	r1, r6, #1
 	adds	r1, r1, #70
 	adds	r1, r1, r3
 	adds	r0, r0, #44
-	ldr	r3, .L214+56
+	ldr	r3, .L218+56
 	bl	.L27
 	ldr	r0, [r4, #60]
 	movs	r2, r5
 	movs	r1, r6
 	bl	PAU_infoWindowDrawStats
-	ldr	r4, .L214+60
-	ldr	r3, .L214+64
+	ldr	r4, .L218+60
+	ldr	r3, .L218+64
 	lsls	r1, r4, #24
 	ldr	r0, [r3]
 	lsrs	r1, r1, #24
-	ldr	r3, .L214+68
+	ldr	r3, .L218+68
 	bl	.L27
 	movs	r3, #128
 	lsls	r3, r3, #1
 	cmp	r0, #0
-	beq	.L210
+	beq	.L214
 	movs	r6, #192
 	orrs	r4, r3
 	lsls	r4, r4, #16
 	lsrs	r4, r4, #16
 	lsls	r6, r6, #3
-.L211:
+.L215:
 	movs	r7, #128
 	ldr	r5, [sp, #4]
-	ldr	r3, .L214+52
+	ldr	r3, .L218+52
 	adds	r5, r5, #84
 	adds	r5, r3, r5
 	lsls	r7, r7, #7
 	movs	r2, r7
 	movs	r1, r6
 	movs	r0, r5
-	ldr	r3, .L214+72
+	ldr	r3, .L218+72
 	bl	.L27
 	movs	r1, r4
 	movs	r2, r7
 	movs	r0, r5
-	ldr	r3, .L214+72
+	ldr	r3, .L218+72
 	bl	.L27
-	ldr	r3, .L214+76
+	ldr	r3, .L218+76
 	movs	r0, r6
 	bl	.L27
-	ldr	r3, .L214+80
+	ldr	r3, .L218+80
 	ldrb	r1, [r3]
 	ldr	r3, [sp, #4]
-	ldr	r2, .L214+52
+	ldr	r2, .L218+52
 	adds	r3, r3, #21
 	adds	r3, r3, #255
 	adds	r3, r2, r3
@@ -2182,32 +2227,32 @@ PAU_selectionOnChange:
 	lsrs	r0, r0, #16
 	adds	r4, r0, #2
 	adds	r0, r0, #3
-.L212:
+.L216:
 	cmp	r1, r2
-	bgt	.L213
+	bgt	.L217
 	@ sp needed
 	movs	r0, #3
-	ldr	r3, .L214+84
+	ldr	r3, .L218+84
 	bl	.L27
 	pop	{r0, r1, r2, r4, r5, r6, r7}
 	pop	{r0}
 	bx	r0
-.L210:
-	ldr	r4, .L214+88
+.L214:
+	ldr	r4, .L218+88
 	orrs	r4, r3
 	lsls	r4, r4, #16
-	ldr	r6, .L214+92
+	ldr	r6, .L218+92
 	lsrs	r4, r4, #16
-	b	.L211
-.L213:
+	b	.L215
+.L217:
 	strh	r4, [r3]
 	strh	r0, [r3, #2]
 	adds	r2, r2, #1
 	adds	r3, r3, #64
-	b	.L212
-.L215:
+	b	.L216
+.L219:
 	.align	2
-.L214:
+.L218:
 	.word	ChangeActiveUnitFacing
 	.word	GetUnit
 	.word	GetUnitInfoWindowX
@@ -2245,23 +2290,23 @@ PAU_selectionOnSelect:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	ldr	r3, .L217
+	ldr	r3, .L221
 	@ sp needed
 	ldrb	r0, [r1, #2]
 	movs	r4, r1
 	bl	.L27
-	ldr	r3, .L217+4
+	ldr	r3, .L221+4
 	ldrh	r2, [r0, #16]
 	strh	r2, [r3, #14]
 	ldrb	r2, [r4, #2]
 	strb	r2, [r3, #13]
-	ldr	r2, .L217+8
+	ldr	r2, .L221+8
 	ldr	r2, [r2]
 	ldrb	r1, [r2, #16]
 	strb	r1, [r3, #19]
 	ldrb	r2, [r2, #17]
 	strb	r2, [r3, #20]
-	ldr	r2, .L217+12
+	ldr	r2, .L221+12
 	ldrb	r2, [r2]
 	strb	r2, [r3, #17]
 	bl	PAU_setPairUpFlag
@@ -2269,16 +2314,16 @@ PAU_selectionOnSelect:
 	bl	PAU_setPairUpGauge
 	movs	r2, #32
 	movs	r1, #0
-	ldr	r0, .L217+16
-	ldr	r3, .L217+20
+	ldr	r0, .L221+16
+	ldr	r3, .L221+20
 	bl	.L27
 	movs	r0, #23
 	pop	{r4}
 	pop	{r1}
 	bx	r1
-.L218:
+.L222:
 	.align	2
-.L217:
+.L221:
 	.word	GetUnit
 	.word	gActionData
 	.word	gActiveUnit
@@ -2303,19 +2348,19 @@ PAU_selectionOnCancel:
 	movs	r4, r0
 	movs	r2, #32
 	movs	r1, #0
-	ldr	r0, .L220
-	ldr	r3, .L220+4
+	ldr	r0, .L224
+	ldr	r3, .L224+4
 	bl	.L27
 	movs	r1, r5
 	movs	r0, r4
-	ldr	r3, .L220+8
+	ldr	r3, .L224+8
 	bl	.L27
 	pop	{r4, r5, r6}
 	pop	{r1}
 	bx	r1
-.L221:
+.L225:
 	.align	2
-.L220:
+.L224:
 	.word	gPal_UIFont
 	.word	CopyToPaletteBuffer
 	.word	GenericSelection_BackToUM
@@ -2348,16 +2393,16 @@ PAU_actionPairUp:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r3, r4, r5, r6, r7, lr}
-	ldr	r6, .L224
+	ldr	r6, .L228
 	@ sp needed
 	movs	r7, r0
-	ldr	r5, .L224+4
+	ldr	r5, .L228+4
 	ldrb	r0, [r6, #12]
 	bl	.L28
 	movs	r4, r0
 	ldrb	r0, [r6, #13]
 	bl	.L28
-	ldr	r3, .L224+8
+	ldr	r3, .L228+8
 	movs	r5, r0
 	bl	.L27
 	movs	r3, #17
@@ -2368,23 +2413,23 @@ PAU_actionPairUp:
 	ldrsb	r2, [r4, r2]
 	ldrsb	r3, [r4, r3]
 	ldrsb	r0, [r5, r0]
-	ldr	r6, .L224+12
+	ldr	r6, .L228+12
 	bl	.L60
 	movs	r6, r0
-	ldr	r3, .L224+16
+	ldr	r3, .L228+16
 	bl	.L27
 	movs	r3, r7
 	movs	r2, #0
 	movs	r1, r6
 	movs	r0, r4
-	ldr	r6, .L224+20
+	ldr	r6, .L228+20
 	bl	.L60
 	movs	r0, r5
 	movs	r1, r4
-	ldr	r3, .L224+24
+	ldr	r3, .L228+24
 	bl	.L27
 	movs	r0, r4
-	ldr	r3, .L224+28
+	ldr	r3, .L228+28
 	bl	.L27
 	movs	r3, #64
 	ldr	r2, [r4, #12]
@@ -2394,9 +2439,9 @@ PAU_actionPairUp:
 	pop	{r3, r4, r5, r6, r7}
 	pop	{r1}
 	bx	r1
-.L225:
+.L229:
 	.align	2
-.L224:
+.L228:
 	.word	gActionData
 	.word	GetUnit
 	.word	TryRemoveUnitFromBallista
@@ -2418,22 +2463,22 @@ PAU_postActionPairUp:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L228
+	ldr	r3, .L232
 	ldrb	r2, [r3, #17]
-	ldr	r3, .L228+4
+	ldr	r3, .L232+4
 	ldrb	r3, [r3]
 	cmp	r2, r3
-	bne	.L226
+	bne	.L230
 	movs	r3, #35
 	ldr	r2, [r0, #12]
 	orrs	r3, r2
 	str	r3, [r0, #12]
-.L226:
+.L230:
 	@ sp needed
 	bx	lr
-.L229:
+.L233:
 	.align	2
-.L228:
+.L232:
 	.word	gActionData
 	.word	PAU_actionID
 	.size	PAU_postActionPairUp, .-PAU_postActionPairUp
@@ -2450,46 +2495,46 @@ PAU_pairUpUsability:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	movs	r3, #133
 	push	{r4, r5, r6, lr}
-	ldr	r4, .L238
+	ldr	r4, .L242
 	ldr	r0, [r4]
 	ldr	r2, [r0, #12]
 	lsls	r3, r3, #4
 	tst	r2, r3
-	bne	.L231
-	ldr	r1, .L238+4
+	bne	.L235
+	ldr	r1, .L242+4
 	lsls	r1, r1, #24
-	ldr	r5, .L238+8
+	ldr	r5, .L242+8
 	lsrs	r1, r1, #24
 	bl	.L28
 	cmp	r0, #0
-	beq	.L232
-.L234:
+	beq	.L236
+.L238:
 	ldr	r0, [r4]
 	bl	PAU_makePairUpTargetList
-	ldr	r3, .L238+12
+	ldr	r3, .L242+12
 	bl	.L27
 	cmp	r0, #0
-	beq	.L231
+	beq	.L235
 	movs	r0, #1
-.L233:
+.L237:
 	@ sp needed
 	pop	{r4, r5, r6}
 	pop	{r1}
 	bx	r1
-.L232:
-	ldr	r1, .L238+16
+.L236:
+	ldr	r1, .L242+16
 	lsls	r1, r1, #24
 	ldr	r0, [r4]
 	lsrs	r1, r1, #24
 	bl	.L28
 	cmp	r0, #0
-	bne	.L234
-.L231:
+	bne	.L238
+.L235:
 	movs	r0, #3
-	b	.L233
-.L239:
+	b	.L237
+.L243:
 	.align	2
-.L238:
+.L242:
 	.word	gActiveUnit
 	.word	DualStrikeID
 	.word	SkillTester
@@ -2508,20 +2553,20 @@ PAU_pairUpEffect:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	ldr	r3, .L241
+	ldr	r3, .L245
 	@ sp needed
 	ldr	r0, [r3]
 	bl	PAU_makePairUpTargetList
-	ldr	r0, .L241+4
-	ldr	r3, .L241+8
+	ldr	r0, .L245+4
+	ldr	r3, .L245+8
 	bl	.L27
 	movs	r0, #7
 	pop	{r4}
 	pop	{r1}
 	bx	r1
-.L242:
+.L246:
 	.align	2
-.L241:
+.L245:
 	.word	gActiveUnit
 	.word	PAU_targetSelectionDefinition
 	.word	StartTargetSelection
@@ -2546,15 +2591,15 @@ PAU_savePairUpData:
 	strh	r3, [r4]
 	bl	PAU_getPairUpFlag
 	cmp	r0, #0
-	beq	.L244
+	beq	.L248
 	movs	r3, #128
 	strh	r3, [r4]
-.L244:
+.L248:
 	@ sp needed
 	bl	PAU_getPairUpGauge
 	ldrh	r3, [r4]
 	orrs	r3, r0
-	ldr	r2, .L248
+	ldr	r2, .L252
 	lsls	r3, r3, #16
 	lsrs	r3, r3, #16
 	strh	r3, [r4]
@@ -2566,14 +2611,14 @@ PAU_savePairUpData:
 	movs	r1, r5
 	strh	r3, [r4]
 	movs	r0, r4
-	ldr	r3, .L248+4
+	ldr	r3, .L252+4
 	bl	.L27
 	pop	{r0, r1, r4, r5, r6}
 	pop	{r0}
 	bx	r0
-.L249:
+.L253:
 	.align	2
-.L248:
+.L252:
 	.word	PAU_pairUpBattleGaugeRAMAddress
 	.word	WriteAndVerifySramFast
 	.size	PAU_savePairUpData, .-PAU_savePairUpData
@@ -2590,17 +2635,17 @@ PAU_loadPairUpData:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r0, r1, r2, lr}
 	mov	r1, sp
-	ldr	r3, .L251
+	ldr	r3, .L255
 	movs	r2, #2
 	ldr	r3, [r3]
 	adds	r1, r1, #6
 	bl	.L27
 	mov	r2, sp
-	ldr	r3, .L251+4
+	ldr	r3, .L255+4
 	ldrh	r2, [r2, #6]
 	ldr	r3, [r3]
 	strb	r2, [r3]
-	ldr	r3, .L251+8
+	ldr	r3, .L255+8
 	ldr	r2, [r3]
 	mov	r3, sp
 	ldrh	r3, [r3, #6]
@@ -2610,9 +2655,9 @@ PAU_loadPairUpData:
 	@ sp needed
 	pop	{r0}
 	bx	r0
-.L252:
+.L256:
 	.align	2
-.L251:
+.L255:
 	.word	ReadSramFast
 	.word	PAU_pairUpBitsRAMAddress
 	.word	PAU_pairUpBattleGaugeRAMAddress
@@ -2629,7 +2674,7 @@ PAU_getBattleHitCount:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, lr}
-	ldr	r3, .L255
+	ldr	r3, .L259
 	movs	r6, r0
 	movs	r5, #1
 	bl	.L27
@@ -2639,31 +2684,31 @@ PAU_getBattleHitCount:
 	lsrs	r4, r4, #24
 	bl	PAU_isPairedUp
 	cmp	r0, #1
-	bne	.L254
+	bne	.L258
 	movs	r2, #255
-	ldr	r3, .L255+4
+	ldr	r3, .L259+4
 	ldr	r3, [r3]
 	lsls	r5, r5, #1
 	ldrb	r3, [r3]
 	lsls	r2, r2, #1
 	ands	r5, r2
 	adds	r5, r3, r5
-	ldr	r3, .L255+8
+	ldr	r3, .L259+8
 	ldrb	r3, [r3]
 	cmp	r5, r3
-	blt	.L254
+	blt	.L258
 	adds	r4, r4, #1
 	lsls	r4, r4, #24
 	lsrs	r4, r4, #24
-.L254:
+.L258:
 	movs	r0, r4
 	@ sp needed
 	pop	{r4, r5, r6}
 	pop	{r1}
 	bx	r1
-.L256:
+.L260:
 	.align	2
-.L255:
+.L259:
 	.word	BattleCheckBraveEffect
 	.word	PAU_pairUpBattleGaugeRAMAddress
 	.word	PAU_gaugeSize
@@ -2686,16 +2731,16 @@ PAU_battleGenerateRoundHits:
 	movs	r4, r0
 	movs	r5, r1
 	cmp	r3, #0
-	bne	.L258
-.L267:
+	bne	.L262
+.L271:
 	movs	r0, #0
-.L259:
+.L263:
 	@ sp needed
 	pop	{r1, r2, r3, r4, r5, r6, r7}
 	pop	{r1}
 	bx	r1
-.L258:
-	ldr	r7, .L283
+.L262:
+	ldr	r7, .L287
 	ldr	r3, [r7]
 	ldr	r3, [r3]
 	lsls	r3, r3, #16
@@ -2704,36 +2749,36 @@ PAU_battleGenerateRoundHits:
 	bl	PAU_getBattleHitCount
 	movs	r6, #0
 	str	r0, [sp, #4]
-.L260:
+.L264:
 	ldr	r3, [sp, #4]
 	cmp	r6, r3
-	bge	.L267
+	bge	.L271
 	cmp	r6, #0
-	beq	.L261
+	beq	.L265
 	movs	r0, r4
 	bl	PAU_isPairedUp
 	cmp	r0, #1
-	bne	.L261
-	ldr	r3, .L283+4
-	ldr	r2, .L283+8
+	bne	.L265
+	ldr	r3, .L287+4
+	ldr	r2, .L287+8
 	ldr	r3, [r3]
 	ldrb	r2, [r2]
 	ldrb	r3, [r3]
 	cmp	r2, r3
-	bhi	.L261
-	ldr	r2, .L283+12
+	bhi	.L265
+	ldr	r2, .L287+12
 	ldr	r3, [r7]
 	strb	r2, [r3, #4]
 	movs	r2, #128
 	lsls	r2, r2, #7
-.L281:
+.L285:
 	movs	r0, #0
 	ldr	r1, [r3]
 	orrs	r2, r1
 	str	r2, [r3]
-.L282:
+.L286:
 	bl	PAU_setBattleGauge
-.L262:
+.L266:
 	ldr	r2, [r7]
 	ldr	r1, [sp]
 	ldr	r3, [r2]
@@ -2746,63 +2791,63 @@ PAU_battleGenerateRoundHits:
 	str	r3, [r2]
 	movs	r1, r5
 	movs	r0, r4
-	ldr	r3, .L283+16
+	ldr	r3, .L287+16
 	bl	.L27
 	cmp	r0, #0
-	bne	.L268
+	bne	.L272
 	adds	r6, r6, #1
-	b	.L260
-.L261:
+	b	.L264
+.L265:
 	movs	r0, r5
 	bl	PAU_isPairedUp
 	cmp	r0, #2
-	bne	.L263
-	ldr	r3, .L283+4
-	ldr	r2, .L283+8
+	bne	.L267
+	ldr	r3, .L287+4
+	ldr	r2, .L287+8
 	ldr	r3, [r3]
 	ldrb	r2, [r2]
 	ldrb	r3, [r3]
 	cmp	r2, r3
-	bhi	.L263
-	ldr	r2, .L283+20
+	bhi	.L267
+	ldr	r2, .L287+20
 	ldr	r3, [r7]
 	strb	r2, [r3, #4]
 	movs	r2, #128
 	lsls	r2, r2, #8
-	b	.L281
-.L263:
+	b	.L285
+.L267:
 	movs	r0, r4
 	bl	PAU_isPairedUp
 	cmp	r0, #1
-	bne	.L264
-.L265:
-	ldr	r3, .L283+4
+	bne	.L268
+.L269:
+	ldr	r3, .L287+4
 	ldr	r3, [r3]
 	ldrb	r0, [r3]
 	adds	r0, r0, #2
 	lsls	r0, r0, #24
 	lsrs	r0, r0, #24
-	b	.L282
-.L264:
+	b	.L286
+.L268:
 	movs	r0, r5
 	bl	PAU_isPairedUp
 	cmp	r0, #1
-	beq	.L265
+	beq	.L269
 	movs	r0, r4
 	bl	PAU_isPairedUp
 	cmp	r0, #2
-	beq	.L265
+	beq	.L269
 	movs	r0, r5
 	bl	PAU_isPairedUp
 	cmp	r0, #2
-	bne	.L262
-	b	.L265
-.L268:
+	bne	.L266
+	b	.L269
+.L272:
 	movs	r0, #1
-	b	.L259
-.L284:
+	b	.L263
+.L288:
 	.align	2
-.L283:
+.L287:
 	.word	gBattleHitIterator
 	.word	PAU_pairUpBattleGaugeRAMAddress
 	.word	PAU_gaugeSize
@@ -2825,38 +2870,38 @@ PAU_clearRescueAndPairUpData:
 	bl	PAU_clearPairUpData
 	movs	r4, #1
 	movs	r5, #50
-.L287:
+.L291:
 	lsls	r0, r4, #24
-	ldr	r3, .L295
+	ldr	r3, .L299
 	lsrs	r0, r0, #24
 	bl	.L27
 	cmp	r0, #0
-	beq	.L286
+	beq	.L290
 	ldr	r3, [r0]
 	cmp	r3, #0
-	beq	.L286
+	beq	.L290
 	movs	r1, #0
 	ldr	r3, [r0, #12]
 	bics	r3, r5
 	str	r3, [r0, #12]
 	strb	r1, [r0, #27]
-	ldr	r3, .L295+4
+	ldr	r3, .L299+4
 	bl	.L27
-.L286:
+.L290:
 	adds	r4, r4, #1
 	cmp	r4, #64
-	bne	.L287
-	ldr	r3, .L295+8
+	bne	.L291
+	ldr	r3, .L299+8
 	@ sp needed
 	bl	.L27
-	ldr	r3, .L295+12
+	ldr	r3, .L299+12
 	bl	.L27
 	pop	{r4, r5, r6}
 	pop	{r0}
 	bx	r0
-.L296:
+.L300:
 	.align	2
-.L295:
+.L299:
 	.word	GetUnit
 	.word	SetUnitStatus
 	.word	RefreshEntityBmMaps
@@ -2882,39 +2927,39 @@ PAU_minMov:
 	lsls	r0, r0, #24
 	lsrs	r0, r0, #24
 	cmp	r0, #1
-	bhi	.L298
-	ldr	r3, .L300
+	bhi	.L302
+	ldr	r3, .L304
 	ldrb	r0, [r5, #27]
 	bl	.L27
-	ldr	r3, .L300+4
+	ldr	r3, .L304+4
 	bl	.L27
 	lsls	r3, r0, #24
 	adds	r2, r0, #0
 	asrs	r3, r3, #24
 	cmp	r3, r4
-	ble	.L299
+	ble	.L303
 	adds	r2, r4, #0
-.L299:
+.L303:
 	lsls	r2, r2, #24
 	asrs	r4, r2, #24
-.L298:
+.L302:
 	movs	r0, r4
 	@ sp needed
 	pop	{r4, r5, r6}
 	pop	{r1}
 	bx	r1
-.L301:
+.L305:
 	.align	2
-.L300:
+.L304:
 	.word	GetUnit
 	.word	prMovGetter
 	.size	PAU_minMov, .-PAU_minMov
 	.global	PAU_infoWindowDisplayProcInstr
 	.section	.rodata.str1.1,"aMS",%progbits,1
-.LC176:
+.LC177:
 	.ascii	"PAU_InfoWindowDisplayProc\000"
 	.global	PAU_aisProcInstr
-.LC177:
+.LC178:
 	.ascii	"PAU_AISProc\000"
 	.section	.rodata
 	.align	2
@@ -2924,7 +2969,7 @@ PAU_minMov:
 PAU_aisProcInstr:
 	.short	1
 	.short	0
-	.word	.LC177
+	.word	.LC178
 	.short	14
 	.short	1
 	.word	0
@@ -2954,7 +2999,7 @@ PAU_aisProcInstr:
 PAU_infoWindowDisplayProcInstr:
 	.short	1
 	.short	0
-	.word	.LC176
+	.word	.LC177
 	.short	3
 	.short	0
 	.word	PAU_infoWindowLoop
@@ -2980,5 +3025,5 @@ PAU_infoWindowDisplayProcInstr:
 	bx	r5
 .L60:
 	bx	r6
-.L208:
+.L212:
 	bx	r7

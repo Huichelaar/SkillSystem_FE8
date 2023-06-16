@@ -62,10 +62,11 @@ extern const void StartEfxGenericAnime(AIStruct* ais); //! FE8U = 0x806E58D
 extern const void PlaySoundAt(u16 songID, u16 unk1, s16 x, u8 unk3); //! FE8U = 0x80729A5
 extern const void SwitchAISFrameDataFromBARoundType(AIStruct* ais, u8 roundType); //! FE8U = 0x805A07D
 extern const u16 GetBattleAnimationId(Unit* unit, const void* pBattleAnimDef, u16 item, u32 *unk3); //! FE8U = 0x8058849
+extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
+extern s32 bAnimCameraOffs; //! FE8U = 0x201FB0C
 extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
 extern u16 gBattleAnimAnimationIndex[2]; //! FE8U = 0x203E182
-extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
 
 // Custom,
 extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event

@@ -296,6 +296,7 @@ void PAU_adjustBAnimLocs(struct PAU_aisProc* proc) {
 // during skill activation. Performs circular motion.
 void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
   proc->timer++;
+  s16 cameraOffs = -(s16)bAnimCameraOffs;
   
   // Find the correct AISes to swap.
   AIStruct* mainFrontAIS = 0;
@@ -355,21 +356,21 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     u8 angle = GetValueFromEasingFunction(0, 0, 0x80, proc->timer, proc->limit);
     if (right) {
       xOffs = gCosLookup[(angle + proc->rightMainAngle) & 0xFF] / proc->slope;
-      mainFrontAIS->xPosition = proc->rightOriginX + xOffs;
+      mainFrontAIS->xPosition = proc->rightOriginX + xOffs + cameraOffs;
       yOffs = -gSinLookup[(angle + proc->rightMainAngle) & 0xFF] / proc->slope;
       mainFrontAIS->yPosition = proc->rightOriginY + yOffs;
       xOffs = gCosLookup[(angle + proc->rightBackAngle) & 0xFF] / proc->slope;
-      backupFrontAIS->xPosition = proc->rightOriginX + xOffs;
+      backupFrontAIS->xPosition = proc->rightOriginX + xOffs + cameraOffs;
       yOffs = -gSinLookup[(angle + proc->rightBackAngle) & 0xFF] / proc->slope;
       backupFrontAIS->yPosition = proc->rightOriginY + yOffs;
     }
     else {
       xOffs = gCosLookup[(angle + proc->leftMainAngle) & 0xFF] / proc->slope;
-      mainFrontAIS->xPosition = proc->leftOriginX + xOffs;
+      mainFrontAIS->xPosition = proc->leftOriginX + xOffs + cameraOffs;
       yOffs = -gSinLookup[(angle + proc->leftMainAngle) & 0xFF] / proc->slope;
       mainFrontAIS->yPosition = proc->leftOriginY + yOffs;
       xOffs = gCosLookup[(angle + proc->leftBackAngle) & 0xFF] / proc->slope;
-      backupFrontAIS->xPosition = proc->leftOriginX + xOffs;
+      backupFrontAIS->xPosition = proc->leftOriginX + xOffs + cameraOffs;
       yOffs = -gSinLookup[(angle + proc->leftBackAngle) & 0xFF] / proc->slope;
       backupFrontAIS->yPosition = proc->leftOriginY + yOffs;
     }
@@ -385,6 +386,20 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     gBattleAnimAnimationIndex[right] = bAnimID;
     gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID].modes;       // SectionData.
     
+    // If +0x10 flag 0x4 isn't set, backup unit won't wait for HP to deplete after hitting enemy.
+    if (right) {
+      if (!(proc->state & SWAPPEDRIGHT)) {
+        backupFrontAIS->state3 |= (mainFrontAIS->state3 & 0x4);
+        backupBackAIS->state3 |= (mainBackAIS->state3 & 0x4);
+      }
+    }
+    else {
+      if (!(proc->state & SWAPPEDLEFT)) {
+        backupFrontAIS->state3 |= (mainFrontAIS->state3 & 0x4);
+        backupBackAIS->state3 |= (mainBackAIS->state3 & 0x4);
+      }
+    }
+    
     // state +0x8 indicates pausing AIS.
     (*(AIStruct**)0x2000000)->state &= ~8;
     (*(AIStruct**)0x2000004)->state &= ~8;
@@ -398,18 +413,18 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     
     proc->timer = 0;
     if (right) {
-      mainFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1);
+      mainFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
       mainFrontAIS->yPosition = proc->rightOriginY + (PAU_bAnimDistY>>1);
-      backupFrontAIS->xPosition = proc->rightOriginX - (PAU_bAnimDistX>>1);
+      backupFrontAIS->xPosition = proc->rightOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
       backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
       
       proc->state &= ~SWAPPINGRIGHT;
       proc->state ^= SWAPPEDRIGHT;
     }
     else {
-      mainFrontAIS->xPosition = proc->leftOriginX - (PAU_bAnimDistX>>1);
+      mainFrontAIS->xPosition = proc->leftOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
       mainFrontAIS->yPosition = proc->leftOriginY + (PAU_bAnimDistY>>1);
-      backupFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1);
+      backupFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
       backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
       
       proc->state &= ~SWAPPINGLEFT;
