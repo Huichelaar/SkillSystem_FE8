@@ -436,3 +436,23 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     backupBackAIS->yPosition = backupFrontAIS->yPosition;
   }
 };
+
+// During level up, priority of banims change to fit them behind the level-up interface.
+// Need to apply this priority change to backup banims as well.
+void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
+  priority <<= 10;
+  
+  // Vanilla behaviour.
+  AIStruct* right = *(AIStruct**)((u32)ekrLevelUpProc + 0x5C);
+  AIStruct* left = *(AIStruct**)((u32)ekrLevelUpProc + 0x60);
+  right->oam2base = (right->oam2base & 0xF3FF) | priority;
+  left->oam2base = (left->oam2base & 0xF3FF) | priority;
+  
+  struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
+  if (!proc)
+    return;
+  if (proc->puLeftFrontAIS)
+    proc->puLeftFrontAIS->oam2base = (proc->puLeftFrontAIS->oam2base & 0xF3FF) | priority;
+  if (proc->puRightFrontAIS)
+    proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
+}

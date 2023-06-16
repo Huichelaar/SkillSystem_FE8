@@ -11,7 +11,24 @@ PUSH
   
   ORG 0x56BC0
     jumpToHack_r0(PAU_bAnimLoopScaleHook)
-    
+  
+  // Adjust backup banim priority during level up.
+  ORG 0x73B6E
+    SHORT 0x4648          // mov r0, r9       @ Puts procstate pointer in r0.
+    SHORT 0x2103          // mov r1, #0x3     @ Priority is three when levelup screen is visible.
+    SHORT 0x46C0          // padding for four alignment.
+    callHack_r2(PAU_setPriorityDuringLvlUp)
+    SHORT 0x4F53          // ldr r7, #0xF3FF  @ We skip past the original instruction.
+    SHORT 0x2300 0x469A   // mov r10, #0x0    @ We skip past the original instruction.
+    SHORT 0xE00E          // branch past stuff already handled in function.
+  ORG 0x74460
+    SHORT 0x1C28          // mov r0, r5       @ Puts procstate pointer in r0.
+    SHORT 0x2102          // mov r1, #0x2     @ Priority is two when levelup screen is no longer visible.
+    callHack_r2(PAU_setPriorityDuringLvlUp)
+    SHORT 0x2400          // mov r4, #0x0     @ We skip past the original instruction.
+    SHORT 0x2680 0x0136   // mov r6, #0x800   @ We skip past the original instruction.
+    SHORT 0xE009          // branch past stuff already handled in function.
+  
   ORG 0x59DE8
     jumpToHack(PAU_bAnimInitHook)
   

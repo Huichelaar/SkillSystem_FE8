@@ -124,5 +124,6 @@ const ProcInstruction PAU_aisProcInstr[];
 void PAU_haltBAnims(struct PAU_aisProc* proc);
 void PAU_adjustBAnimLocs(struct PAU_aisProc* proc);
 void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right);
+void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority);
 
 #endif // BANIM_H

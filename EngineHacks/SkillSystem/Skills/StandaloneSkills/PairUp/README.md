@@ -3,6 +3,7 @@ TODO:
   - Expand MESSAGES to help find stuff (parameters) if anything moves at later points in ROMhack.
     - Put pair-up window TSA in messages.
     - Put statboost struct instances in messages.
+  - Test without any pair-up active.
   - Test in arena or disable arena option when paired-up?
   - Do these tests with and without BGs. 0x202bd32 unset 0x2 and 0x4 for no BGs, set both for BGS.
   - Do these tests with paired-up unit not having an equipped weapon.
