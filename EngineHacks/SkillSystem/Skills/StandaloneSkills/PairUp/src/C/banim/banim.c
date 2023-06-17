@@ -5,9 +5,11 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
   u8 item = GetUnitEquippedWeapon(unit) & 0xFF;
   u8 weaponType = GetItemType(item);
   const u16 *anim_instr = unit->pClassData->pBattleAnimDef;
-  u16 specification;
+  u16 specification, tempBAnimID = 0;
   
   for (int i = 0; ; i++) {
+    if (!anim_instr[i*2])
+      break;
     specification = anim_instr[i*2] >> 8;
     if (item) {
        if (specification == 0) {
@@ -18,12 +20,12 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
            return anim_instr[i*2 + 1]-1;
          }
        }
-       else if (specification == 1) {
+       else if (specification == 1 && !tempBAnimID) {
          if (weaponType == (anim_instr[i*2] & 0xFF)) {
            *spellAnimID = GetSpellAssocStructPtr(item)->type;
            if (*spellAnimID == -1)
              *spellAnimID = PAU_defaultMagicAnimsTable[weaponType];
-           return anim_instr[i*2 + 1]-1;
+           tempBAnimID = anim_instr[i*2 + 1];
          }
        }
     }
@@ -36,12 +38,14 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
        }
        else if (specification == 1) {
          if (!((anim_instr[i*2] & 0xFF) == 4) && !((anim_instr[i*2] & 0xFF) == 9)) {      // Ignore staff and unarmed animations.
-           *spellAnimID = PAU_defaultMagicAnimsTable[anim_instr[i*2] >> 8];
+           *spellAnimID = PAU_defaultMagicAnimsTable[anim_instr[i*2] & 0xFF];
            return anim_instr[i*2 + 1]-1;
          }
        }
     }
   }
+  
+  return tempBAnimID-1;
 }
 
 // Scales another AIS during Kakudai proc.
