@@ -62,7 +62,15 @@ extern const void StartEfxGenericAnime(AIStruct* ais); //! FE8U = 0x806E58D
 extern const void PlaySoundAt(u16 songID, u16 unk1, s16 x, u8 unk3); //! FE8U = 0x80729A5
 extern const void SwitchAISFrameDataFromBARoundType(AIStruct* ais, u8 roundType); //! FE8U = 0x805A07D
 extern const u16 GetBattleAnimationId(Unit* unit, const void* pBattleAnimDef, u16 item, u32 *unk3); //! FE8U = 0x8058849
+extern AIStruct* GetOpponentFrontAIS(AIStruct* ais); //! FE8U = 0x805A2B5
+extern const s16 GetAISNextBattleAnimRoundType(AIStruct* ais); //! FE8U = 0x805A2F1
+extern const s16 GetAISCurrentRoundType(AIStruct* ais); //! FE8U = 0x805A311
+extern const u8 IsRoundTypeOffensive (s16 roundType); //! FE8U = 0x805A21D
+extern const void MoveBattleCameraOnto(AIStruct* ais, s16 speed); //! FE8U = 0x80533D1
+extern const ProcInstruction gProc_efxFarAttack[]; //! FE8U = 0x85B97C4
 extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
+extern int bAnimCameraTarget; //!FE8U = 0x2017744
+extern int bAnimCameraMoving; //!FE8U = 0x2017748
 extern s32 bAnimCameraOffs; //! FE8U = 0x201FB0C
 extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
@@ -73,8 +81,8 @@ extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
 extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
 
 extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event.
-extern const u16 PAU_dualStrikeSkillActivationSound;                  // In PairUp.event.
-extern const u16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
+extern const s16 PAU_dualStrikeSkillActivationSound;                  // In PairUp.event.
+extern const s16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
 extern const u8 PAU_dualBAnimSwapTime;                                // In PairUp.event.
 extern const u16 PAU_defaultMagicAnimsTable[];                        // In PairUp.event.
 
@@ -82,6 +90,8 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
 void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8 aisSubjectID);
 void PAU_dualStrikeAnim(AIStruct* AIS); // called by Skill Activation things.
+void PAU_dualGuardAnim(AIStruct* AIS); // called by Skill Activation things.
+void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority);
 
 struct PAU_aisProc {
   /* 00 */ PROC_HEADER;
@@ -119,11 +129,23 @@ enum
   SWAPPEDLEFT = (1 << 1),     // Indicates left backup and main AISes have swapped.
 	SWAPPINGRIGHT = (1 << 2),
   SWAPPEDRIGHT = (1 << 3),
+  DUALGUARDACTIVE = (1 << 4)
 };
 const ProcInstruction PAU_aisProcInstr[];
 void PAU_haltBAnims(struct PAU_aisProc* proc);
 void PAU_adjustBAnimLocs(struct PAU_aisProc* proc);
 void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right);
-void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority);
+
+struct PAU_delayAISProc {   // Delays actions until camera has stopped moving.
+  /* 00 */ PROC_HEADER;
+  
+  /* 29 */ u8 stateMask;
+  /* 2A */ u16 swapSound;
+  /* 2C */ s16 swapSoundXPos;
+};
+const ProcInstruction PAU_delayAISProcInstr[];
+void PAU_waitUntilCameraStops(struct PAU_delayAISProc* proc);
+void PAU_applyStateMask(struct PAU_delayAISProc* proc);
+void PAU_enableAISes(struct PAU_delayAISProc* proc);
 
 #endif // BANIM_H

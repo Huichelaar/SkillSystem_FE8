@@ -56,10 +56,14 @@
   BYTE 0x0B 0x27 0xFF 0x26
   
   // These sounds play when the battle anims swap
-  // when dual strike or dual guard trigger.
+  // when dual strike or dual guard trigger,
+  // or when the anims swap back after strike/guard.
+  // Set to -1 if you don't want anything to play.
   ALIGN 2; PAU_dualStrikeSkillActivationSound:
   SHORT 0xCB
   ALIGN 2; PAU_dualGuardSkillActivationSound:
+  SHORT 0xCB
+  ALIGN 2; PAU_swapBackActivationSound:
   SHORT 0xCB
   
   // Amount of frames it takes for backup and main

@@ -45,6 +45,22 @@ PUSH
     SHORT 0x46C0
     jumpToHack(PAU_bAnimCommand5Hook)
   
+  // Don't move camera if it's already on target or already moving.
+  ORG 0x5250E         // Branch
+    SHORT 0xD146      // one
+  ORG 0x52516         // instruction
+    SHORT 0xD142      // deeper
+  ORG 0x52534         // to
+    SHORT 0xD130      // reach
+  ORG 0x5253E         // scooted-over
+    SHORT 0xD82B      // code.
+  ORG 0x5257C
+    jumpToHack(PAU_bAnimRedundantCam)
+  ORG 0x52590
+    jumpToHack(PAU_bAnimRedundantCam)
+    // Scoot things over to make previous branches still work.
+    // This is possible due to one short of padding after this function.
+    SHORT 0x1C28 0xF7B0 0xFC7B 0xBC30 0xBC01 0x4700
 
 POP
 
@@ -54,3 +70,4 @@ ALIGN 4; PAU_bAnimInitHook: #include "initHook.lyn.event"
 ALIGN 4; PAU_bAnimCommand5Hook: #include "command5Hook.lyn.event"
 ALIGN 4; PAU_bAnimCommand6Hook: #include "command6Hook.lyn.event"
 ALIGN 4; PAU_bAnimCommandDHook: #include "commandDHook.lyn.event"
+ALIGN 4; PAU_bAnimRedundantCam: #include "redundantCam.lyn.event"

@@ -15,11 +15,12 @@ beq   Return
   mov   r0, r7
   ldr   r3, =GetAISSubjectId
   bl    GOTO_R3
+  mov   r4, r0
   mov   r1, #0x2B
   ldrb  r2, [r5, r1]        @ proc->state.
   mov   r3, #0x3
-  lsl   r3, r0              @ Determine if we check SWAPP**LEFT
-  lsl   r3, r0              @ or SWAPP**RIGHT.
+  lsl   r3, r4              @ Determine if we check SWAPP**LEFT
+  lsl   r3, r4              @ or SWAPP**RIGHT.
   tst   r3, r2
   beq   Return              @ If either proc->state SWAPP**LEFT or SWAPP**RIGHT bits set, halt and finish.
     ldrh  r0, [r7]
@@ -33,7 +34,20 @@ beq   Return
     sub   r1, #0x1
     cmp   r0, r1
     beq   dontIncrRound
+      ldrh  r1, [r7, #0x12] @ PreviousRoundType.
       strh  r0, [r7, #0x12] @ CurrentRoundType.
+      cmp   r1, #0x0
+      blt   L1
+      cmp   r1, #0x3
+      ble   L2
+      cmp   r1, #0x9
+      bne   L1
+        L2:
+        mov   r1, #0x4      @ Set +0x10 bit 4 if bAnim attacked this round.
+        ldrh  r2, [r7, #0x10]
+        orr   r2, r1
+        strh  r2, [r7, #0x10]
+      L1:
       ldrh  r0, [r7, #0xE]
       add   r0, #0x1
       strh  r0, [r7, #0xE]  @ Increment round if next round exists.

@@ -220,30 +220,87 @@ void PAU_dualStrikeAnim(AIStruct* ais) {
   if (!proc) {    // This proc should exist when we reach this.
     StartEfxSureShotAnime(ais);
     return;
-  }  
+  }
+  ais->state3 &= ~0x20;   // General pain in the behind, this bit.
   int aisSubjectID = GetAISSubjectId(ais);
   
-  proc->state |= (1 << (aisSubjectID << 1));  // Set SWAPPING bit.
+  // Move camera if applicable.
+  if (gSomethingRelatedToAnimAndDistance && bAnimCameraTarget != aisSubjectID) {
+    MoveBattleCameraOnto(GetOpponentFrontAIS(ais), -1);
+    struct PAU_delayAISProc* proc2 = (struct PAU_delayAISProc*)ProcStart(PAU_delayAISProcInstr, (Proc*)proc);
+    proc2->stateMask = (1 << (aisSubjectID << 1));  // Set SWAPPING bit.
+    proc2->swapSound = PAU_dualStrikeSkillActivationSound;
+    proc2->swapSoundXPos = ais->xPosition;
+  }
+  else {
+    proc->state |= (1 << (aisSubjectID << 1));      // Set SWAPPING bit.
+    if (PAU_dualStrikeSkillActivationSound != -1)
+      PlaySoundAt(PAU_dualStrikeSkillActivationSound, 0x100, ais->xPosition, 1);
+  }
+  
   proc->timer = 0;
   proc->limit = PAU_dualBAnimSwapTime;
-  
-  // Camera, or just BG1 position.
-  if (gSomethingRelatedToAnimAndDistance) {
-    if (!aisSubjectID)
-      SetBgPosition(1, 24, 0);
-    else
-      SetBgPosition(1, 232, 0);
-  }
-  // TODO movebattlecameraonto
   
   // Halt all AISes.
   proc->leftFrontAIS->state |= 0x8;
   proc->leftBackAIS->state |= 0x8;
   proc->rightFrontAIS->state |= 0x8;
   proc->rightBackAIS->state |= 0x8;
-  
-  PlaySoundAt(PAU_dualStrikeSkillActivationSound, 0x100, ais->xPosition, 1);
 };
+
+void PAU_dualGuardAnim(AIStruct* ais) {
+  struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
+  if (!proc) {    // This proc should exist when we reach this.
+    StartEfxGenericAnime(ais);
+    return;
+  }
+  ais->state3 &= ~0x20;   // General pain in the behind, this bit.
+  int aisSubjectID = GetAISSubjectId(ais);
+  
+  // Move camera if applicable.
+  if (gSomethingRelatedToAnimAndDistance && bAnimCameraTarget == aisSubjectID) {
+    MoveBattleCameraOnto(ais, -1);
+    struct PAU_delayAISProc* proc2 = (struct PAU_delayAISProc*)ProcStart(PAU_delayAISProcInstr, (Proc*)proc);
+    proc2->stateMask = (1 << ((aisSubjectID ^ 1) << 1));  // Set SWAPPING bit.
+    proc2->swapSound = PAU_dualGuardSkillActivationSound;
+    proc2->swapSoundXPos = GetOpponentFrontAIS(ais)->xPosition;
+  }
+  else {
+    proc->state |= (1 << ((aisSubjectID ^ 1) << 1));      // Set SWAPPING bit.
+    if (PAU_dualGuardSkillActivationSound != -1)
+      PlaySoundAt(PAU_dualGuardSkillActivationSound, 0x100, GetOpponentFrontAIS(ais)->xPosition, 1);
+  }
+
+  proc->state |= DUALGUARDACTIVE;
+  proc->timer = 0;
+  proc->limit = PAU_dualBAnimSwapTime;
+  
+  // Halt all AISes.
+  proc->leftFrontAIS->state |= 0x8;
+  proc->leftBackAIS->state |= 0x8;
+  proc->rightFrontAIS->state |= 0x8;
+  proc->rightBackAIS->state |= 0x8;
+};
+
+// During level up, priority of banims change to fit them behind the level-up interface.
+// Need to apply this priority change to backup banims as well.
+void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
+  priority <<= 10;
+  
+  // Vanilla behaviour.
+  AIStruct* right = *(AIStruct**)((u32)ekrLevelUpProc + 0x5C);
+  AIStruct* left = *(AIStruct**)((u32)ekrLevelUpProc + 0x60);
+  right->oam2base = (right->oam2base & 0xF3FF) | priority;
+  left->oam2base = (left->oam2base & 0xF3FF) | priority;
+  
+  struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
+  if (!proc)
+    return;
+  if (proc->puLeftFrontAIS)
+    proc->puLeftFrontAIS->oam2base = (proc->puLeftFrontAIS->oam2base & 0xF3FF) | priority;
+  if (proc->puRightFrontAIS)
+    proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
+}
 
 const ProcInstruction PAU_aisProcInstr[] = {
   PROC_SET_NAME("PAU_AISProc"),
@@ -268,7 +325,6 @@ void PAU_haltBAnims(struct PAU_aisProc* proc) {
 
 // Adjusts x and y of backup bAnim.
 void PAU_adjustBAnimLocs(struct PAU_aisProc* proc) {
-  
   if (proc->puLeftFrontAIS) {
     if (proc->state & SWAPPINGLEFT)
       PAU_swapBAnimLocs(proc, 0);
@@ -389,31 +445,40 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     u16 bAnimID = PAU_findPairUpBAnim(unit, &temp);
     gBattleAnimAnimationIndex[right] = bAnimID;
     gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID].modes;       // SectionData.
-    
+
     // If +0x10 flag 0x4 isn't set, backup unit won't wait for HP to deplete after hitting enemy.
     if (right) {
-      if (!(proc->state & SWAPPEDRIGHT)) {
-        backupFrontAIS->state3 |= (mainFrontAIS->state3 & 0x4);
-        backupBackAIS->state3 |= (mainBackAIS->state3 & 0x4);
-      }
+      backupFrontAIS->state3 = mainFrontAIS->state3;
+      backupBackAIS->state3 = mainBackAIS->state3;
+      mainFrontAIS->state |= 8;     // Pause the to be backup bAnim again. C0D won't, as standing motions don't have C0D.
+      if (proc->state & SWAPPEDRIGHT)
+        proc->state &= ~DUALGUARDACTIVE;
     }
     else {
-      if (!(proc->state & SWAPPEDLEFT)) {
-        backupFrontAIS->state3 |= (mainFrontAIS->state3 & 0x4);
-        backupBackAIS->state3 |= (mainBackAIS->state3 & 0x4);
-      }
+      backupFrontAIS->state3 = mainFrontAIS->state3;
+      backupBackAIS->state3 = mainBackAIS->state3;
+      mainFrontAIS->state |= 8;     // Pause the to be backup bAnim again. C0D won't, as standing motions don't have C0D.
+      if (proc->state & SWAPPEDLEFT)
+        proc->state &= ~DUALGUARDACTIVE;
     }
-    
-    // state +0x8 indicates pausing AIS.
-    (*(AIStruct**)0x2000000)->state &= ~8;
-    (*(AIStruct**)0x2000004)->state &= ~8;
-    (*(AIStruct**)0x2000008)->state &= ~8;
-    (*(AIStruct**)0x200000C)->state &= ~8;
     
     SwitchAISFrameDataFromBARoundType(backupFrontAIS, mainFrontAIS->currentRoundType);
     SwitchAISFrameDataFromBARoundType(backupBackAIS, mainBackAIS->currentRoundType);
     backupFrontAIS->nextRoundId = mainFrontAIS->nextRoundId;
     backupBackAIS->nextRoundId = mainBackAIS->nextRoundId;
+    
+    if (gSomethingRelatedToAnimAndDistance && 
+        IsRoundTypeOffensive(GetAISCurrentRoundType(backupFrontAIS))) {
+      MoveBattleCameraOnto(backupFrontAIS, -1);
+      ProcGoto(ProcStart(PAU_delayAISProcInstr, (Proc*)proc), 1);
+    }
+    else {                                // Immediately re-enable AISes.
+      // state +0x8 indicates pausing AIS.
+      (*(AIStruct**)0x2000000)->state &= ~8;
+      (*(AIStruct**)0x2000004)->state &= ~8;
+      (*(AIStruct**)0x2000008)->state &= ~8;
+      (*(AIStruct**)0x200000C)->state &= ~8;
+    }
     
     proc->timer = 0;
     if (right) {
@@ -441,22 +506,46 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
   }
 };
 
-// During level up, priority of banims change to fit them behind the level-up interface.
-// Need to apply this priority change to backup banims as well.
-void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
-  priority <<= 10;
+// Delays actions until camera has stopped moving.
+// Delays a little more after that.
+const ProcInstruction PAU_delayAISProcInstr[] = {
+  PROC_SET_NAME("PAU_DelayAISProc"),
+  PROC_YIELD,
   
-  // Vanilla behaviour.
-  AIStruct* right = *(AIStruct**)((u32)ekrLevelUpProc + 0x5C);
-  AIStruct* left = *(AIStruct**)((u32)ekrLevelUpProc + 0x60);
-  right->oam2base = (right->oam2base & 0xF3FF) | priority;
-  left->oam2base = (left->oam2base & 0xF3FF) | priority;
+  PROC_LABEL(0),
+  PROC_LOOP_ROUTINE(PAU_waitUntilCameraStops),
+  PROC_SLEEP(10),     // Camera finished moving, rest a bit before executing action.
+  PROC_CALL_ROUTINE(PAU_applyStateMask),
+  PROC_GOTO(2),
   
-  struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
-  if (!proc)
-    return;
-  if (proc->puLeftFrontAIS)
-    proc->puLeftFrontAIS->oam2base = (proc->puLeftFrontAIS->oam2base & 0xF3FF) | priority;
-  if (proc->puRightFrontAIS)
-    proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
+  PROC_LABEL(1),
+  PROC_LOOP_ROUTINE(PAU_waitUntilCameraStops),
+  PROC_SLEEP(10),     // Camera finished moving, rest a bit before executing action.
+  PROC_CALL_ROUTINE(PAU_enableAISes),
+  
+  PROC_LABEL(2),
+  PROC_END
+};
+
+// Wait for battle camera to stop moving.
+void PAU_waitUntilCameraStops(struct PAU_delayAISProc* proc) {
+  if (!bAnimCameraMoving)
+    BreakProcLoop((Proc*)proc);
+}
+
+// Apply state mask to parent, instance of PAU_aisProc, state.
+void PAU_applyStateMask(struct PAU_delayAISProc* proc) {
+  ((struct PAU_aisProc*)proc->parent)->state ^= proc->stateMask;
+  
+  if (proc->swapSound != -1)
+    PlaySoundAt(proc->swapSound, 0x100, proc->swapSoundXPos, 1);
+}
+
+// Enable AISes.
+void PAU_enableAISes(struct PAU_delayAISProc* proc) {
+    // state +0x8 set indicates AIS is paused.
+    (*(AIStruct**)0x2000000)->state &= ~8;
+    (*(AIStruct**)0x2000004)->state &= ~8;
+    (*(AIStruct**)0x2000008)->state &= ~8;
+    (*(AIStruct**)0x200000C)->state &= ~8;
 }

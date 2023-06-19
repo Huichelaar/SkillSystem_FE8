@@ -41,5 +41,6 @@ SkillAnimation(GlaciesID,IgnisAnim)
 SkillAnimation(GreatShieldID,PaviseAnim)
 SkillAnimation(VengeanceID,ImpaleAnim)
 SkillAnimation(DualStrikeID,PAU_dualStrikeAnim & (-2))
+SkillAnimation(DualGuardID,PAU_dualGuardAnim & (-2))
 
 ORG SkillAnimationTable+1024
