@@ -22,7 +22,7 @@ beq   Return
   lsl   r3, r4              @ Determine if we check SWAPP**LEFT
   lsl   r3, r4              @ or SWAPP**RIGHT.
   tst   r3, r2
-  beq   Return              @ If either proc->state SWAPP**LEFT or SWAPP**RIGHT bits set, halt and finish.
+  beq   Return              @ If proc->state SWAPP**LEFT / SWAPP**RIGHT bits set, halt and finish.
     ldrh  r0, [r7]
     mov   r1, #0x8
     orr   r0, r1
@@ -33,25 +33,32 @@ beq   Return
     mov   r1, #0x0
     sub   r1, #0x1
     cmp   r0, r1
-    beq   dontIncrRound
-      ldrh  r1, [r7, #0x12] @ PreviousRoundType.
-      strh  r0, [r7, #0x12] @ CurrentRoundType.
-      cmp   r1, #0x0
-      blt   L1
-      cmp   r1, #0x3
-      ble   L2
-      cmp   r1, #0x9
-      bne   L1
-        L2:
-        mov   r1, #0x4      @ Set +0x10 bit 4 if bAnim attacked this round.
-        ldrh  r2, [r7, #0x10]
-        orr   r2, r1
-        strh  r2, [r7, #0x10]
-      L1:
-      ldrh  r0, [r7, #0xE]
-      add   r0, #0x1
-      strh  r0, [r7, #0xE]  @ Increment round if next round exists.
-    dontIncrRound:
+    bne   incrRound
+      mov   r0, #0x2B
+      ldrb  r1, [r5, r0]    @ proc->state.
+      mov   r2, #0x20
+      orr   r1, r2
+      strb  r1, [r5, r0]    @ Set LASTROUND.
+      b     end
+    incrRound:
+    ldrh  r1, [r7, #0x12]   @ PreviousRoundType.
+    strh  r0, [r7, #0x12]   @ CurrentRoundType.
+    cmp   r1, #0x0
+    blt   L1
+    cmp   r1, #0x3
+    ble   L2
+    cmp   r1, #0x9
+    bne   L1
+      L2:
+      mov   r1, #0x4        @ Set +0x10 bit 4 if bAnim attacked this round.
+      ldrh  r2, [r7, #0x10]
+      orr   r2, r1
+      strh  r2, [r7, #0x10]
+    L1:
+    ldrh  r0, [r7, #0xE]
+    add   r0, #0x1
+    strh  r0, [r7, #0xE]    @ Increment round if next round exists.
+    end:
     pop   {r4-r5}
     ldr   r0, =0x80596D7    @ Skip the other stuff, including other queued commands, as well.
     bx    r0

@@ -15,6 +15,8 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
        if (specification == 0) {
          if (item == (anim_instr[i*2] & 0xFF)) {
            *spellAnimID = GetSpellAssocStructPtr(item)->type;
+           if (*spellAnimID == NOSFERATUSPELL)
+             *spellAnimID = PAU_nosferatuReplacementSpellID;
            if (*spellAnimID == -1)
              *spellAnimID = PAU_defaultMagicAnimsTable[weaponType];
            return anim_instr[i*2 + 1]-1;
@@ -23,6 +25,8 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
        else if (specification == 1 && !tempBAnimID) {
          if (weaponType == (anim_instr[i*2] & 0xFF)) {
            *spellAnimID = GetSpellAssocStructPtr(item)->type;
+           if (*spellAnimID == NOSFERATUSPELL)
+             *spellAnimID = PAU_nosferatuReplacementSpellID;
            if (*spellAnimID == -1)
              *spellAnimID = PAU_defaultMagicAnimsTable[weaponType];
            tempBAnimID = anim_instr[i*2 + 1];
@@ -32,6 +36,8 @@ u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID) {
     else {
        if (specification == 0) {
          *spellAnimID = GetSpellAssocStructPtr(anim_instr[i*2] & 0xFF)->type;
+         if (*spellAnimID == NOSFERATUSPELL)
+           *spellAnimID = PAU_nosferatuReplacementSpellID;
          if (*spellAnimID == -1)
            *spellAnimID = PAU_defaultMagicAnimsTable[GetItemType((u8)anim_instr[i*2] & 0xFF)];
          return anim_instr[i*2 + 1]-1;
@@ -186,7 +192,7 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     proc->puRightFrontAIS = newFrontAIS;
     proc->puRightBackAIS = newBackAIS;
     
-    proc->rightOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1);
+    proc->rightOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1) + bAnimCameraOffs;
     proc->rightOriginY = newFrontAIS->yPosition + ((frontAIS->yPosition - newFrontAIS->yPosition)>>1);
     
     a = frontAIS->xPosition - newFrontAIS->xPosition;
@@ -200,7 +206,7 @@ void PAU_initPairUpPartner(AIStruct* frontAIS, AIStruct* backAIS, Unit* unit, u8
     proc->puLeftFrontAIS = newFrontAIS;
     proc->puLeftBackAIS = newBackAIS;
     
-    proc->leftOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1);
+    proc->leftOriginX = newFrontAIS->xPosition + ((frontAIS->xPosition - newFrontAIS->xPosition)>>1) + bAnimCameraOffs;
     proc->leftOriginY = newFrontAIS->yPosition + ((frontAIS->yPosition - newFrontAIS->yPosition)>>1);
     
     a = frontAIS->xPosition - newFrontAIS->xPosition;
@@ -275,11 +281,9 @@ void PAU_dualGuardAnim(AIStruct* ais) {
   proc->timer = 0;
   proc->limit = PAU_dualBAnimSwapTime;
   
-  // Halt all AISes.
-  proc->leftFrontAIS->state |= 0x8;
-  proc->leftBackAIS->state |= 0x8;
-  proc->rightFrontAIS->state |= 0x8;
-  proc->rightBackAIS->state |= 0x8;
+  // Halt our AISes.
+  ais->state |= 0x8;
+  (*(AIStruct**)(0x2000004 + (aisSubjectID<<3)))->state |= 0x8;     // Back layer AIS.
 };
 
 // During level up, priority of banims change to fit them behind the level-up interface.
@@ -310,7 +314,7 @@ const ProcInstruction PAU_aisProcInstr[] = {
   PROC_LABEL(0),
   PROC_LOOP_ROUTINE(PAU_adjustBAnimLocs),
   
-  PROC_END    // TODO, delete proc when anim ends.
+  PROC_END    // Proc is ended externally, when battle ends.
 };
 
 // Pauses paired-up units' bAnims.
@@ -445,39 +449,48 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     u16 bAnimID = PAU_findPairUpBAnim(unit, &temp);
     gBattleAnimAnimationIndex[right] = bAnimID;
     gpBattleAnimFrameStartLookup[right] = battleAnims[bAnimID].modes;       // SectionData.
-
+    
     // If +0x10 flag 0x4 isn't set, backup unit won't wait for HP to deplete after hitting enemy.
-    if (right) {
-      backupFrontAIS->state3 = mainFrontAIS->state3;
-      backupBackAIS->state3 = mainBackAIS->state3;
-      mainFrontAIS->state |= 8;     // Pause the to be backup bAnim again. C0D won't, as standing motions don't have C0D.
-      if (proc->state & SWAPPEDRIGHT)
-        proc->state &= ~DUALGUARDACTIVE;
-    }
-    else {
-      backupFrontAIS->state3 = mainFrontAIS->state3;
-      backupBackAIS->state3 = mainBackAIS->state3;
-      mainFrontAIS->state |= 8;     // Pause the to be backup bAnim again. C0D won't, as standing motions don't have C0D.
-      if (proc->state & SWAPPEDLEFT)
-        proc->state &= ~DUALGUARDACTIVE;
-    }
+    backupFrontAIS->state3 = mainFrontAIS->state3;
+    backupBackAIS->state3 = mainBackAIS->state3;
+    mainFrontAIS->state |= 8;     // Pause the to be backup bAnim again.
+    mainBackAIS->state |= 8;      // Can't rely on C0D, as standing motions don't have C0D.
+    if (right && (proc->state & SWAPPEDRIGHT))
+      proc->state &= ~DUALGUARDACTIVE;
+    else if (!right && (proc->state & SWAPPEDLEFT))
+      proc->state &= ~DUALGUARDACTIVE;
     
-    SwitchAISFrameDataFromBARoundType(backupFrontAIS, mainFrontAIS->currentRoundType);
-    SwitchAISFrameDataFromBARoundType(backupBackAIS, mainBackAIS->currentRoundType);
-    backupFrontAIS->nextRoundId = mainFrontAIS->nextRoundId;
-    backupBackAIS->nextRoundId = mainBackAIS->nextRoundId;
-    
-    if (gSomethingRelatedToAnimAndDistance && 
-        IsRoundTypeOffensive(GetAISCurrentRoundType(backupFrontAIS))) {
-      MoveBattleCameraOnto(backupFrontAIS, -1);
-      ProcGoto(ProcStart(PAU_delayAISProcInstr, (Proc*)proc), 1);
-    }
-    else {                                // Immediately re-enable AISes.
-      // state +0x8 indicates pausing AIS.
-      (*(AIStruct**)0x2000000)->state &= ~8;
-      (*(AIStruct**)0x2000004)->state &= ~8;
-      (*(AIStruct**)0x2000008)->state &= ~8;
-      (*(AIStruct**)0x200000C)->state &= ~8;
+    if (!(proc->state & LASTROUND)) {
+      
+      // Force melee animations for paired-up unit at melee range.
+      u8 frontRoundType = mainFrontAIS->currentRoundType;
+      u8 backRoundType = mainBackAIS->currentRoundType;
+      if (!(gSomethingRelatedToAnimAndDistance) &&
+         ((right && (!(proc->state & SWAPPEDRIGHT))) ||
+         (!(right) && (!(proc->state & SWAPPEDLEFT))))) {
+        if (frontRoundType == 2 || frontRoundType == 3)
+          frontRoundType -= 2;
+        if (backRoundType == 2 || backRoundType == 3)
+          backRoundType -= 2;
+      }
+      
+      SwitchAISFrameDataFromBARoundType(backupFrontAIS, frontRoundType);
+      SwitchAISFrameDataFromBARoundType(backupBackAIS, backRoundType);
+      backupFrontAIS->nextRoundId = mainFrontAIS->nextRoundId;
+      backupBackAIS->nextRoundId = mainBackAIS->nextRoundId;
+      
+      if (gSomethingRelatedToAnimAndDistance && 
+          IsRoundTypeOffensive(GetAISCurrentRoundType(backupFrontAIS))) {
+        MoveBattleCameraOnto(backupFrontAIS, -1);
+        ProcGoto(ProcStart(PAU_delayAISProcInstr, (Proc*)proc), 1);
+      }
+      else {                                // Immediately re-enable AISes.
+        // state +0x8 indicates pausing AIS.
+        (*(AIStruct**)0x2000000)->state &= ~8;
+        (*(AIStruct**)0x2000004)->state &= ~8;
+        (*(AIStruct**)0x2000008)->state &= ~8;
+        (*(AIStruct**)0x200000C)->state &= ~8;
+      }
     }
     
     proc->timer = 0;

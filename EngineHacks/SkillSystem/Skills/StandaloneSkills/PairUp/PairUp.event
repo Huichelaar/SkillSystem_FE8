@@ -64,7 +64,7 @@
   ALIGN 2; PAU_dualGuardSkillActivationSound:
   SHORT 0xCB
   ALIGN 2; PAU_swapBackActivationSound:
-  SHORT 0xCB
+  SHORT (-1)
   
   // Amount of frames it takes for backup and main
   // battle sprites to swap when dual skills trigger.
@@ -91,6 +91,11 @@
   SHORT 0xE           // 12 Ring    -> 0xE  Dance/Play.
   SHORT 0 0 0 0 0 0 0 0   // Redundancy for potential future weapontypes.
   
+  // Replaces Nosferatu spell animation when cast by paired-up unit.
+  // Nosferatu breaks when it tries to recover user's HP,
+  // when user is dual striker. Also affects Runesword.
+  ALIGN 4; PAU_nosferatuReplacementSpellID:
+  SHORT 0x34          // Luna.
   
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP

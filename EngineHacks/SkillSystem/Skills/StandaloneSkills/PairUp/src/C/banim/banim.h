@@ -76,6 +76,8 @@ extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
 extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
 extern u16 gBattleAnimAnimationIndex[2]; //! FE8U = 0x203E182
 
+const s16 NOSFERATUSPELL = 0x1E;
+
 // Custom,
 extern u8 BA2_AB_UNCOMPFRAMEDATA;  // In AAA.event
 extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
@@ -85,6 +87,7 @@ extern const s16 PAU_dualStrikeSkillActivationSound;                  // In Pair
 extern const s16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
 extern const u8 PAU_dualBAnimSwapTime;                                // In PairUp.event.
 extern const u16 PAU_defaultMagicAnimsTable[];                        // In PairUp.event.
+extern const s16 PAU_nosferatuReplacementSpellID;                     // In PairUp.event.
 
 u16 PAU_findPairUpBAnim(Unit* unit, s16* spellAnimID);
 void PAU_scalePairUpPartner(void* oamDataScript, void* oamDataBuffer, AIStruct* newAIS, u16 aisSubjectID, struct KakudaiProc* proc, u16 scale);
@@ -129,7 +132,8 @@ enum
   SWAPPEDLEFT = (1 << 1),     // Indicates left backup and main AISes have swapped.
 	SWAPPINGRIGHT = (1 << 2),
   SWAPPEDRIGHT = (1 << 3),
-  DUALGUARDACTIVE = (1 << 4)
+  DUALGUARDACTIVE = (1 << 4),
+  LASTROUND = (1 << 5)        // Set by C0D.
 };
 const ProcInstruction PAU_aisProcInstr[];
 void PAU_haltBAnims(struct PAU_aisProc* proc);
