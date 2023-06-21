@@ -3138,17 +3138,13 @@ PAU_getBattleHitCount:
 	bl	PAU_isPairedUp
 	cmp	r0, #1
 	bne	.L324
-	movs	r2, #255
 	ldr	r3, .L325+4
 	ldr	r3, [r3]
-	lsls	r5, r5, #1
-	ldrb	r3, [r3]
-	lsls	r2, r2, #1
-	ands	r5, r2
-	adds	r5, r3, r5
-	ldr	r3, .L325+8
-	ldrb	r3, [r3]
-	cmp	r5, r3
+	ldrb	r2, [r3]
+	adds	r3, r2, r4
+	ldr	r2, .L325+8
+	ldrb	r2, [r2]
+	cmp	r3, r2
 	blt	.L324
 	adds	r4, r4, #1
 	lsls	r4, r4, #24

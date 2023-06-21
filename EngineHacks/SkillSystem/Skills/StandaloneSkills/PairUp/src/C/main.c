@@ -13,7 +13,7 @@ int PAU_getBattleHitCount(BattleUnit* unit) {
   // Add another round for Dual Strike.
   if (PAU_isPairedUp((Unit*)unit) == PAU_PAIRUP_OFFENSE) {
     u8 pairUpGauge = PAU_getBattleGauge();
-    if (pairUpGauge + (hitCount<<1) >= PAU_gaugeSize) {
+    if (pairUpGauge + hitCount >= PAU_gaugeSize) {
       hitCount++;
     }
   }
