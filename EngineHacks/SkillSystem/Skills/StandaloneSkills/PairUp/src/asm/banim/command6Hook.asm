@@ -101,33 +101,32 @@ bne   Return        @ Ignore if back layer.
           bl    GOTO_R12
       L3:
       
-      @ Block opponent AISes if no Dual Guard.
-      cmp   r6, #0x0
-      bne   Return
-        mov   r0, r5
-        mov   r1, #0x1
-        eor   r1, r0
-        lsl   r1, #0x3
-        ldr   r0, =0x2000000
-        add   r0, r1
-        mov   r5, r0
-        add   r5, #0x8
-        Loop:
-          ldr   r1, [r0]
-          cmp   r1, #0x0
-          beq   L2
-            @ldrh  r2, [r1, #0x10]
-            @mov   r3, #0x20
-            @orr   r2, r3
-            @strh  r2, [r1, #0x10]
-            ldrh  r2, [r1]
-            mov   r3, #0x8
-            orr   r2, r3
-            strh  r2, [r1]
-          L2:
-          add   r0, #0x4
-          cmp   r0, r5
-          blt   Loop
+      @ Block our AISes if Dual Guard, or
+      @ opponent AISes if no Dual Guard.
+      mov   r1, #0x1
+      eor   r1, r5
+      eor   r1, r6
+      lsl   r1, #0x3
+      ldr   r0, =0x2000000
+      add   r0, r1
+      mov   r5, r0
+      add   r5, #0x8
+      Loop:
+        ldr   r1, [r0]
+        cmp   r1, #0x0
+        beq   L2
+          @ldrh  r2, [r1, #0x10]
+          @mov   r3, #0x20
+          @orr   r2, r3
+          @strh  r2, [r1, #0x10]
+          ldrh  r2, [r1]
+          mov   r3, #0x8
+          orr   r2, r3
+          strh  r2, [r1]
+        L2:
+        add   r0, #0x4
+        cmp   r0, r5
+        blt   Loop
 
 @ Vanilla. Overwritten by hook.
 Return:

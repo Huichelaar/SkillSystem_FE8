@@ -20,8 +20,6 @@ TODO:
     - Test when DualGuard is triggered in the first round.
     - Test enemy proccing skill immediately after Dual Strike round.
     - Test Dual Strike round being the last round.
-  - During level-up screen, paired-up unit is in front of partner (seems to be OAM priority, not AIS depth). Paired-up unit has priority 2, partner has priority 3. Change paired-up unit's oam2base.
-  - Make user setting for time it takes to swap bAnims.
   - grepWin all TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
   
 

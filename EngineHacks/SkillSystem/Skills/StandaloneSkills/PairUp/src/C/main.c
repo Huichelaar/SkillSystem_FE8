@@ -51,7 +51,7 @@ s8 PAU_battleGenerateRoundHits(struct BattleUnit* attacker, struct BattleUnit* d
              PAU_isPairedUp((Unit*)defender) == PAU_PAIRUP_OFFENSE ||
              PAU_isPairedUp((Unit*)attacker) == PAU_PAIRUP_DEFENSE ||
              PAU_isPairedUp((Unit*)defender) == PAU_PAIRUP_DEFENSE) {
-      PAU_setBattleGauge(PAU_getBattleGauge()+2); // Increment battle pair-up gauge.
+      PAU_setBattleGauge(PAU_getBattleGauge()+1); // Increment battle pair-up gauge.
     }
       
     gBattleHitIterator->attributes |= attrs;

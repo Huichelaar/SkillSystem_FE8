@@ -3277,7 +3277,7 @@ PAU_battleGenerateRoundHits:
 	ldr	r3, .L353+4
 	ldr	r3, [r3]
 	ldrb	r0, [r3]
-	adds	r0, r0, #2
+	adds	r0, r0, #1
 	lsls	r0, r0, #24
 	lsrs	r0, r0, #24
 	b	.L352

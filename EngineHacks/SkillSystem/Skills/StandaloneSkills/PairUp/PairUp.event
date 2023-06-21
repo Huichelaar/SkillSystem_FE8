@@ -16,9 +16,9 @@
   WORD 0x3000007
   
   // Pair-up gauge size. This needs to be a value in [0, 127].
-  // Mind, pair-up gauge is incremented by two, not one!
+  // Pair-up gauge is incremented by one for each action in battle.
   PAU_gaugeSize:
-  BYTE 10
+  BYTE 5
   
   // Pair-up action index. This is used by action data and PostActionCalcLoop.
   // This should be an unused actionID. If changing this, need to change UnitActionRework.event to match.
