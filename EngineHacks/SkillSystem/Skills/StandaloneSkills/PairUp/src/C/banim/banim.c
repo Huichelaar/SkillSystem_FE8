@@ -562,3 +562,93 @@ void PAU_enableAISes(struct PAU_delayAISProc* proc) {
     (*(AIStruct**)0x2000008)->state &= ~8;
     (*(AIStruct**)0x200000C)->state &= ~8;
 }
+
+// Draws pair-up gauge symbols when battle overlay gets drawn.
+// Keeps track of symbols during battle.
+// Also removes pair-up gauge when battle overlay gets removed.
+const ProcInstruction PAU_bAnimGaugeProcInstr[] = {
+  PROC_SET_NAME("PAU_BAnimGaugeAppearProc"),
+  PROC_YIELD,
+  
+  PROC_LABEL(0),
+  PROC_CALL_ROUTINE(PAU_bAnimGaugeAppearInit),
+  PROC_LOOP_ROUTINE(PAU_bAnimGaugeAppearLoop),
+  
+  PROC_LABEL(1),
+  
+  
+  PROC_END
+};
+
+void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc) {
+  
+  // TODO, what if paired-up unit is on the left due to heal?
+  proc->leftGaugeVal = 0;
+  proc->rightGaugeVal = PAU_getPairUpGauge();
+  
+  proc->prevX = 1;
+  if (!(proc->disappear)) {
+    proc->prevX = 0;
+    
+    // Put gauge icons in BGVRAM.
+    CpuFastCopy((void*)prGetMiscIconGfx(0x602), (void*)0x6000220, 0x80);    // 0x600220 should be available.
+    
+    // Put item palette in BGPAL.
+    CpuFastCopy((void*)gIconPalettes, (void*)gPaletteBuffer, 0x20);
+    gPaletteBuffer[0] = 0;                            // First BG colour needs to be black.
+  }
+  
+  proc->timer = 0;
+}
+
+void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc) {
+  u8 val = 0;
+  u16 scrEntryMask, charOffs, scrEntryId;
+  int startX = 0, endX = 1;
+  if (proc->disappear) {
+    startX = 1;
+    endX = 0;
+  }
+  proc->timer++;
+  
+  s32 x = GetValueFromEasingFunction(1, startX, endX, (u32)proc->timer, (u32)proc->limit);
+  if (x != proc->prevX) {
+    proc->prevX = x;
+    BreakProcLoop((Proc*)proc);
+    EnableBgSyncByMask(BG0_SYNC_BIT);
+  
+    // Update screen entries.
+    if (proc->leftPairUpType) {
+      scrEntryMask = (x<<31)>>31;    // Either no bits set, or all bits set.
+      charOffs = 0;
+      scrEntryId = 0xE0;
+      val = proc->leftGaugeVal;
+      for (int i = 0; i < PAU_gaugeSize; i++) {
+        if (val > 0)
+          val--;
+        else
+          charOffs = 1;
+        gBg0MapBuffer[scrEntryId] = (0x0011 + ((proc->leftPairUpType - 1)<<1) + charOffs) & scrEntryMask;
+        scrEntryId += 0x20;
+      }
+    }
+    
+    if (proc->rightPairUpType) {
+      scrEntryMask = (x<<31)>>31;    // Either no bits set, or all bits set.
+      charOffs = 0;
+      scrEntryId = 0xFD;
+      val = proc->rightGaugeVal;
+      for (int i = 0; i < PAU_gaugeSize; i++) {
+        if (val > 0)
+          val--;
+        else
+          charOffs = 1;
+        gBg0MapBuffer[scrEntryId] = (0x0411 + ((proc->rightPairUpType - 1)<<1) + charOffs) & scrEntryMask;
+        scrEntryId += 0x20;
+      }
+    }
+  }
+  
+  if (proc->timer >= proc->limit)
+    BreakProcLoop((Proc*)proc);     // Should be redundant.
+}

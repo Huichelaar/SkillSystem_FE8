@@ -68,6 +68,7 @@ extern const s16 GetAISCurrentRoundType(AIStruct* ais); //! FE8U = 0x805A311
 extern const u8 IsRoundTypeOffensive (s16 roundType); //! FE8U = 0x805A21D
 extern const void MoveBattleCameraOnto(AIStruct* ais, s16 speed); //! FE8U = 0x80533D1
 extern const ProcInstruction gProc_efxFarAttack[]; //! FE8U = 0x85B97C4
+extern const u16 gIconPalettes[16]; //! FE8U = 0x85996F4
 extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
 extern int bAnimCameraTarget; //!FE8U = 0x2017744
 extern int bAnimCameraMoving; //!FE8U = 0x2017748
@@ -151,5 +152,21 @@ const ProcInstruction PAU_delayAISProcInstr[];
 void PAU_waitUntilCameraStops(struct PAU_delayAISProc* proc);
 void PAU_applyStateMask(struct PAU_delayAISProc* proc);
 void PAU_enableAISes(struct PAU_delayAISProc* proc);
+
+struct PAU_bAnimGaugeProc {     // Keeps track of gauge bar icon display.
+  /* 00 */ PROC_HEADER;
+  
+  /* 29 */ u8 disappear;
+  /* 2A */ u16 timer;
+  /* 2C */ u16 limit;
+  /* 2E */ u8 leftPairUpType;
+  /* 2F */ u8 rightPairUpType;
+  /* 30 */ u8 leftGaugeVal;
+  /* 31 */ u8 rightGaugeVal;
+  /* 32 */ s16 prevX;
+};
+const ProcInstruction PAU_bAnimGaugeProcInstr[];
+void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc);
+void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc);
 
 #endif // BANIM_H

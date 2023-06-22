@@ -29,7 +29,10 @@ void SPD_init(struct SPD_ProcStateMain* proc) {
   
   // Draw skill name.
   FontData* font = (FontData*)0x2017648;
+  u16 pal[16];
+  CpuFastCopy((void*)gPaletteBuffer, (void*)pal, 0x20);   // Preserve palette.
   Text_InitFontExt(font, (void*)0x6000020, 1, 0);
+  CpuFastCopy((void*)pal, (void*)gPaletteBuffer, 0x20);   // Preserve palette.
   *(u32*)((u32)font+8) = 0x8004269;    // Draws glyphs by overwriting pixels instead of adding.
   Text_InitClear(&proc->textHandle, 8);
   Text_SetXCursor(&proc->textHandle, (int)Text_GetStringTextCenteredPos(SKILLDISPLAY_WIDTH*8, gCurrentTextString));

@@ -22,6 +22,8 @@ TODO:
     - Test Dual Strike round being the last round.
   - grepWin all TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
   
+  - Level up uses BGPalette 0 (used for gauge icons). Undraw icons during level-up?
+  
 
 Notes:
   - Client mentioned not wanting str/mag split. Mention this has been set in config file.

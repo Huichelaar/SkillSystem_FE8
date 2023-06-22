@@ -15,6 +15,7 @@ struct NewBattleRound {
 };
 extern u8 SkillTester(Unit* unit, u8 skillID);
 extern s8 prMovGetter(Unit* unit);
+extern u32 prGetMiscIconGfx(u16 iconId);
 
 int PAU_getBattleHitCount(BattleUnit* unit);
 s8 PAU_battleGenerateRoundHits(struct BattleUnit* attacker, struct BattleUnit* defender);

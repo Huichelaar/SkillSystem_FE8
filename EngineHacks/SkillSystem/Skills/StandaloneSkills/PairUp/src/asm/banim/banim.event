@@ -66,6 +66,11 @@ PUSH
   ORG 0x5624C
     callHack_r2(PAU_bAnimKillAISProc)
     SHORT 0x46C0
+  
+  // Draw pair-up gauge symbols when battle overlay gets drawn.
+  // Also remove pair-up gauge when battle overlay gets removed.
+  ORG 0x56D2C
+    jumpToHack(PAU_bAnimGaugeAppear)
 
 POP
 
@@ -77,3 +82,4 @@ ALIGN 4; PAU_bAnimCommand6Hook: #include "command6Hook.lyn.event"
 ALIGN 4; PAU_bAnimCommandDHook: #include "commandDHook.lyn.event"
 ALIGN 4; PAU_bAnimRedundantCam: #include "redundantCam.lyn.event"
 ALIGN 4; PAU_bAnimKillAISProc: #include "killAISProc.lyn.event"
+ALIGN 4; PAU_bAnimGaugeAppear: #include "gaugeAppear.lyn.event"

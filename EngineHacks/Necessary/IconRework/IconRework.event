@@ -6,7 +6,7 @@
 #include "IconRework_Internal.event"
 
 // SKILL ICONS SHEET
-{
+//{
 InjectIconGfxGetter(1, (prGetSkillIconGfx+1))
 InjectIconGfxGetter(2, (prGetAffinityIconGfx+1))
 InjectIconGfxGetter(3, (prGetMountTypeIconGfx+1))
@@ -35,10 +35,12 @@ prGetSkillBookIconGfx:
 	#incbin "asm/GetSheetIconGfx.bin"
 	POIN SkillIcons
 
+ORG CurrentOffset+1
 prGetMiscIconGfx:
+ORG CurrentOffset-1
 	#incbin "asm/GetSheetIconGfx.bin"
 	POIN MiscIcons
 
-}
+//}
 
 #endif // HAX_ICON_REWORK
