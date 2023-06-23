@@ -288,6 +288,7 @@ void PAU_dualGuardAnim(AIStruct* ais) {
 
 // During level up, priority of banims change to fit them behind the level-up interface.
 // Need to apply this priority change to backup banims as well.
+// Also clear gauge icons and end PAU_bAnimGaugeProc instance.
 void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
   priority <<= 10;
   
@@ -297,13 +298,23 @@ void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
   right->oam2base = (right->oam2base & 0xF3FF) | priority;
   left->oam2base = (left->oam2base & 0xF3FF) | priority;
   
+  // Change display priority.
   struct PAU_aisProc* proc = (struct PAU_aisProc*)ProcFind(PAU_aisProcInstr);
-  if (!proc)
-    return;
-  if (proc->puLeftFrontAIS)
-    proc->puLeftFrontAIS->oam2base = (proc->puLeftFrontAIS->oam2base & 0xF3FF) | priority;
-  if (proc->puRightFrontAIS)
-    proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
+  if (proc) {
+    if (proc->puLeftFrontAIS)
+      proc->puLeftFrontAIS->oam2base = (proc->puLeftFrontAIS->oam2base & 0xF3FF) | priority;
+    if (proc->puRightFrontAIS)
+      proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
+  }
+  
+  // Clear gauge icons.
+  struct PAU_bAnimGaugeProc* proc2 = (struct PAU_bAnimGaugeProc*)ProcFind(PAU_bAnimGaugeProcInstr);
+  if (proc2) {
+    proc2->disappear = 1;
+    proc2->ending = 1;
+    proc2->limit = 1;
+    ProcGoto((Proc*) proc2, 0);
+  }
 }
 
 const ProcInstruction PAU_aisProcInstr[] = {
@@ -574,18 +585,12 @@ const ProcInstruction PAU_bAnimGaugeProcInstr[] = {
   PROC_CALL_ROUTINE(PAU_bAnimGaugeAppearInit),
   PROC_LOOP_ROUTINE(PAU_bAnimGaugeAppearLoop),
   
-  PROC_LABEL(1),
-  
+  PROC_BLOCK,
   
   PROC_END
 };
 
 void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc) {
-  
-  // TODO, what if paired-up unit is on the left due to heal?
-  proc->leftGaugeVal = 0;
-  proc->rightGaugeVal = PAU_getPairUpGauge();
-  
   proc->prevX = 1;
   if (!(proc->disappear)) {
     proc->prevX = 0;
@@ -614,7 +619,10 @@ void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc) {
   s32 x = GetValueFromEasingFunction(1, startX, endX, (u32)proc->timer, (u32)proc->limit);
   if (x != proc->prevX) {
     proc->prevX = x;
-    BreakProcLoop((Proc*)proc);
+    if (proc->ending)
+      EndProc((Proc*)proc);
+    else
+      BreakProcLoop((Proc*)proc);
     EnableBgSyncByMask(BG0_SYNC_BIT);
   
     // Update screen entries.
@@ -649,6 +657,77 @@ void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc) {
     }
   }
   
-  if (proc->timer >= proc->limit)
-    BreakProcLoop((Proc*)proc);     // Should be redundant.
+  if (proc->timer >= proc->limit) {     // Should be redundant.
+    if (proc->ending)
+      EndProc((Proc*)proc);
+    else
+      BreakProcLoop((Proc*)proc);
+  }
+}
+
+// Increment or clear gauge icons during actions.
+void PAU_bAnimGaugeUpdate(struct PAU_bAnimGaugeProc* proc, u16 round) {
+  u8 leftTarget = (gpUnitLeft_BattleStruct->unit.index == gBattleTarget.unit.index);
+  u8 clearLeft = 0;
+  u8 rightTarget = (gpUnitRight_BattleStruct->unit.index == gBattleTarget.unit.index);
+  u8 clearRight = 0;
+  
+  u8 retaliate = (battleBuffer[round].battleHit.info & BATTLE_HIT_INFO_RETALIATION);
+  u8 dualStrikeTriggered = (battleBuffer[round].skillID == (((int)&DualStrikeID) & 0xFF));
+  u8 dualGuardTriggered = (battleBuffer[round].skillID == (((int)&DualGuardID) & 0xFF));
+  
+  if (proc->leftPairUpType) {
+    if (leftTarget) {
+      if (retaliate) {
+        if (dualStrikeTriggered)
+          clearLeft = 1;
+      }
+      else
+        if (dualGuardTriggered)
+          clearLeft = 1;
+    }
+    else
+      if (retaliate) {
+        if (dualGuardTriggered)
+          clearLeft = 1;
+      }
+      else
+        if (dualStrikeTriggered)
+          clearLeft = 1;
+  }
+  
+  else if (proc->rightPairUpType) {
+    if (rightTarget) {
+      if (retaliate) {
+        if (dualStrikeTriggered)
+          clearRight = 1;
+      }
+      else
+        if (dualGuardTriggered)
+          clearRight = 1;
+    }
+    else
+      if (retaliate) {
+        if (dualGuardTriggered)
+          clearRight = 1;
+      }
+      else
+        if (dualStrikeTriggered)
+          clearRight = 1;
+  }
+  
+  if (clearLeft)
+    proc->leftGaugeVal = 0;
+  else if (proc->leftPairUpType && (proc->leftGaugeVal < PAU_gaugeSize))
+    proc->leftGaugeVal++;
+  
+  if (clearRight)
+    proc->rightGaugeVal = 0;
+  else if (proc->rightPairUpType && (proc->rightGaugeVal < PAU_gaugeSize))
+    proc->rightGaugeVal++;
+  
+  proc->disappear = 0;
+  proc->limit = 1;
+  proc->ending = 0;
+  ProcGoto((Proc*)proc, 0);
 }

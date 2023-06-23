@@ -11,6 +11,11 @@ ldr   r0, =PAU_bAnimGaugeProcInstr
 ldr   r3, =ProcFind
 bl    GOTO_R3
 mov   r6, r0
+cmp   r6, #0x0
+bne   L5                    @ If proc doesn't exist,
+  cmp   r5, #0x1            @ and overlay is to disappear,
+  beq   L3                  @ don't start proc.
+L5:
 
 @ Left.
 ldr   r0, =gpUnitLeft_BattleStruct
@@ -26,21 +31,28 @@ beq   L1
     ldr   r3, =ProcStart
     bl    GOTO_R3
     mov   r6, r0
-    mov   r0, #0x29
-    strb  r5, [r6, r0]      @ disappear.
-    mov   r0, #0x2C
-    strh  r4, [r6, r0]      @ limit.
-    mov   r0, #0x2F
+    mov   r0, #0x34
     mov   r1, #0x0
+    strb  r1, [r6, r0]      @ ending.
+    mov   r0, #0x2F
     strb  r1, [r6, r0]      @ rightPairUpType.
-    mov   r0, #0x30
-    strb  r1, [r6, r0]      @ leftGaugeVal.
+    mov   r0, #0x2E
+    strb  r7, [r6, r0]      @ leftPairUpType.
     bl    PAU_getPairUpGauge
+    mov   r1, #0x30
+    strb  r0, [r6, r1]      @ leftGaugeVal.
+    mov   r0, #0x0
     mov   r1, #0x31
     strb  r0, [r6, r1]      @ rightGaugeVal.
   L2:
-  mov   r0, #0x2E
-  strb  r7, [r6, r0]        @ leftPairUpType.
+  mov   r0, #0x29
+  strb  r5, [r6, r0]        @ disappear.
+  mov   r0, #0x2C
+  strh  r4, [r6, r0]        @ limit.
+  mov   r0, r6
+  mov   r1, #0x0  
+  ldr   r3, =ProcGoto
+  bl    GOTO_R3
 
 @ Right.
 L1:
@@ -57,21 +69,28 @@ beq   L3
     ldr   r3, =ProcStart
     bl    GOTO_R3
     mov   r6, r0
-    mov   r0, #0x29
-    strb  r5, [r6, r0]      @ disappear.
-    mov   r0, #0x2C
-    strh  r4, [r6, r0]      @ limit.
-    mov   r0, #0x2E
+    mov   r0, #0x34
     mov   r1, #0x0
+    strb  r1, [r6, r0]      @ ending.
+    mov   r0, #0x2E
     strb  r1, [r6, r0]      @ leftPairUpType.
-    mov   r0, #0x30
-    strb  r1, [r6, r0]      @ leftGaugeVal.
+    mov   r0, #0x2F
+    strb  r7, [r6, r0]      @ rightPairUpType.
     bl    PAU_getPairUpGauge
     mov   r1, #0x31
     strb  r0, [r6, r1]      @ rightGaugeVal.
+    mov   r0, #0x0
+    mov   r1, #0x30
+    strb  r0, [r6, r1]      @ leftGaugeVal.
   L4:
-  mov   r0, #0x2F
-  strb  r7, [r6, r0]        @ rightPairUpType.
+  mov   r0, #0x29
+  strb  r5, [r6, r0]        @ disappear.
+  mov   r0, #0x2C
+  strh  r4, [r6, r0]        @ limit.
+  mov   r0, r6
+  mov   r1, #0x0  
+  ldr   r3, =ProcGoto
+  bl    GOTO_R3
 
 @ Vanilla, overwritten by hook.
 L3:

@@ -1,0 +1,39 @@
+// Battle animation pair-up gauge icons related stuff.
+
+PUSH
+
+  // Draw pair-up gauge symbols when battle overlay gets drawn.
+  // Also remove pair-up gauge when battle overlay gets removed.
+  ORG 0x56D2C
+    jumpToHack(PAU_bAnimGaugeAppear)
+  
+  // Update gauge icons due to attack.
+  ORG 0x5230C
+    jumpToHack(PAU_bAnimGaugeAttack)
+  
+  // Update gauge icons due to heal. Commented out as healing doesn't affect pair-up gauge.
+  /*
+  ORG 0x52A14
+    jumpToHack(PAU_bAnimGaugeHeal)
+  */
+  
+  // Update gauge icons due to nosferatuAttack.
+  ORG 0x525F0
+    jumpToHack(PAU_bAnimGaugeNosferatu)
+  
+  // Update gauge icons due to attack that dealt no damage.
+  ORG 0x52BA0
+    jumpToHack(PAU_bAnimGaugeNODMG)
+  
+  // Update gauge icons due to attack that misses.
+  ORG 0x52980
+    jumpToHack(PAU_bAnimGaugeMiss)
+
+POP
+
+ALIGN 4; PAU_bAnimGaugeAppear: #include "appear.lyn.event"
+ALIGN 4; PAU_bAnimGaugeAttack: #include "attack.lyn.event"
+//ALIGN 4; PAU_bAnimGaugeHeal: #include "heal.lyn.event"
+ALIGN 4; PAU_bAnimGaugeNosferatu: #include "nosferatu.lyn.event"
+ALIGN 4; PAU_bAnimGaugeNODMG: #include "nodmg.lyn.event"
+ALIGN 4; PAU_bAnimGaugeMiss: #include "miss.lyn.event"

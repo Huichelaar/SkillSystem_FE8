@@ -56,6 +56,7 @@ struct BanimRoundScripts {
   /* 03 */ u8 priority_back;
 };
 extern const struct BanimRoundScripts gBattleAnimModeLookupMaybe[]; //! FE8U = 0x80DAEF0
+extern struct NewBattleRound* battleBuffer; //! FE8U = 0x802AEC4
 extern const u32 gAISFrames_DummyNoFrames; //! FE8U = 0x85B9D5C
 extern const void StartEfxSureShotAnime(AIStruct* ais); //! FE8U = 0x806E311
 extern const void StartEfxGenericAnime(AIStruct* ais); //! FE8U = 0x806E58D
@@ -73,8 +74,8 @@ extern int* gpBattleAnimFrameStartLookup[2]; //! FE8U = 0x200005C
 extern int bAnimCameraTarget; //!FE8U = 0x2017744
 extern int bAnimCameraMoving; //!FE8U = 0x2017748
 extern s32 bAnimCameraOffs; //! FE8U = 0x201FB0C
-extern BattleUnit** gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
-extern BattleUnit** gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
+extern BattleUnit* gpUnitLeft_BattleStruct; //! FE8U = 0x203E188
+extern BattleUnit* gpUnitRight_BattleStruct; //! FE8U = 0x203E18C
 extern u16 gBattleAnimAnimationIndex[2]; //! FE8U = 0x203E182
 
 const s16 NOSFERATUSPELL = 0x1E;
@@ -164,9 +165,12 @@ struct PAU_bAnimGaugeProc {     // Keeps track of gauge bar icon display.
   /* 30 */ u8 leftGaugeVal;
   /* 31 */ u8 rightGaugeVal;
   /* 32 */ s16 prevX;
+  
+  /* 34 */ u8 ending;
 };
 const ProcInstruction PAU_bAnimGaugeProcInstr[];
 void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc);
 void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc);
+void PAU_bAnimGaugeUpdate(struct PAU_bAnimGaugeProc* proc, u16 round);
 
 #endif // BANIM_H
