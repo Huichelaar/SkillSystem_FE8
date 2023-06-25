@@ -308,6 +308,7 @@ void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
   }
   
   // Clear gauge icons.
+  /*
   struct PAU_bAnimGaugeProc* proc2 = (struct PAU_bAnimGaugeProc*)ProcFind(PAU_bAnimGaugeProcInstr);
   if (proc2) {
     proc2->disappear = 1;
@@ -315,6 +316,7 @@ void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
     proc2->limit = 1;
     ProcGoto((Proc*) proc2, 0);
   }
+  */
 }
 
 const ProcInstruction PAU_aisProcInstr[] = {
@@ -596,11 +598,11 @@ void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc) {
     proc->prevX = 0;
     
     // Put gauge icons in BGVRAM.
-    CpuFastCopy((void*)prGetMiscIconGfx(0x602), (void*)0x6000220, 0x80);    // 0x600220 should be available.
+    CpuFastCopy((void*)prGetMiscIconGfx(0x605), (void*)0x6000220, 0x80);    // 0x600220 should be available.
     
     // Put item palette in BGPAL.
-    CpuFastCopy((void*)gIconPalettes, (void*)gPaletteBuffer, 0x20);
-    gPaletteBuffer[0] = 0;                            // First BG colour needs to be black.
+    //CpuFastCopy((void*)gIconPalettes, (void*)gPaletteBuffer, 0x20);
+    //gPaletteBuffer[0] = 0;                            // First BG colour needs to be black.
   }
   
   proc->timer = 0;

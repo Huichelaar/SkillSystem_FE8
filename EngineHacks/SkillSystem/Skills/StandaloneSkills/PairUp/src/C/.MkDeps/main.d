@@ -66,7 +66,7 @@ main.o main.s: main.c \
  C\:/FE-CLib/include/gbafe/dialogue.h \
  C\:/FE-CLib/include/gbafe/drawutils.h internal/internal.c \
  internal/internal.h banim/banim.c banim/banim.h menu/menu.c menu/menu.h \
- save/save.c save/save.h
+ save/save.c save/save.h forecast/forecast.c forecast/forecast.h
 c\:\users\steffens\desktop\map\gamestuff\fe\romhacking\devkitpro\devkitarm\arm-none-eabi\include\stdio.h:
 c\:\users\steffens\desktop\map\gamestuff\fe\romhacking\devkitpro\devkitarm\arm-none-eabi\include\_ansi.h:
 c\:\users\steffens\desktop\map\gamestuff\fe\romhacking\devkitpro\devkitarm\arm-none-eabi\include\newlib.h:
@@ -162,3 +162,5 @@ menu/menu.c:
 menu/menu.h:
 save/save.c:
 save/save.h:
+forecast/forecast.c:
+forecast/forecast.h:

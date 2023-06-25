@@ -177,18 +177,18 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
   // Draw pair-up skill icon.
   u16 gaugeIconID, skillIconID;
   if (SkillTester(gActiveUnit, (int)&DualStrikeID)) {
-    gaugeIconID = 0x600;  // Assumes gauge icons are first symbols on sheet 6 (misc icons sheet).
+    gaugeIconID = 0x603;
     skillIconID = (int)&DualStrikeID | 0x100;   // Assumes skill icons are on sheet 1.
   }
   else {
-    gaugeIconID = 0x601;
+    gaugeIconID = 0x604;
     skillIconID = (int)&DualGuardID | 0x100;
   }
-  DrawIcon(gBg0MapBuffer + 42 + x, gaugeIconID, 0x4000);  // We do this merely to allocate this icon.
+  DrawIcon(gBg0MapBuffer + 42 + x, gaugeIconID, 0x0000);  // We do this merely to allocate this icon.
   DrawIcon(gBg0MapBuffer + 42 + x, skillIconID, 0x4000);
 
   // Draw pair-up gauge icons.
-  u16 scrEntry = 0x4000 | GetIconTileIndex(gaugeIconID);
+  u16 scrEntry = GetIconTileIndex(gaugeIconID);
   for (int i = 0; i < PAU_gaugeSize; i++) {
     gBg0MapBuffer[i*32 + 138 + x] = scrEntry + 2;
     gBg0MapBuffer[i*32 + 139 + x] = scrEntry + 3;

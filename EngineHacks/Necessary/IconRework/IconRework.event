@@ -12,7 +12,7 @@ InjectIconGfxGetter(2, (prGetAffinityIconGfx+1))
 InjectIconGfxGetter(3, (prGetMountTypeIconGfx+1))
 InjectIconGfxGetter(4, (prGetWRankIconGfx+1))
 InjectIconGfxGetter(5, (prGetSkillBookIconGfx+1))
-InjectIconGfxGetter(6, (prGetMiscIconGfx+1))
+InjectIconGfxGetter(6, (prGetMiscIconGfx|1))
 
 ALIGN 4
 prGetSkillIconGfx:

@@ -11,6 +11,28 @@ PUSH
   // We replace sub_8019108 for this. Couldn't find a good place to hook.
   ORG 0x19108
     jumpToHack(PAU_clearRescueAndPairUpData)
+  
+  // Replace battle forecast proc.
+  ORG 0xBBB0
+    POIN PAU_forecastProcInstr
+  ORG 0x22E34
+    POIN PAU_forecastProcInstr
+  ORG 0x37360
+    POIN PAU_forecastProcInstr
+  ORG 0x373B0
+    POIN PAU_forecastProcInstr
+  ORG 0x373DC
+    POIN PAU_forecastProcInstr
+  ORG 0x3743C
+    POIN PAU_forecastProcInstr
+  ORG 0x374BC
+    POIN PAU_forecastProcInstr
+  ORG 0x374EC
+    POIN PAU_forecastProcInstr
+  ORG 0x59B644
+    POIN PAU_forecastProcInstr
+  ORG 0x5AA1B8
+    POIN PAU_forecastProcInstr
 
 POP
 
