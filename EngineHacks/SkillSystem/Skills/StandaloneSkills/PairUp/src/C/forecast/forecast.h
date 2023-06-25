@@ -21,6 +21,7 @@ struct PAU_forecastProc {
   /* 53 */ s8 isEffectiveB;
 };
 const ProcInstruction PAU_forecastProcInstr[];
+void PAU_forecastDrawGaugeIcons(struct PAU_forecastProc* proc, u16* dest, Unit* unit, u8 pairupType, u8 right);
 void PAU_forecastDrawContentsStandard(struct PAU_forecastProc* proc);
 void PAU_forecastDrawContentsExtended(struct PAU_forecastProc* proc);
 void PAU_forecastDrawContents(struct PAU_forecastProc* proc);
@@ -31,6 +32,13 @@ void PAU_forecastPutMultipliers(struct PAU_forecastProc* proc);
 void PAU_forecastLoopSlideIn(struct PAU_forecastProc* proc);
 void PAU_forecastLoopDisplay(struct PAU_forecastProc* proc);
 void PAU_forecastLoopSlideOut(struct PAU_forecastProc* proc);
+
+extern const void* PAU_forecastWindowLeftTSA;         // In gfx.event.
+extern const void* PAU_forecastWindowRightTSA;        // In gfx.event.
+extern const void* PAU_forecastWindowBothTSA;         // In gfx.event.
+extern const void* PAU_forecastWindowExtLeftTSA;      // In gfx.event.
+extern const void* PAU_forecastWindowExtRightTSA;     // In gfx.event.
+extern const void* PAU_forecastWindowExtBothTSA;      // In gfx.event.
 
 // Vanilla.
 extern TextHandle gaBattleForecastTextStructs[]; //! FE8U = 0x2002FDC
