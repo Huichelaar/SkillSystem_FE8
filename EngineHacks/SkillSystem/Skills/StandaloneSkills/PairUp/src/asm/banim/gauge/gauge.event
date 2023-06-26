@@ -1,4 +1,7 @@
 // Battle animation pair-up gauge icons related stuff.
+#ifndef jumpToHack_r2
+  #define jumpToHack_r2(offset) "BYTE 0x00 0x4A 0x10 0x47; POIN (offset|0x1)"
+#endif
 
 PUSH
 
@@ -6,6 +9,19 @@ PUSH
   // Also remove pair-up gauge when battle overlay gets removed.
   ORG 0x56D2C
     jumpToHack(PAU_bAnimGaugeAppear)
+  
+  // Darken gauge during levelup.
+  // Setup window and blendcontrol before palettes get darkened.
+  ORG 0x73E70
+    jumpToHack(PAU_bAnimGaugeInitLevelUp)
+  // Darken gauge.
+  ORG 0x73F62
+    SHORT 0x4679      // mov r1 r15 @ For return address.
+    jumpToHack_r2(PAU_bAnimGaugeLoopLevelUp)
+  // Brighten gauge.
+  ORG 0x7436E
+    SHORT 0x4679      // mov r1 r15 @ For return address.
+    jumpToHack_r2(PAU_bAnimGaugeLoopLevelUp)
   
   // Update gauge icons due to attack.
   ORG 0x5230C
@@ -32,6 +48,8 @@ PUSH
 POP
 
 ALIGN 4; PAU_bAnimGaugeAppear: #include "appear.lyn.event"
+ALIGN 4; PAU_bAnimGaugeInitLevelUp: #include "initLevelUp.lyn.event"
+ALIGN 4; PAU_bAnimGaugeLoopLevelUp: #include "loopLevelUp.lyn.event"
 ALIGN 4; PAU_bAnimGaugeAttack: #include "attack.lyn.event"
 //ALIGN 4; PAU_bAnimGaugeHeal: #include "heal.lyn.event"
 ALIGN 4; PAU_bAnimGaugeNosferatu: #include "nosferatu.lyn.event"

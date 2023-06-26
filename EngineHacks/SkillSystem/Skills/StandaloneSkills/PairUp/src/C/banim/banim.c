@@ -288,7 +288,6 @@ void PAU_dualGuardAnim(AIStruct* ais) {
 
 // During level up, priority of banims change to fit them behind the level-up interface.
 // Need to apply this priority change to backup banims as well.
-// Also clear gauge icons and end PAU_bAnimGaugeProc instance.
 void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
   priority <<= 10;
   
@@ -306,17 +305,7 @@ void PAU_setPriorityDuringLvlUp(Proc* ekrLevelUpProc, u16 priority) {
     if (proc->puRightFrontAIS)
       proc->puRightFrontAIS->oam2base = (proc->puRightFrontAIS->oam2base & 0xF3FF) | priority;
   }
-  
-  // Clear gauge icons.
-  /*
-  struct PAU_bAnimGaugeProc* proc2 = (struct PAU_bAnimGaugeProc*)ProcFind(PAU_bAnimGaugeProcInstr);
-  if (proc2) {
-    proc2->disappear = 1;
-    proc2->ending = 1;
-    proc2->limit = 1;
-    ProcGoto((Proc*) proc2, 0);
-  }
-  */
+
 }
 
 const ProcInstruction PAU_aisProcInstr[] = {
@@ -587,79 +576,104 @@ const ProcInstruction PAU_bAnimGaugeProcInstr[] = {
   PROC_CALL_ROUTINE(PAU_bAnimGaugeAppearInit),
   PROC_LOOP_ROUTINE(PAU_bAnimGaugeAppearLoop),
   
+  PROC_LABEL(1),
   PROC_BLOCK,
   
   PROC_END
 };
 
+void PAU_bAnimGaugeScrEntries(struct PAU_bAnimGaugeProc* proc, u16 mask) {
+  u8 val = 0;
+  u16 charOffs, scrEntryId;
+  
+  if (proc->leftPairUpType) {
+    charOffs = 0;
+    scrEntryId = 0xE0;
+    val = proc->leftGaugeVal;
+    for (int i = 0; i < PAU_gaugeSize; i++) {
+      if (val > 0)
+        val--;
+      else
+        charOffs = 1;
+      gBg0MapBuffer[scrEntryId] = (0x0011 + ((proc->leftPairUpType - 1)<<1) + charOffs) & mask;
+      scrEntryId += 0x20;
+    }
+  }
+  
+  if (proc->rightPairUpType) {
+    charOffs = 0;
+    scrEntryId = 0xFD;
+    val = proc->rightGaugeVal;
+    for (int i = 0; i < PAU_gaugeSize; i++) {
+      if (val > 0)
+        val--;
+      else
+        charOffs = 1;
+      gBg0MapBuffer[scrEntryId] = (0x0411 + ((proc->rightPairUpType - 1)<<1) + charOffs) & mask;
+      scrEntryId += 0x20;
+    }
+  }
+  
+  EnableBgSyncByMask(BG0_SYNC_BIT);
+}
+
 void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc) {
-  proc->prevX = 1;
+  
+  // Setup window0, unless effect is immediate.
+  if (proc->limit > 1) {
+    gLCDIOBuffer.win0_right = 240;
+    gLCDIOBuffer.win0_left = 0;
+    gLCDIOBuffer.win0_bottom = 0x68;
+    gLCDIOBuffer.win0_top = 0x30;
+    gLCDIOBuffer.winControl.win0_enableBg0 = 0;
+    gLCDIOBuffer.winControl.win0_enableBg1 = 1;
+    gLCDIOBuffer.winControl.win0_enableBg2 = 1;
+    gLCDIOBuffer.winControl.win0_enableBg3 = 1;
+    gLCDIOBuffer.winControl.win0_enableObj = 1;
+    gLCDIOBuffer.winControl.win0_enableBlend = 1;
+    gLCDIOBuffer.winControl.wout_enableBg0 = 1;
+    gLCDIOBuffer.winControl.wout_enableBg1 = 1;
+    gLCDIOBuffer.winControl.wout_enableBg2 = 1;
+    gLCDIOBuffer.winControl.wout_enableBg3 = 1;
+    gLCDIOBuffer.winControl.wout_enableObj = 1;
+    gLCDIOBuffer.winControl.wout_enableBlend = 1;
+    gLCDIOBuffer.dispControl.enableWin0 = 1;
+  } else {
+    if (proc->disappear)
+      PAU_bAnimGaugeScrEntries(proc, 0);
+    if (proc->ending)
+      EndProc((Proc*)proc);
+    else
+      ProcGoto((Proc*)proc, 1);
+  }
+  
   if (!(proc->disappear)) {
-    proc->prevX = 0;
     
     // Put gauge icons in BGVRAM.
     CpuFastCopy((void*)prGetMiscIconGfx(0x605), (void*)0x6000220, 0x80);    // 0x600220 should be available.
     
-    // Put item palette in BGPAL.
-    //CpuFastCopy((void*)gIconPalettes, (void*)gPaletteBuffer, 0x20);
-    //gPaletteBuffer[0] = 0;                            // First BG colour needs to be black.
+    // Update screen entries.
+    PAU_bAnimGaugeScrEntries(proc, 0xFFFF);
   }
   
   proc->timer = 0;
 }
 
 void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc) {
-  u8 val = 0;
-  u16 scrEntryMask, charOffs, scrEntryId;
-  int startX = 0, endX = 1;
+  int startX = 0, endX = 56;
   if (proc->disappear) {
-    startX = 1;
+    startX = 56;
     endX = 0;
   }
   proc->timer++;
   
-  s32 x = GetValueFromEasingFunction(1, startX, endX, (u32)proc->timer, (u32)proc->limit);
-  if (x != proc->prevX) {
-    proc->prevX = x;
-    if (proc->ending)
-      EndProc((Proc*)proc);
-    else
-      BreakProcLoop((Proc*)proc);
-    EnableBgSyncByMask(BG0_SYNC_BIT);
+  u8 x = (u8)GetValueFromEasingFunction(1, startX, endX, (u32)proc->timer, (u32)proc->limit);
+  gLCDIOBuffer.win0_top = 0x30 + x;
   
-    // Update screen entries.
-    if (proc->leftPairUpType) {
-      scrEntryMask = (x<<31)>>31;    // Either no bits set, or all bits set.
-      charOffs = 0;
-      scrEntryId = 0xE0;
-      val = proc->leftGaugeVal;
-      for (int i = 0; i < PAU_gaugeSize; i++) {
-        if (val > 0)
-          val--;
-        else
-          charOffs = 1;
-        gBg0MapBuffer[scrEntryId] = (0x0011 + ((proc->leftPairUpType - 1)<<1) + charOffs) & scrEntryMask;
-        scrEntryId += 0x20;
-      }
-    }
-    
-    if (proc->rightPairUpType) {
-      scrEntryMask = (x<<31)>>31;    // Either no bits set, or all bits set.
-      charOffs = 0;
-      scrEntryId = 0xFD;
-      val = proc->rightGaugeVal;
-      for (int i = 0; i < PAU_gaugeSize; i++) {
-        if (val > 0)
-          val--;
-        else
-          charOffs = 1;
-        gBg0MapBuffer[scrEntryId] = (0x0411 + ((proc->rightPairUpType - 1)<<1) + charOffs) & scrEntryMask;
-        scrEntryId += 0x20;
-      }
-    }
-  }
-  
-  if (proc->timer >= proc->limit) {     // Should be redundant.
+  if (proc->timer >= proc->limit) {
+    gLCDIOBuffer.dispControl.enableWin0 = 0;
+    if (proc->disappear)
+      PAU_bAnimGaugeScrEntries(proc, 0);
     if (proc->ending)
       EndProc((Proc*)proc);
     else

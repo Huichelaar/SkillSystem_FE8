@@ -169,6 +169,7 @@ struct PAU_bAnimGaugeProc {     // Keeps track of gauge bar icon display.
   /* 34 */ u8 ending;
 };
 const ProcInstruction PAU_bAnimGaugeProcInstr[];
+void PAU_bAnimGaugeScrEntries(struct PAU_bAnimGaugeProc* proc, u16 mask);
 void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc);
 void PAU_bAnimGaugeAppearLoop(struct PAU_bAnimGaugeProc* proc);
 void PAU_bAnimGaugeUpdate(struct PAU_bAnimGaugeProc* proc, u16 round);

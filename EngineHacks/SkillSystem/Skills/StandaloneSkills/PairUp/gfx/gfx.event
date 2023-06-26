@@ -1,30 +1,3 @@
-PUSH
-
-  /*
-  ORG 0x368A0
-    POIN PAU_forecastWindowBothTSA
-  ORG 0x370F6       // proc->x. Decremented by two when side is right.
-    BYTE 0x12
-  //ORG 0x59E518      // SlideIn offsets. Incremented by two.
-    //BYTE 8 10 11 12
-  //ORG 0x59E518      // SlideIn offsets. Decremented by two.
-    //BYTE 4 6 7 8
-  ORG 0x371A2       // Right SlideIn xOffs. Decremented by two. Used by both BG0 and BG1
-    BYTE 0x1C
-  ORG 0x3718C       // BG0 screen entry buffer ptr. increment by one entry to force BG further right.
-    WORD 0x2022CAA
-  ORG 0x36EEA       // Arrow1 xPos. Incremented by one.
-    BYTE 0x9
-  ORG 0x36F1A       // Arrow2 xPos. Incremented by one.
-    BYTE 0x3
-  ORG 0x36F9E       // Multiplier1 xPos. Incremented by eight.
-    BYTE 0x50
-  ORG 0x36FC0       // Multiplier2 xPos. Incremented by eight.
-    BYTE 0x20
-  */
-
-POP
-
 ALIGN 4; PAU_infoWindowTSA: #incbin "infoWindow.tsa"                          // Compressed.
 ALIGN 4; PAU_forecastWindowLeftTSA: #incbin "forecastWindowLeft.tsa"          // Uncompressed.
 ALIGN 4; PAU_forecastWindowRightTSA: #incbin "forecastWindowRight.tsa"        // Uncompressed.
