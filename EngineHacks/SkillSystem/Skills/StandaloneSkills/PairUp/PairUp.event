@@ -97,6 +97,24 @@
   ALIGN 4; PAU_nosferatuReplacementSpellID:
   SHORT 0x34          // Luna.
   
+  // If set to 0, when paired-up, backup unit's mapsprite will be hidden
+  // and a rescue icon will display over the main unit's sprite. 
+  // If set to 1, when paired-up, both mapsprites will show.
+  PAU_showBothMapSprites:
+  BYTE 1
+  
+    // These determine how far paired-up mapsprites stray from the tile
+    // a single mapsprite would stand on. Values are in pixels.
+    // These won't affect anything if PAU_showBothMapSprites is set to 0.
+    PAU_mapFrontOffsX:
+    BYTE (-4)
+    PAU_mapFrontOffsY:
+    BYTE (-4)
+    PAU_mapBackOffsX:
+    BYTE 4
+    PAU_mapBackOffsY:
+    BYTE 4
+  
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
 

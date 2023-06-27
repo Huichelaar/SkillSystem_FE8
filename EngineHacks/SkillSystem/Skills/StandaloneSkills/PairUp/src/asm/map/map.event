@@ -1,0 +1,53 @@
+// Map animation related stuff.
+#include "spriteIcons/spriteIcons.event"
+
+PUSH
+  
+  // Add hidden unit to SMS array if they're backup to a non-hidden unit.
+  ORG 0x271D4
+    jumpToHack(PAU_mapAddSMSHook)
+  
+  // If unit SMS is to be hidden, hide backup unit as well.
+  ORG 0x28120
+    jumpToHack(PAU_mapHideSMS)
+  
+  // If unit SMS is to be shown, show backup unit as well.
+  ORG 0x28138
+    jumpToHack(PAU_mapShowSMS)
+  
+  // TODO rally SMS + so many others.
+  
+  // Create second MU for backup mapsprite and offset the two.
+  ORG 0x784C4
+    jumpToHack(PAU_mapAddMU)
+  
+  // Call MU_SetDefaultFacing for all gProc_MoveUnits, instead of the first one.
+  ORG 0x786EC
+    SHORT 0x4902      // ldr  r1, =MU_SetDefaultFacing
+    SHORT 0xF78A
+    SHORT 0xFC53      // bl   ForEachProc
+    SHORT 0xBC01      // pop  {r0}
+    SHORT 0x4700      // bx   r0
+    SHORT 0x0         // padding
+    WORD 0x80786BD    // MU_SetDefaultFacing literal.
+  
+  // Call MU_StartMoveScript for all gProc_MoveUnits, instead of the first one.
+  ORG 0x78702
+    SHORT 0x1C02      // mov  r2, r0
+    SHORT 0x4805      // ldr  r0, =gProc_MoveUnit
+    SHORT 0x4903      // ldr  r1, =MU_StartMoveScript
+    SHORT 0x4B03      // ldr  r3, =PAU_ForEachProcExt
+    SHORT 0xF059
+    SHORT 0xF8DF      // bl   BXR3
+    SHORT 0xBC10      // pop  {r4}
+    SHORT 0xBC01      // pop  {r0}
+    SHORT 0x4700      // bx   r0
+    WORD 0x8078791    // MU_StartMoveScript literal.
+    POIN PAU_ForEachProcExt|1
+
+POP
+
+ALIGN 4; PAU_mapAddSMSHook: #include "addSMSHook.lyn.event"
+ALIGN 4; PAU_mapHideSMS: #include "hideSMS.lyn.event"
+ALIGN 4; PAU_mapShowSMS: #include "showSMS.lyn.event"
+ALIGN 4; PAU_mapAddMU: #include "addMU.lyn.event"

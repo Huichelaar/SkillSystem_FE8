@@ -1,0 +1,14 @@
+// Hooks in DisplayUnitAdditionalBlinkingIcons/PutUnitSpriteIconsOam 0x80275E8.
+
+PUSH
+
+  // Don't display rescue icon if unit is paired-up.
+  // Also allow check for boss or protected icon if unit is paired-up.
+  ORG 0x278AC
+    jumpToHack(PAU_mapSpriteIconRescue)
+  
+  // TODO more icons (poison, sleep, berserk, etc.)
+
+POP
+
+ALIGN 4; PAU_mapSpriteIconRescue: #include "rescue.lyn.event"
