@@ -27,6 +27,6 @@ L1:
 ldr   r3, [r6, #0xC]
 ldr   r0, =0x201        @ US_HIDDEN | US_BIT9 (link arena hide bit).
 and   r0, r3
-ldr   r2, =0x80271dD
+ldr   r2, =0x80271DD
 GOTO_R2:
 bx    r2

@@ -249,6 +249,11 @@ u8 PAU_actionPairUp(Proc* proc) {
   
   MU_EndAll(); // Deletes MMS before creating new one. Avoids seeing double MMS.
   Make6CKOIDO(subjectUnit, dir, 0, proc);   // Creates new MMS.
+  if (PAU_showBothMapSprites) {
+    Proc* muProc = ProcFind(gProc_MoveUnit);
+    if (muProc)
+      ProcStart(PAU_offsetMapSpriteProcInstr, muProc);
+  }
   UnitRescue(targetUnit, subjectUnit);
   HideUnitSMS(subjectUnit);
   

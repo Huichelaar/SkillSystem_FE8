@@ -2,11 +2,13 @@
 @ If unit SMS is to be hidden, hide backup unit as well.
 @ Registers:
 @   r2: SMSHandle* smsHandle.
-@   r1: smsHandle->config.
 @   r4: Unit* unit.
 .thumb
 
 @ Vanilla, overwritten by hook.
+cmp   r2, #0x0
+beq   Return
+ldrb  r1, [r2, #0xB]                  @ smsHandle->config.
 mov   r3, #0x80
 orr   r1, r3
 strb  r1, [r2, #0xB]
@@ -25,7 +27,7 @@ beq   Return
     beq   Return
       ldr   r3, =GetUnit
       bl    GOTO_R3
-      mov   r4, r0                    @ When we return we won't need r4 anymore.
+      mov   r4, r0
       cmp   r4, #0x0
       beq   Return
         bl    PAU_isPairedUp
@@ -40,6 +42,8 @@ beq   Return
             strb  r1, [r0, #0xB]      @ Hide sprite.
   
 Return:
-ldr   r3, =0x802812B
+pop   {r4}
+pop   {r0}
+bx    r0
 GOTO_R3:
 bx    r3

@@ -8,8 +8,15 @@ PUSH
     jumpToHack(PAU_mapAddSMSHook)
   
   // If unit SMS is to be hidden, hide backup unit as well.
-  ORG 0x28120
+  ORG 0x2811A
+    SHORT 0x46C0 0x46C0 0x46C0
     jumpToHack(PAU_mapHideSMS)
+  // We repurpose the redundant remainder of this function
+  // to a ladder to PAU_MU_CreateTwo in vanilla blrange.
+    #define PAU_MU_CreateTwoLadder 0x8028128
+    SHORT 0x4B00              // ldr r3, =PAU_MU_CreateTwo
+    SHORT 0x4718              // bx   r3
+    POIN PAU_MU_CreateTwo|1   // PAU_MU_CreateTwo literal.
   
   // If unit SMS is to be shown, show backup unit as well.
   ORG 0x28138
@@ -17,9 +24,15 @@ PUSH
   
   // TODO rally SMS + so many others.
   
-  // Create second MU for backup mapsprite and offset the two.
-  ORG 0x784C4
-    jumpToHack(PAU_mapAddMU)
+  // Call PAU_MU_CreateTwo instead of MU_Create.
+  ORG 0x1D06C
+    BL(PAU_MU_CreateTwoLadder)
+  ORG 0x27AA6
+    BL(PAU_MU_CreateTwoLadder)
+  
+  // Call function that deletes leftover MU and offsets new KOIDO MU.
+  ORG 0x32230
+    jumpToHack(PAU_mapDropHook)
   
   // Call MU_SetDefaultFacing for all gProc_MoveUnits, instead of the first one.
   ORG 0x786EC
@@ -50,4 +63,4 @@ POP
 ALIGN 4; PAU_mapAddSMSHook: #include "addSMSHook.lyn.event"
 ALIGN 4; PAU_mapHideSMS: #include "hideSMS.lyn.event"
 ALIGN 4; PAU_mapShowSMS: #include "showSMS.lyn.event"
-ALIGN 4; PAU_mapAddMU: #include "addMU.lyn.event"
+ALIGN 4; PAU_mapDropHook: #include "dropHook.lyn.event"

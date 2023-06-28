@@ -2,10 +2,10 @@
 #include "main.h"
 #include "internal/internal.c"
 #include "banim/banim.c"
+#include "map/map.c"
 #include "menu/menu.c"
 #include "save/save.c"
 #include "forecast/forecast.c"
-#include "map/map.c"
 
 // Replaces GetBattleHitCount at 0x2B081. Checks for Dual Strike.
 int PAU_getBattleHitCount(BattleUnit* unit) {

@@ -5,6 +5,7 @@
 // Vanilla.
 extern const u8 BattleCheckBraveEffect(BattleUnit* unit); //! FE8U = 0x802B095
 extern const s8 BattleGenerateHit(struct BattleUnit* attacker, struct BattleUnit* defender); //! FE8U = 0x802B83D
+extern const ProcInstruction gProc_MoveUnit[]; //! FE8U = 0x89A2C48
 
 // SkillSys.
 struct NewBattleRound {
@@ -38,5 +39,6 @@ extern u8* PAU_pairUpBattleGaugeRAMAddress;
 extern u8* PAU_pairUpBitsRAMAddress;
 extern s16 PAU_bAnimDistX;
 extern s16 PAU_bAnimDistY;
+extern u8 PAU_showBothMapSprites;
 
 #endif // MAIN_H
