@@ -25,13 +25,61 @@ void PAU_puOffsetMSLoop(struct PAU_offsetMapSpriteProc* proc);
 void PAU_dropOffsetMSInit(struct PAU_offsetMapSpriteProc* proc);
 void PAU_dropOffsetMSLoop(struct PAU_offsetMapSpriteProc* proc);
 
+struct PAU_swapMapSpriteProc {
+  /* 00 */ PROC_HEADER;
+  
+  /* 29 */ u8 state;
+  /* 2A */ u16 timer;
+  /* 2C */ u16 limit;
+  /* 2E */ u8 frontID;
+  /* 2F */ u8 backID;
+  /* 30 */ u8 frontAngle;
+  /* 31 */ u8 backAngle;
+};
+const ProcInstruction PAU_swapMapSpriteProcInstr[];
+u8 PAU_startSwapMSProc(u8 start, Proc* proc);
+void PAU_swapMSInit(struct PAU_swapMapSpriteProc* proc);
+void PAU_swapMSLoop(struct PAU_swapMapSpriteProc* proc);
+
 extern s8 PAU_mapFrontOffsX;          // In PairUp.event
 extern s8 PAU_mapFrontOffsY;          // In PairUp.event
 extern s8 PAU_mapBackOffsX;           // In PairUp.event
 extern s8 PAU_mapBackOffsY;           // In PairUp.event
 
 // Vanilla
+struct MapAnimActorState {
+  /* 00 */ struct Unit* unit;
+  /* 04 */ struct BattleUnit* bu;
+  /* 08 */ struct MUProc* mu;
+  /* 0C */ u8 hp_max;
+  /* 0D */ u8 hp_cur;
+  /* 0E */ u16 hp_displayed_q4;
+  /* 10 */ u8 hp_info_x;
+  /* 11 */ u8 hp_info_y;
+  /* 12 */ u16 pad;
+};
+struct MapAnimState {
+  /* 00 */ struct MapAnimActorState actor[4];
+
+  /* 50 */ struct BattleHit* pCurrentRound;
+  /* 54 */ const struct ProcInstruction* specialProcScr;
+  /* 58 */ u8 subjectActorId;
+  /* 59 */ u8 targetActorId;
+  /* 5A */ u16 hitAttributes;
+  /* 5C */ u8 hitInfo;
+  /* 5D */ u8 hitDamage;
+  /* 5E */ u8 actorCount_maybe;
+  /* 5F */ u8 timer;
+  /* 60 */ u8 x;
+  /* 61 */ u8 y;
+  /* 62 */ u8 u62;
+};
+extern struct MapAnimState gMapAnimData; //! FE8U = 0x203E1F0
 extern Proc gProcStatePool[]; //! FE8U = 0x2024E68
 extern struct MUConfig gMoveUnitExtraDataArray[4]; //! FE8U = 0x3001900
+extern const void _ProcSleepCallback(Proc* proc); //! FE8U = 0x8003291
+extern const void PlaySpacialSoundMaybe(u16 songID, int x); //! FE8U = 0x8014B29
+extern const void MU_SortObjLayers(); //! FE8U = 0x8079BE1
+extern const void MapAnim_BeginSubjectFastAnim(); //! FE8U = 0x80813F9
 
 #endif // MAP_H

@@ -1,0 +1,24 @@
+// Map battle stuff.
+
+PUSH
+
+  // Start extra battle MUs for backup units of paired-up units.
+  ORG 0x7B964
+    jumpToHack(PAU_mapBattleInitBackupMUs)
+  
+  // Set facing direction of backup units of paired-up units.
+  ORG 0x7B4B0
+    SHORT 0x4B02 0x4718     // jumpToHack, but using the next jumpToHack's literal.
+  ORG 0x7B4B8
+    jumpToHack(PAU_mapBattleFaceBackupMUs)
+  
+  // Swap battle MUs if dual guard or dual strike.
+  ORG 0x9A4764
+    PROC_CALL_ROUTINE_ARG(PAU_startSwapMSProc, 1)   // 1 indicates we're at the start of our proc.
+  ORG 0x9A4814
+    PROC_CALL_ROUTINE_ARG(PAU_startSwapMSProc, 0)   // 0 indicates we're at the end of our proc.
+
+POP
+
+ALIGN 4; PAU_mapBattleInitBackupMUs: #include "initBackupMUs.lyn.event"
+ALIGN 4; PAU_mapBattleFaceBackupMUs: #include "faceBackupMUs.lyn.event"

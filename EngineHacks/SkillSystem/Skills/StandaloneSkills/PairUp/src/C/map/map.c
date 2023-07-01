@@ -91,7 +91,7 @@ void PAU_ForEachProcExt(ProcInstruction* script, void func(Proc*, u8*), u8* comm
   }
 }
 
-// Offsets map sprites during pair-up action.
+// Offsets map sprites during pair-up and drop actions.
 const ProcInstruction PAU_offsetMapSpriteProcInstr[] = {
   PROC_SET_NAME("PAU_OffsetMapSpriteProc"),
   PROC_YIELD,
@@ -153,13 +153,132 @@ void PAU_dropOffsetMSInit(struct PAU_offsetMapSpriteProc* proc) {
 
 void PAU_dropOffsetMSLoop(struct PAU_offsetMapSpriteProc* proc) {
   proc->timer++;
-  if (proc->timer >= proc->limit) {
-    //PAU_mapAddSMS(proc->unit2, PAU_PAIRUP_BACKUP);
+  if (proc->timer >= proc->limit)
     BreakProcLoop((Proc*)proc);
-  }
   
   proc->muProc1->xSubOffset -= (PAU_mapFrontOffsX / proc->limit)<<4;
   proc->muProc1->ySubOffset -= (PAU_mapFrontOffsY / proc->limit)<<4;
   proc->muProc2->xSubOffset -= (PAU_mapBackOffsX / proc->limit)<<4;
   proc->muProc2->ySubOffset -= (PAU_mapBackOffsY / proc->limit)<<4;
 }
+
+// Swap map sprites during battle.
+const ProcInstruction PAU_swapMapSpriteProcInstr[] = {
+  PROC_SET_NAME("PAU_SwapMapSpriteProc"),
+  PROC_YIELD,
+  PROC_CALL_ROUTINE(PAU_swapMSInit),
+  PROC_LOOP_ROUTINE(PAU_swapMSLoop),
+  PROC_END
+  
+};
+
+// Replaces call to 0x813F9 in gMapAnimDefaultRound and the END_PROC command.
+u8 PAU_startSwapMSProc(u8 start, Proc* proc) {
+  struct PAU_swapMapSpriteProc* proc2;
+  
+  if (PAU_showBothMapSprites) {
+    // Check if dual strike or dual guard triggered.
+    u8 proccedSkillID = ((struct NewBattleRound*)(gMapAnimData.pCurrentRound)-1)->skillID;
+    if (proccedSkillID == (((int)&DualStrikeID) & 0xFF)) {
+      proc2 = (struct PAU_swapMapSpriteProc*)ProcStartBlocking(PAU_swapMapSpriteProcInstr, proc);
+      proc2->state = start;
+      return 0;               // Yield.
+    } else if (proccedSkillID == (((int)&DualGuardID) & 0xFF)) {
+      proc2 = (struct PAU_swapMapSpriteProc*)ProcStartBlocking(PAU_swapMapSpriteProcInstr, proc);
+      proc2->state = start;
+      proc2->state |= 2;      // Indicates it's Dual Guard.
+      return 0;               // Yield.
+    }
+  }
+  
+  if (start) {
+    MapAnim_BeginSubjectFastAnim();
+    return 1;                 // Don't yield.
+  }
+  EndProc(proc);
+  return 0;                   // Yield.
+}
+
+void PAU_swapMSInit(struct PAU_swapMapSpriteProc* proc) {
+  proc->frontID = 0;
+  proc->backID = 0;
+  proc->timer = 0;
+  proc->limit = 8;
+  
+  // Find front Unit's actorID.
+  if (!(proc->state & 2))           // Dual Strike.
+    proc->frontID = gMapAnimData.subjectActorId;
+  else
+    proc->frontID = gMapAnimData.targetActorId;
+  
+  // Find back Unit's actorID.
+  if (proc->frontID < 2) {
+    proc->backID = proc->frontID + 2;
+    if (!(gMapAnimData.actor[proc->backID].bu == gMapAnimData.actor[proc->frontID].bu))
+      proc->backID = proc->frontID + 1;
+  } else {
+    proc->backID = proc->frontID - 2;
+    if (!(gMapAnimData.actor[proc->backID].bu == gMapAnimData.actor[proc->frontID].bu))
+      proc->backID = proc->frontID - 1;
+  }
+  
+  // Play skill activation sound.
+  int x = (gMapAnimData.actor[proc->frontID].bu->unit.xPos << 4) - gGameState.cameraRealPos.x;
+  if (proc->state & 1) {
+    if (!(proc->state & 2))           // Dual Strike.
+      PlaySpacialSoundMaybe(PAU_dualStrikeSkillActivationSound, x);
+    else
+      PlaySpacialSoundMaybe(PAU_dualGuardSkillActivationSound, x);
+  } else if (PAU_swapBackActivationSound != -1)
+    PlaySpacialSoundMaybe(PAU_swapBackActivationSound, x);
+  
+  // Setup angle.
+  proc->frontAngle = ArcTan2(PAU_mapFrontOffsX, PAU_mapFrontOffsY) >> 8;
+  proc->backAngle = ArcTan2(PAU_mapBackOffsX, PAU_mapBackOffsY) >> 8;
+};
+
+void PAU_swapMSLoop(struct PAU_swapMapSpriteProc* proc) {
+  proc->timer++;
+  
+  // Move MUs in circular motion.
+  int angle = (proc->timer << 4) & 0xFF;
+  int frontX = gSinLookup[(angle + proc->frontAngle) & 0xFF] >> 6;
+  int frontY = gCosLookup[(angle + proc->frontAngle) & 0xFF] >> 6;
+  int backX = gSinLookup[(angle + proc->backAngle) & 0xFF] >> 6;
+  int backY = gCosLookup[(angle + proc->backAngle) & 0xFF] >> 6;
+  gMapAnimData.actor[proc->frontID].mu->xSubOffset = frontX;
+  gMapAnimData.actor[proc->frontID].mu->ySubOffset = frontY;
+  gMapAnimData.actor[proc->backID].mu->xSubOffset = backX;
+  gMapAnimData.actor[proc->backID].mu->ySubOffset = backY;
+  
+  // Halfway through change which sprite gets drawn over which.
+  if (proc->timer == (proc->limit>>1)) {
+    gMapAnimData.actor[proc->backID].mu->ySubPosition += 1;   // Ensures sorting works.
+    MU_SortObjLayers();
+    gMapAnimData.actor[proc->backID].mu->ySubPosition -= 1;
+  }
+  
+  if (proc->timer >= proc->limit) {
+    
+    // Ensure final positions are correct.
+    gMapAnimData.actor[proc->frontID].mu->xSubOffset = PAU_mapBackOffsX<<4;
+    gMapAnimData.actor[proc->frontID].mu->ySubOffset = PAU_mapBackOffsY<<4;
+    gMapAnimData.actor[proc->backID].mu->xSubOffset = PAU_mapFrontOffsX<<4;
+    gMapAnimData.actor[proc->backID].mu->ySubOffset = PAU_mapFrontOffsY<<4;
+    
+    // Swap the ID of the actor/target.
+    if (!(proc->state & 2))
+      gMapAnimData.subjectActorId = proc->backID;
+    else
+      gMapAnimData.targetActorId = proc->backID;
+    BreakProcLoop((Proc*)proc);
+    
+    if (proc->state & 1) {
+      // Wait a little before action.
+      proc->sleepTime = 8;
+      proc->onCycle = _ProcSleepCallback;
+    } else {
+      EndProc(proc->parent);
+    }
+  }
+};

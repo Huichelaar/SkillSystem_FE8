@@ -87,6 +87,7 @@ extern u8 BA2_AB_UNCOMPOAMDATA;    // In AAA.event
 extern const struct BanimRoundScripts PAU_backupBAnimRoundScripts[];  // In PairUp.event.
 extern const s16 PAU_dualStrikeSkillActivationSound;                  // In PairUp.event.
 extern const s16 PAU_dualGuardSkillActivationSound;                   // In PairUp.event.
+extern const s16 PAU_swapBackActivationSound;                         // In PairUp.event.
 extern const u8 PAU_dualBAnimSwapTime;                                // In PairUp.event.
 extern const u16 PAU_defaultMagicAnimsTable[];                        // In PairUp.event.
 extern const s16 PAU_nosferatuReplacementSpellID;                     // In PairUp.event.
