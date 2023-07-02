@@ -40,12 +40,17 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
       ldr   r0, =gMapAnimData
       mov   r1, #0x5E
       ldrb  r2, [r0, r1]        @ ActorCount.
-      add   r2, r4
+      add   r2, #0x1
       mov   r1, #0x14
       mul   r1, r2
-      ldr   r1, [r1, r0]
-      cmp   r1, #0x0
-      bne   L2
+      add   r1, #0x4
+      ldr   r1, [r1, r0]        @ backupUnit's bu.
+      mov   r3, #0x14
+      mul   r3, r4
+      add   r3, #0x4
+      ldr   r3, [r3, r0]        @ mainUnit's bu.
+      cmp   r1, r3
+      beq   L2
         sub   r2, #0x1
       L2:
       mov   r6, r2              @ ID of backupUnit's actorState.
@@ -102,9 +107,10 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
 Return:
 mov   r0, r4
 pop   {r4, r6}
-ldr   r3, =0x807B4C1
+ldr   r3, =0x807B4B7
 cmp   r0, #0x0
-beq   GOTO_R3
-  ldr   r3, =0x807B4B7
+bne   GOTO_R3
+  bl    PAU_muSortObjLayers     @ Set OBJLayers to ensure correct display order.
+  ldr   r3, =0x807B4C1
 GOTO_R3:
 bx    r3

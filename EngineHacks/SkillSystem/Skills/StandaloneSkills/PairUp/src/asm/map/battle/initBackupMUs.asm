@@ -12,7 +12,7 @@ ldr   r0, [r0]                  @ r0 = BattleRounds[0].
 mov   r1, #0x80
 lsl   r1, #0x3
 tst   r0, r1
-bne   Return                    @ Vanilla, if first round is triangle attack.
+bne   Return                    @ Skip if first round is triangle attack.
   ldr   r0, =PAU_showBothMapSprites
   ldrb  r0, [r0]
   cmp   r0, #0x0
@@ -40,7 +40,7 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
     mov   r1, #0x5E
     ldrb  r0, [r0, r1]        @ ActorCount.
     cmp   r0, #0x1
-    ble   Return              @ Return if no Target.
+    ble   Return              @ Skip if no Target.
       mov   r0, r4            @ Target.
       bl    PAU_isPairedUp
       cmp   r0, #0x0
@@ -56,7 +56,6 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
         mov   r1, r4
         ldr   r3, =CreateMapBattleMU
         bl    GOTO_R3
-        mov   r1, #0x1        @ Indicates ActorCount++;
 
 @ Vanilla, overwritten by hook.
 Return:
