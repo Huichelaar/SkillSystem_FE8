@@ -5,6 +5,7 @@ void PAU_mapAddSMS(Unit* unit, u8 pairupType);
 struct MUProc* PAU_MU_CreateTwo(Unit* mainUnit);
 void PAU_ForEachProcExt(ProcInstruction* script, void func(Proc*, u8*), u8* commands);
 void PAU_muSortObjLayers();
+void PAU_MU_CritFlash_SpriteShakeLoop(Proc* proc);
 
 struct PAU_offsetMapSpriteProc {
   /* 00 */ PROC_HEADER;
@@ -82,6 +83,7 @@ extern Proc gProcStatePool[]; //! FE8U = 0x2024E68
 extern struct MUConfig gMoveUnitExtraDataArray[4]; //! FE8U = 0x3001900
 extern const void _ProcSleepCallback(Proc* proc); //! FE8U = 0x8003291
 extern const void PlaySpacialSoundMaybe(u16 songID, int x); //! FE8U = 0x8014B29
+extern const void MU_SetDisplayOffset(struct MUProc* proc, int xOff, int yOff); //! FE8U = 0x80797F4
 extern const void MU_SortObjLayers(); //! FE8U = 0x8079BE1
 extern const void MapAnimProc_MoveCameraOntoSubject(Proc* proc); //! FE8U = 0807A941
 extern const void MapAnimProc_MoveCameraOntoTarget(Proc* proc); //! FE8U = 0807A95D

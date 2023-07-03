@@ -30,6 +30,10 @@ PUSH
     BL(PAU_MU_CreateTwoLadder)
   ORG 0x27AA6
     BL(PAU_MU_CreateTwoLadder)
+  ORG 0x3115C     // Resuming from animated battle.
+    BL(PAU_MU_CreateTwoLadder)
+  ORG 0x3139E     // Resuming from action? Called when loading suspend save.
+    BL(PAU_MU_CreateTwoLadder)
   //ORG 0x7B35A   // Battles but also traps apparently.
     //BL(PAU_MU_CreateTwoLadder)
   

@@ -2,6 +2,10 @@
 
 PUSH
 
+  // Clear backup Unit's MU if mainUnit dies.
+  ORG 0x326A0
+    jumpToHack(PAU_mapBattleDeathClearMU)
+
   // Start extra battle MUs for backup units of paired-up units.
   ORG 0x7B964
     jumpToHack(PAU_mapBattleInitBackupMUs)
@@ -15,6 +19,10 @@ PUSH
   ORG 0x7B4B8
     jumpToHack(PAU_mapBattleFaceBackupMUs)
   
+  // Take MU xOffs and yOffs into account for paired-up units during crit shake.
+  ORG 0x9A2D78
+    PROC_LOOP_ROUTINE(PAU_MU_CritFlash_SpriteShakeLoop)
+  
   // Swap battle MUs if dual guard or dual strike.
   ORG 0x9A4764
     PROC_CALL_ROUTINE_ARG(PAU_startSwapMSProc, 1)   // 1 indicates we're at the start of our proc.
@@ -25,3 +33,4 @@ POP
 
 ALIGN 4; PAU_mapBattleInitBackupMUs: #include "initBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleFaceBackupMUs: #include "faceBackupMUs.lyn.event"
+ALIGN 4; PAU_mapBattleDeathClearMU: #include "deathClearMU.lyn.event"

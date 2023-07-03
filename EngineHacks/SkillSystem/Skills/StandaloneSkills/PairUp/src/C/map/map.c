@@ -165,6 +165,29 @@ void PAU_muSortObjLayers() {
     gMapAnimData.actor[array[i]].mu->pAPHandle->objLayer = priority[i];
 }
 
+// Replaces the original at 0x8079A10.
+// Takes paired-up xOffs and yOffs into account.
+void PAU_MU_CritFlash_SpriteShakeLoop(Proc* proc) {
+  u8 timer = *(u8*)((u32)proc+0x30);
+  struct MUProc* pMUProc = *(struct MUProc**)((u32)proc+0x2C);
+  timer++;
+  *(u8*)((u32)proc+0x30) = timer;
+  u8 pu = PAU_isPairedUp(pMUProc->pUnit);
+  s16 baseX = 0, baseY = 0;
+  
+  if (PAU_showBothMapSprites && (pu == PAU_PAIRUP_OFFENSE || pu == PAU_PAIRUP_DEFENSE)) {
+    baseX = PAU_mapFrontOffsX;
+    baseY = PAU_mapFrontOffsY;
+  }
+  
+  MU_SetDisplayOffset(pMUProc, ((timer & 1) ? baseX+2 : baseX-2), baseY);
+
+  if (timer >= 12) {
+    MU_SetDisplayOffset(pMUProc, baseX, baseY);
+    BreakProcLoop(proc);
+  }
+}
+
 // Offsets map sprites during pair-up and drop actions.
 const ProcInstruction PAU_offsetMapSpriteProcInstr[] = {
   PROC_SET_NAME("PAU_OffsetMapSpriteProc"),
@@ -245,6 +268,8 @@ const ProcInstruction PAU_swapMapSpriteProcInstr[] = {
   PROC_CALL_ROUTINE(PAU_swapMSPlay),
   PROC_LOOP_ROUTINE(PAU_swapMSLoop),
   PROC_CALL_ROUTINE(PAU_swapMSEnd),
+  PROC_YIELD,
+  PROC_CALL_ROUTINE(MapAnim_BeginSubjectFastAnim),
   PROC_GOTO(0),
   
   // Move camera back to actor.
@@ -253,6 +278,8 @@ const ProcInstruction PAU_swapMapSpriteProcInstr[] = {
   PROC_CALL_ROUTINE(MapAnimProc_MoveCameraOntoSubject),
   PROC_YIELD,
   PROC_CALL_ROUTINE(PAU_swapMSEnd),
+  PROC_YIELD,
+  PROC_CALL_ROUTINE(MapAnim_BeginSubjectFastAnim),
   
   PROC_LABEL(0),
   PROC_YIELD,

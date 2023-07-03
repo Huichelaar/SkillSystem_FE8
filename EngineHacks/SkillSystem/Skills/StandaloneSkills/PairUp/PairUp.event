@@ -117,6 +117,8 @@
   
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
+  // Temp, increase crit of KillerAxe to 'force' crits.
+  // PUSH; ORG 0x80A038; BYTE 127; POP
 
 // Includes.
 #include "src/src.event"
