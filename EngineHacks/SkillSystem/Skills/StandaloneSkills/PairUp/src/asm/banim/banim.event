@@ -1,5 +1,6 @@
 // Battle animation related stuff.
 #include "gauge/gauge.event"
+#include "spell/spell.event"
 #ifndef jumpToHack_r0
   #define jumpToHack_r0(offset) "BYTE 0x00 0x48 0x00 0x47; POIN (offset|0x1)"
 #endif

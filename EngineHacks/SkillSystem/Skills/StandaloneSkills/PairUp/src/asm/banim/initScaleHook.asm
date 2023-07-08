@@ -48,6 +48,15 @@ lsl   r1, r5, #0x2
 add   r1, #0x5C
 str   r0, [r4, r1]        @ Clear +0x5C and +0x60.
 
+@ Check if unit enabled (will fail for monocombat, like fortify).
+ldr   r0, =0x203E104      @ gBattleAnimUnitEnabledLookup
+lsl   r1, r5, #0x1
+ldsh  r0, [r0, r1]
+cmp   r0, #0x1
+beq   L5
+bl    notPairedUp
+L5:
+
 ldr   r0, =gpUnitLeft_BattleStruct
 lsl   r1, r5, #0x2
 add   r0, r1

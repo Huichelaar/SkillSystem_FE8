@@ -5,19 +5,29 @@
 ldr   r1, =0x2000000
 ldr   r0, [r1]            @ frontLeftAIS.
 ldr   r1, [r1, #0x4]      @ backLeftAIS.
-ldr   r2, =gpUnitLeft_BattleStruct
-ldr   r2, [r2]
-mov   r3, #0x0            @ 0 for Left AIS.
-bl    PAU_initPairUpPartner
+cmp   r0, #0x0
+beq   L1
+  cmp   r1, #0x0
+  beq   L1
+    ldr   r2, =gpUnitLeft_BattleStruct
+    ldr   r2, [r2]
+    mov   r3, #0x0            @ 0 for Left AIS.
+    bl    PAU_initPairUpPartner
+L1:
 
 @ Call function for Right AISes.
 ldr   r1, =0x2000000
 ldr   r0, [r1, #0x8]      @ frontRightAIS.
 ldr   r1, [r1, #0xC]      @ backRightAIS.
-ldr   r2, =gpUnitRight_BattleStruct
-ldr   r2, [r2]
-mov   r3, #0x1            @ 1 for Right AIS.
-bl    PAU_initPairUpPartner
+cmp   r0, #0x0
+beq   L2
+  cmp   r1, #0x0
+  beq   L2
+    ldr   r2, =gpUnitRight_BattleStruct
+    ldr   r2, [r2]
+    mov   r3, #0x1            @ 1 for Right AIS.
+    bl    PAU_initPairUpPartner
+L2:
 
 @ Vanilla, overwritten by hook.
 ldr   r0, =gSomethingRelatedToAnimAndDistance

@@ -71,6 +71,19 @@
   PAU_dualBAnimSwapTime:
   BYTE 10
   
+  // List of spellIDs of staves/dance/sing spellAnimIDs that should
+  // increment the pair-up gauge. 0-terminated.
+  ALIGN 4; PAU_statusSpellAffectGaugeList:
+  //SHORT 0xE             // Song. Not sure what this is, it might be unused in FE8.
+  //SHORT 0xF             // Dance. To add this, new hook for incrementing battle gauge needs to be added to ActionDance.
+  //SHORT 0x2C            // Restore staff.
+  SHORT 0x2D            // Silence.
+  SHORT 0x2E            // Sleep.
+  //SHORT 0x2F            // Hammerne.
+  SHORT 0x30            // Berserk.
+  //SHORT 0x31            // Barrier.
+  SHORT 0 0 0 0 0 0 0   // Terminator + redundancy for potential future spells.
+  
   // Table of magic animations corresponding to default weapon types.
   // If Dual Striker doesn't have an equippable weapon, the first non-staff
   // non-unarmed battle animation of their class animation struct is picked,
@@ -119,6 +132,10 @@
   // PUSH; ORG 0x8071CA; BYTE 3; POP
   // Temp, increase crit of KillerAxe to 'force' crits.
   // PUSH; ORG 0x80A038; BYTE 127; POP
+  // Temp, give access to ballistae to Eirika & Ephraim
+  // PUSH; ORG 0x803D8C; BYTE 0x80; ORG 0x804064; BYTE 0x80; POP
+  // Temp, give access to staves to Eirika & Ephraim.
+  PUSH; ORG 0x803D7C; BYTE 0xFF; ORG 0x804054; BYTE 0xFF; POP
 
 // Includes.
 #include "src/src.event"

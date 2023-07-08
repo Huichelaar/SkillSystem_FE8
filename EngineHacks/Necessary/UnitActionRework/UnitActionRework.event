@@ -16,6 +16,8 @@ ALIGN 4
 prNewActionApplication:
 	#incbin "asm/ApplyAction.bin"
 	POIN pActionRoutineTable
+  POIN PAU_getPairUpGauge
+  POIN PAU_setBattleGauge
 
 ALIGN 4
 prWaitAction:

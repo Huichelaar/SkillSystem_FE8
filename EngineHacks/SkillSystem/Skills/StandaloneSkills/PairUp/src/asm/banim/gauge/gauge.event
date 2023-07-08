@@ -44,6 +44,10 @@ PUSH
   // Update gauge icons due to attack that misses.
   ORG 0x52980
     jumpToHack(PAU_bAnimGaugeMiss)
+  
+  // Update gauge icons due to status hit.
+  ORG 0x52D90
+    jumpToHack(PAU_bAnimGaugeStatus)
 
 POP
 
@@ -55,3 +59,4 @@ ALIGN 4; PAU_bAnimGaugeAttack: #include "attack.lyn.event"
 ALIGN 4; PAU_bAnimGaugeNosferatu: #include "nosferatu.lyn.event"
 ALIGN 4; PAU_bAnimGaugeNODMG: #include "nodmg.lyn.event"
 ALIGN 4; PAU_bAnimGaugeMiss: #include "miss.lyn.event"
+ALIGN 4; PAU_bAnimGaugeStatus: #include "status.lyn.event"

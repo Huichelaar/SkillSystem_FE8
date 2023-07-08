@@ -28,6 +28,12 @@ PUSH
   // Call PAU_MU_CreateTwo instead of MU_Create.
   ORG 0x1D06C
     BL(PAU_MU_CreateTwoLadder)
+  ORG 0x1D740     // MakeMoveunitForActiveUnit. Triggered when selecting unit immediately after pairing-up.
+    BL(PAU_MU_CreateTwoLadder)
+  ORG 0x24936     // RideCommandEffect (ballistae).
+    BL(PAU_MU_CreateTwoLadder)
+  ORG 0x24996     // ExitCommandEffect (ballistae).
+    BL(PAU_MU_CreateTwoLadder)
   ORG 0x27AA6
     BL(PAU_MU_CreateTwoLadder)
   ORG 0x3115C     // Resuming from animated battle.
@@ -36,6 +42,8 @@ PUSH
     BL(PAU_MU_CreateTwoLadder)
   //ORG 0x7B35A   // Battles but also traps apparently.
     //BL(PAU_MU_CreateTwoLadder)
+  ORG 0x9EB24     // Return from supply.
+    BL(PAU_MU_CreateTwoLadder)
   
   // Call function that deletes leftover MU and offsets new KOIDO MU.
   ORG 0x32230

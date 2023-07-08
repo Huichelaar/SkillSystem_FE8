@@ -1,0 +1,20 @@
+// Modify certain spell effects to take paired-up unit into account.
+
+PUSH
+
+  // When big bubble appears, the AIS gets a lower priority so it's drawn after bubble.
+  // We'll do the same for the paired-up AIS.
+  ORG 0x61EF8
+    SHORT 0x1C28      // mov r0, r5     @ AIS*
+    SHORT 0x2140      // mov r1, #0x40  @ priority >> 4
+    callHack_r2(PAU_bAnimSpellFortifyHook)
+    SHORT 0x46C0      // NOP
+  ORG 0x6201C
+    SHORT 0x1C30      // mov r0, r6     @ AIS*
+    SHORT 0x2180      // mov r1, #0x80  @ priority >> 4
+    callHack_r2(PAU_bAnimSpellFortifyHook)
+    SHORT 0x46C0      // NOP
+
+POP
+
+ALIGN 4; PAU_bAnimSpellFortifyHook: #include "fortifyHook.lyn.event"

@@ -5,6 +5,10 @@
 #define NeomaUnarmedAnim 4
 
 {
+ALIGN 4; #include "BishopM/7. Staff/bism_mg1Installer.event"
+}
+
+{
 ALIGN 4; #include "Kylorde/3. Axe/lorm_sp1Installer.event"
 }
 {
@@ -17,6 +21,7 @@ ALIGN 4; #include "Kylorde/8. Unarmed/lorm_sp1Installer.event"
 ALIGN 4; KylordeAnims:
 AxeAnim(KylordeAxeAnim)
 HandaxeAnim(KylordeHandaxeAnim)
+StaffAnim(0x82)
 UnarmedAnim(KylordeUnarmedAnim)
 EndAnim
 
@@ -28,5 +33,6 @@ ALIGN 4; #include "Neoma/8. Unarmed/lorf_sw1Installer.event"
 }
 ALIGN 4; NeomaAnims:
 SwordAnim(NeomaSwordAnim)
+StaffAnim(0x82)
 UnarmedAnim(NeomaUnarmedAnim)
 EndAnim

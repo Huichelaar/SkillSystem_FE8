@@ -2,6 +2,8 @@
 .include "_Definitions.h.s"
 
 .set pActionEffectTable, EALiterals+0x00
+.set PAU_getPairUpGauge, EALiterals+0x04
+.set PAU_setBattleGauge, EALiterals+0x08
 
 .set prActionStaffDoorChestUseItemNightmare, 0x0802FC48
 
@@ -15,12 +17,21 @@ ApplyAction:
 	ldr r5, =pActionStruct
 	
 	ldrb r0, [r5, #0x0C] @ Action Unit Index
-	_blh prUnit_GetStruct
+	_blh prGetUnitStruct
 	
 	@ Storing Active Unit
 	ldr r1, =ppActiveUnit
 	str r0, [r1]
 	
+  @ Copy pair-up gauge to battle pair-up gauge.
+  ldr r2, PAU_getPairUpGauge
+  bl BXR2
+  ldr r2, PAU_setBattleGauge
+  bl BXR2
+  
+  ldr r1, =ppActiveUnit
+  ldr r0, [r1]
+  
 	@ r2 = Action Id
 	ldrb r2, [r5, #0x11]
 	

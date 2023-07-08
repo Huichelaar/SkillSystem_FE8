@@ -7,6 +7,19 @@
 #include "save/save.c"
 #include "forecast/forecast.c"
 
+// Returns TRUE if status spell should increment pair-up gauge.
+// Returns FALSE otherwise.
+u8 PAU_doesStatusSpellAffectGauge(s16 spellAnimID) {
+  int i = 0;
+  
+  while (PAU_statusSpellAffectGaugeList[i]) {
+    if (PAU_statusSpellAffectGaugeList[i] == spellAnimID)
+      return TRUE;
+    i++;
+  }
+  return FALSE;
+}
+
 // Replaces GetBattleHitCount at 0x2B081. Checks for Dual Strike.
 int PAU_getBattleHitCount(BattleUnit* unit) {
   u8 hitCount = 1;
