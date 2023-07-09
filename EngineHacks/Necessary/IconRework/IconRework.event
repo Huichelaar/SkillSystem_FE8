@@ -16,6 +16,9 @@ InjectIconGfxGetter(6, (prGetMiscIconGfx|1))
 
 ALIGN 4
 prGetSkillIconGfx:
+ORG CurrentOffset+1
+prGetSkillIconGfxThumb:
+ORG CurrentOffset-1
 	#incbin "asm/GetSheetIconGfx.bin"
 	POIN SkillIcons
 	
@@ -35,8 +38,9 @@ prGetSkillBookIconGfx:
 	#incbin "asm/GetSheetIconGfx.bin"
 	POIN SkillIcons
 
-ORG CurrentOffset+1
 prGetMiscIconGfx:
+ORG CurrentOffset+1
+prGetMiscIconGfxThumb:
 ORG CurrentOffset-1
 	#incbin "asm/GetSheetIconGfx.bin"
 	POIN MiscIcons

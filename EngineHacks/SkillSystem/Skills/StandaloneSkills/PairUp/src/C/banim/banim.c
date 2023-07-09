@@ -650,7 +650,7 @@ void PAU_bAnimGaugeAppearInit(struct PAU_bAnimGaugeProc* proc) {
   if (!(proc->disappear)) {
     
     // Put gauge icons in BGVRAM.
-    CpuFastCopy((void*)prGetMiscIconGfx(0x605), (void*)0x6000220, 0x80);    // 0x600220 should be available.
+    CpuFastCopy((void*)prGetMiscIconGfxThumb(0x604), (void*)0x6000220, 0x80);    // 0x600220 should be available.
     
     // Update screen entries.
     PAU_bAnimGaugeScrEntries(proc, 0xFFFF);

@@ -3,9 +3,12 @@
 
 PUSH
   
-  // Enable ride command when unit is rescuing, if unit is also paired-up.
+  // Enable "Ride" command when unit is rescuing, if unit is also paired-up.
   ORG 0x248DC
     jumpToHack(PAU_mapRideUsability)
+  // Disable "Arena" command if unit is paired-up.
+  ORG 0x240FC
+    jumpToHack(PAU_mapArenaUsability)
   
   // Add check for Pair-Up before applying support bonuses.
   ORG 0x2862E
@@ -36,6 +39,7 @@ PUSH
 POP
 
 ALIGN 4; PAU_mapRideUsability: #include "rideUsability.lyn.event"
+ALIGN 4; PAU_mapArenaUsability: #include "arenaUsability.lyn.event"
 ALIGN 4; PAU_checkIfSupportBonus: #include "checkIfSupportBonus.lyn.event"
 ALIGN 4; PAU_battleApplyGaugeUpdates: #include "battleApplyGaugeUpdates.lyn.event"
 ALIGN 4; PAU_incrMisc: #include "incrMisc.lyn.event"

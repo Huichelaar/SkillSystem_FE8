@@ -54,8 +54,17 @@ lsl   r1, r5, #0x1
 ldsh  r0, [r0, r1]
 cmp   r0, #0x1
 beq   L5
-bl    notPairedUp
+  bl    notPairedUp
 L5:
+
+@ Check if promotion.
+ldr   r0, =gBattleStats
+ldrh  r0, [r0]
+ldr   r1, =0x110      @ 0x10 promo_prep (branch screen?), 0x100 promo.
+tst   r0, r1
+beq   L6
+  bl    notPairedUp
+L6:
 
 ldr   r0, =gpUnitLeft_BattleStruct
 lsl   r1, r5, #0x2

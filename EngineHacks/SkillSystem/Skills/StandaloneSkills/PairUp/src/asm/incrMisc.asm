@@ -10,11 +10,23 @@ push  {r5}
 @ Vanilla, overwritten by hook.
 ldrb  r1, [r4, #0x12]
 lsl   r1, #0x1
-add   r0, #0x1E
-ldrh  r5, [r0, r1]
+mov   r5, r0
+add   r5, #0x1E
+ldrh  r5, [r5, r1]
 mov   r1, #0xFF
 and   r5, r1          @ Item.
 
+@ Increment battle pair-up gauge if applicable.
+bl    PAU_isPairedUp
+cmp   r0, #0x0
+bne   L1
+  ldrb  r0, [r4, #0xD]
+  ldr   r3, =GetUnit
+  bl    GOTO_R3
+  bl    PAU_isPairedUp
+  cmp   r0, #0x0
+  beq   Return
+L1:
 mov   r0, r5
 ldr   r3, =GetSpellAssocStructPtr
 bl    GOTO_R3

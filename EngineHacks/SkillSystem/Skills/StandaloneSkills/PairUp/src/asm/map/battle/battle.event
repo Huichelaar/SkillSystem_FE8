@@ -19,6 +19,30 @@ PUSH
   ORG 0x7B4B8
     jumpToHack(PAU_mapBattleFaceBackupMUs)
   
+  // Draw pairup overlay TSA if paired-up.
+  ORG 0x7BE5C
+    jumpToHack(PAU_mapBattlePickTSAArray)
+  ORG 0x7BE82
+    SHORT 0x0724    // lsl r4, #0x1C      @ lsl r4 0xC and lsl r4 #0x10 in one instruction.
+    SHORT 0x01B9    // lsl r1, r7, #0x6   @ r7 is 1 if paired-up, 0 otherwise.
+    SHORT 0xBC80    // pop {r7}           @ To match the push {r7} in PAU_mapBattlePickTSAArray.
+    SHORT 0x1A40    // sub r0, r1         @ Move ScreenEntries one row higher if paired-up.
+  // Repoint tiles, and move them 1 slot earlier.
+  ORG 0x7BC44
+    POIN PAU_mapBattleWindowGfx
+    WORD 0x6000000
+  // Repoint solo TSA.
+  ORG 0x9A3670
+    POIN PAU_mapBattleWindowSoloTSA
+    POIN PAU_mapBattleWindowSoloTSA
+    POIN PAU_mapBattleWindowSoloTSA
+    POIN PAU_mapBattleWindowSoloTSA
+  // Repoint left and right TSA if battlestats hasn't.
+  #ifndef BATTLE_STATS
+    POIN PAU_mapBattleWindowRightTSA
+    POIN PAU_mapBattleWindowLeftTSA
+  #endif // BATTLE_STATS
+  
   // Take MU xOffs and yOffs into account for paired-up units during crit shake.
   ORG 0x9A2D78
     PROC_LOOP_ROUTINE(PAU_MU_CritFlash_SpriteShakeLoop)
@@ -34,3 +58,4 @@ POP
 ALIGN 4; PAU_mapBattleInitBackupMUs: #include "initBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleFaceBackupMUs: #include "faceBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleDeathClearMU: #include "deathClearMU.lyn.event"
+ALIGN 4; PAU_mapBattlePickTSAArray: #include "pickTSAArray.lyn.event"

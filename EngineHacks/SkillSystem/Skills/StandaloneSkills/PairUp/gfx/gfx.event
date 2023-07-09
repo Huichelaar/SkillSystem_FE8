@@ -1,7 +1,28 @@
-ALIGN 4; PAU_infoWindowTSA: #incbin "infoWindow.tsa"                          // Compressed.
-ALIGN 4; PAU_forecastWindowLeftTSA: #incbin "forecastWindowLeft.tsa"          // Uncompressed.
-ALIGN 4; PAU_forecastWindowRightTSA: #incbin "forecastWindowRight.tsa"        // Uncompressed.
-ALIGN 4; PAU_forecastWindowBothTSA: #incbin "forecastWindowBoth.tsa"          // Uncompressed.
-ALIGN 4; PAU_forecastWindowExtLeftTSA: #incbin "forecastWindowExtLeft.tsa"    // Uncompressed.
-ALIGN 4; PAU_forecastWindowExtRightTSA: #incbin "forecastWindowExtRight.tsa"  // Uncompressed.
-ALIGN 4; PAU_forecastWindowExtBothTSA: #incbin "forecastWindowExtBoth.tsa"    // Uncompressed.
+// target info window TSA.
+ALIGN 4; PAU_infoWindowTSA: #incbin "targetWindow/infoWindow.tsa"                             // Compressed.
+
+// battle forecast TSA.
+ALIGN 4; PAU_forecastWindowLeftTSA: #incbin "battleForecast/forecastWindowLeft.tsa"           // Uncompressed.
+ALIGN 4; PAU_forecastWindowRightTSA: #incbin "battleForecast/forecastWindowRight.tsa"         // Uncompressed.
+ALIGN 4; PAU_forecastWindowBothTSA: #incbin "battleForecast/forecastWindowBoth.tsa"           // Uncompressed.
+ALIGN 4; PAU_forecastWindowExtLeftTSA: #incbin "battleForecast/forecastWindowExtLeft.tsa"     // Uncompressed.
+ALIGN 4; PAU_forecastWindowExtRightTSA: #incbin "battleForecast/forecastWindowExtRight.tsa"   // Uncompressed.
+ALIGN 4; PAU_forecastWindowExtBothTSA: #incbin "battleForecast/forecastWindowExtBoth.tsa"     // Uncompressed.
+
+// mapbattle overlay TSA.
+ALIGN 4; PAU_mapBattleWindowSoloTSA: #incbin "mapBattleOverlay/solo.tsa"                      // Compressed.
+ALIGN 4; PAU_mapBattleWindowSoloPUTSA: #incbin "mapBattleOverlay/soloPU.tsa"                  // Compressed.
+#ifndef BATTLE_STATS
+  ALIGN 4; PAU_mapBattleWindowLeftTSA: #incbin "mapBattleOverlay/left.tsa"                    // Compressed.
+  ALIGN 4; PAU_mapBattleWindowLeftPUTSA: #incbin "mapBattleOverlay/leftPU.tsa"                // Compressed.
+  ALIGN 4; PAU_mapBattleWindowRightTSA: #incbin "mapBattleOverlay/right.tsa"                  // Compressed.
+  ALIGN 4; PAU_mapBattleWindowRightPUTSA: #incbin "mapBattleOverlay/rightPU.tsa"              // Compressed.
+#endif // BATTLE_STATS
+
+//mapbattle overlay tiles.
+ALIGN 4; PAU_mapBattleWindowGfx: #incbin "mapBattleOverlay/mapBattleTiles.dmp"                // Compressed.
+
+// Three-by-two 2d array, indexed by actorcount and actorID.
+ALIGN 4; PAU_mapBattleWindowTSAArray:
+POIN PAU_mapBattleWindowSoloPUTSA PAU_mapBattleWindowSoloPUTSA PAU_mapBattleWindowSoloPUTSA PAU_mapBattleWindowSoloPUTSA
+POIN PAU_mapBattleWindowRightPUTSA PAU_mapBattleWindowLeftPUTSA

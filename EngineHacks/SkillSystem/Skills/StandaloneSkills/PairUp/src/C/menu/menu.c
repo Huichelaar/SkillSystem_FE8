@@ -34,10 +34,14 @@ const ProcInstruction PAU_infoWindowDisplayProcInstr[] = {
   PROC_END
 };
 
-// Draw target SMS.
+// Draw sprites.
 void PAU_infoWindowLoop(struct PAU_InfoWindowDisplayProc* proc) {
+  // Unit SMS.
   Unit* unit = GetUnit(((TargetSelectionProc*)proc->parent)->pCurrentEntry->unitIndex);
   PutUnitSpriteExt(2, proc->xUnitSprite, 8, 0, unit);
+  
+  // Skill Icon.
+  ObjInsertSafe(0, ((u16)proc->x)+0x51, 8, &gObj_16x16, 0x1180);
 }
 
 // Mostly copies UnitInfoWindow_PositionUnitName, 0x80347D4.
@@ -148,7 +152,7 @@ void PAU_selectionOnConstruction(struct PAU_TargetSelectionProc* proc) {
   CopyToPaletteBuffer((void*)redAndGreenColour, 0x14, 12);
   
   // Load item palette.
-  CopyToPaletteBuffer((void*)gIconPalettes, 0x80, 32);
+  CopyToPaletteBuffer((void*)gIconPalettes, 0x220, 32);
 }
 
 // Target select onSwitchIn.
@@ -157,6 +161,7 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
   ChangeActiveUnitFacing(target->x, target->y);
   Unit* unit = GetUnit(target->unitIndex);
   int x = GetUnitInfoWindowX(unit, 13);
+  proc->infoWindowDisplayProc->x = x<<3;
   
   // Draw info window.
   ClearBG0BG1();
@@ -177,21 +182,31 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
   // Draw pair-up skill icon.
   u16 gaugeIconID, skillIconID;
   if (SkillTester(gActiveUnit, (int)&DualStrikeID)) {
-    gaugeIconID = 0x603;
+    gaugeIconID = 0x600;
     skillIconID = (int)&DualStrikeID | 0x100;   // Assumes skill icons are on sheet 1.
   }
   else {
-    gaugeIconID = 0x604;
+    gaugeIconID = 0x602;
     skillIconID = (int)&DualGuardID | 0x100;
   }
-  DrawIcon(gBg0MapBuffer + 42 + x, gaugeIconID, 0x0000);  // We do this merely to allocate this icon.
-  DrawIcon(gBg0MapBuffer + 42 + x, skillIconID, 0x4000);
+  DrawIcon(gBg0MapBuffer + 106 + x, gaugeIconID, 0x0000);    // We do this merely to allocate this icon.
+  DrawIcon(gBg0MapBuffer + 106 + x, gaugeIconID+1, 0x0000);  // We do this merely to allocate this icon.
+  CopyTileGfxForObj((void*)prGetSkillIconGfxThumb(skillIconID), (void*)0x6013000, 2, 2);
 
   // Draw pair-up gauge icons.
   u16 scrEntry = GetIconTileIndex(gaugeIconID);
-  for (int i = 0; i < PAU_gaugeSize; i++) {
-    gBg0MapBuffer[i*32 + 138 + x] = scrEntry + 2;
-    gBg0MapBuffer[i*32 + 139 + x] = scrEntry + 3;
+  u16 scrEntry2 = GetIconTileIndex(gaugeIconID+1);
+  for (int i = 0; i <= PAU_gaugeSize; i++) {
+    if (i == 0) {
+      gBg0MapBuffer[i*32 + 106 + x] = scrEntry;
+      gBg0MapBuffer[i*32 + 107 + x] = scrEntry + 1;
+    } else if (i < PAU_gaugeSize) {
+      gBg0MapBuffer[i*32 + 106 + x] = scrEntry + 2;
+      gBg0MapBuffer[i*32 + 107 + x] = scrEntry + 3;
+    } else {
+      gBg0MapBuffer[i*32 + 106 + x] = scrEntry2;
+      gBg0MapBuffer[i*32 + 107 + x] = scrEntry2 + 1;
+    }
   }
 
   EnableBgSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);

@@ -16,7 +16,8 @@ struct NewBattleRound {
 };
 extern u8 SkillTester(Unit* unit, u8 skillID);
 extern s8 prMovGetter(Unit* unit);
-extern u32 prGetMiscIconGfx(u16 iconId);
+extern u32 prGetSkillIconGfxThumb(u16 iconId);
+extern u32 prGetMiscIconGfxThumb(u16 iconId);
 
 u8 PAU_doesStatusSpellAffectGauge(s16 spellAnimID);
 int PAU_getBattleHitCount(BattleUnit* unit);

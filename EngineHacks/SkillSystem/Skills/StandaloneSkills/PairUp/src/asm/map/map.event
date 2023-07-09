@@ -28,6 +28,8 @@ PUSH
   // Call PAU_MU_CreateTwo instead of MU_Create.
   ORG 0x1D06C
     BL(PAU_MU_CreateTwoLadder)
+  ORG 0x1D2CC     // TryMakeCantoUnit. Triggered after promotion (to canto-enabled unit?) at least.
+    BL(PAU_MU_CreateTwoLadder)
   ORG 0x1D740     // MakeMoveunitForActiveUnit. Triggered when selecting unit immediately after pairing-up.
     BL(PAU_MU_CreateTwoLadder)
   ORG 0x24936     // RideCommandEffect (ballistae).

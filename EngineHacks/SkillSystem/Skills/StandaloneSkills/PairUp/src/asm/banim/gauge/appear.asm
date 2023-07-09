@@ -17,6 +17,13 @@ bne   L5                    @ If proc doesn't exist,
   beq   L3                  @ don't start proc.
 L5:
 
+@ Check if promotion.
+ldr   r0, =gBattleStats
+ldrh  r0, [r0]
+ldr   r1, =0x110            @ 0x10 promo_prep (branch screen?), 0x100 promo.
+tst   r0, r1
+bne   L3                    @ Don't start proc if promotion.
+
 @ Left.
 ldr   r0, =gpUnitLeft_BattleStruct
 ldr   r0, [r0]

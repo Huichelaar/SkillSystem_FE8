@@ -44,6 +44,7 @@ u8 PAU_pairUpEffect(MenuProc* menuProc, MenuCommandProc* commandProc);
 const extern void* PAU_infoWindowTSA;
 
 // Vanilla.
+extern const void CopyTileGfxForObj(void* src, void* dest, u8 width, u8 height); //! FE8U = 0x8013021
 extern const int GetUnitInfoWindowX(struct Unit* unit, int width); //! FE8U = 0x80349D5
 extern const void PutUnitSpriteExt(int layer, int x, int y, int oam2, struct Unit* unit); //! FE8U = 0x8027E4D
 extern const void TryRemoveUnitFromBallista(Unit* unit); //! FE8U = 0x8037A6D

@@ -45,7 +45,7 @@ void PAU_forecastDrawGaugeIcons(struct PAU_forecastProc* proc, u16* dest, Unit* 
   if (!(pairupType))
     return;
   
-  u16 gaugeIconID = 0x606 + ((pairupType - 1) << 1);
+  u16 gaugeIconID = 0x605 + ((pairupType - 1) << 1);
   u16 offs = 0;
   u8 val = PAU_getPairUpGauge();
   

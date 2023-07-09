@@ -15,22 +15,18 @@
 	
 	PUSH
 	
-	//Update the graphics
-	ORG $7BC44
-	POIN New_Battle_Anims_Off_Graphics
-	
 	//Modify the numbers to use - rather than ?
 	ORG $7BA20
 	POIN New_Numbers
 	
 	//TSA for the right and left boxes, respectively
 	ORG $9A3680
-	POIN New_Battle_Anims_Off_Right_TSA
-	POIN New_Battle_Anims_Off_Left_TSA
+	POIN PAU_mapBattleWindowRightTSA
+	POIN PAU_mapBattleWindowLeftTSA
 	
 	//Make the box not overlap active units or go off-screen (will probably have to fiddle with this later)
 	ORG $7AB8A
-	SHORT 0x285F //cmp r0,#0x5F rather than 0x6F
+	SHORT 0x2857 //cmp r0,#0x57 rather than 0x6F
 	ORG $7AB98
 	SHORT 0x3840 //sub r0,#0x40 rather than 0x28
 	ORG $7ABA2
@@ -42,19 +38,6 @@
 	jumpToHack(Show_Battle_Stats)
 	
 	POP
-	
-	ALIGN 4
-	New_Battle_Anims_Off_Graphics:
-	//#incext Png2Dmp "Anims_Off_Battle_Graphic New.png" --lz77
-	#incbin "Anims_Off_Battle_Graphic-New.dmp"
-	
-	ALIGN 4
-	New_Battle_Anims_Off_Right_TSA:
-	#incbin "New_Battle_Anims_Off_Right_TSA.dmp"
-	
-	ALIGN 4
-	New_Battle_Anims_Off_Left_TSA:
-	#incbin "New_Battle_Anims_Off_Left_TSA.dmp"
 	
 	ALIGN 4
 	Show_Battle_Stats:
@@ -75,6 +58,11 @@
 	New_Numbers:
 	//#incext Png2Dmp "new_numbers.png" --lz77
 	#incbin "new_numbers.dmp"
+  
+  ALIGN 4; PAU_mapBattleWindowLeftTSA: #incbin "tsa/leftStats.tsa"              // Compressed.
+  ALIGN 4; PAU_mapBattleWindowLeftPUTSA: #incbin "tsa/leftStatsPU.tsa"          // Compressed.
+  ALIGN 4; PAU_mapBattleWindowRightTSA: #incbin "tsa/rightStats.tsa"            // Compressed.
+  ALIGN 4; PAU_mapBattleWindowRightPUTSA: #incbin "tsa/rightStatsPU.tsa"        // Compressed.
 	
 // #else
 // 	ERROR "You're not assembling FE8 events!"
