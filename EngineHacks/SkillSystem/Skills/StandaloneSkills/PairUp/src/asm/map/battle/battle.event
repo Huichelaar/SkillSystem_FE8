@@ -43,6 +43,10 @@ PUSH
     POIN PAU_mapBattleWindowLeftTSA
   #endif // BATTLE_STATS
   
+  // Update gauge icons.
+  ORG 0x81628
+    jumpToHack(PAU_mapBattleUpdateGaugeIcons)
+  
   // Take MU xOffs and yOffs into account for paired-up units during crit shake.
   ORG 0x9A2D78
     PROC_LOOP_ROUTINE(PAU_MU_CritFlash_SpriteShakeLoop)
@@ -59,3 +63,4 @@ ALIGN 4; PAU_mapBattleInitBackupMUs: #include "initBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleFaceBackupMUs: #include "faceBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleDeathClearMU: #include "deathClearMU.lyn.event"
 ALIGN 4; PAU_mapBattlePickTSAArray: #include "pickTSAArray.lyn.event"
+ALIGN 4; PAU_mapBattleUpdateGaugeIcons: #include "updateGaugeIcons.lyn.event"

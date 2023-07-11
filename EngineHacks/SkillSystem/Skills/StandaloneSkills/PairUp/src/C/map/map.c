@@ -343,7 +343,7 @@ void PAU_swapMSInit(struct PAU_swapMapSpriteProc* proc) {
   // Setup angle.
   proc->frontAngle = ArcTan2(PAU_mapFrontOffsX, PAU_mapFrontOffsY) >> 8;
   proc->backAngle = ArcTan2(PAU_mapBackOffsX, PAU_mapBackOffsY) >> 8;
-};
+}
 
 // Play skill activation sound.
 void PAU_swapMSPlay(struct PAU_swapMapSpriteProc* proc) {
@@ -397,7 +397,7 @@ void PAU_swapMSLoop(struct PAU_swapMapSpriteProc* proc) {
     
     BreakProcLoop((Proc*)proc);
   }
-};
+}
 
 void PAU_swapMSEnd(struct PAU_swapMapSpriteProc* proc) {
 
@@ -409,4 +409,53 @@ void PAU_swapMSEnd(struct PAU_swapMapSpriteProc* proc) {
     EndProc(proc->parent);
   }
 
+}
+
+const ProcInstruction PAU_mapGaugeProcInstr[] = {
+  PROC_SET_NAME("PAU_MapGaugeProc"),
+  PROC_YIELD,
+  PROC_LABEL(0),
+  PROC_CALL_ROUTINE(PAU_mapGaugeInit),
+  PROC_BLOCK,
+  PROC_END
 };
+
+void PAU_mapGaugeScrEntries(struct PAU_mapGaugeProc* proc, u16 mask) {
+  u16 scrEntry = GetIconTileIndex(0x604);
+  u16 xLeft, xRight;
+  
+  if (gMapAnimData.actorCount_maybe == 1) {
+    xLeft = proc->infoWindowProc->x - 1;
+    xRight = xLeft;
+  } else {
+    xLeft = proc->infoWindowProc->x - 10;
+    xRight = proc->infoWindowProc->x + 5;
+  }
+  
+  // Left
+  if (proc->leftPairUpType) {
+    for (int i = 0; i < PAU_gaugeSize; i++) {
+      if (i >= proc->leftGaugeVal)
+        gBg0MapBuffer[(proc->infoWindowProc->y << 5) + xLeft + i] = scrEntry + ((proc->leftPairUpType - 1) << 1) + 1;
+      else
+        gBg0MapBuffer[(proc->infoWindowProc->y << 5) + xLeft + i] = scrEntry + ((proc->leftPairUpType - 1) << 1);
+    }
+  }
+  
+  // Right
+  if (proc->rightPairUpType) {
+    for (int i = 0; i < PAU_gaugeSize; i++) {
+      if (i >= proc->rightGaugeVal)
+        gBg0MapBuffer[(proc->infoWindowProc->y << 5) + xRight + i] = (scrEntry | 0x400) + ((proc->rightPairUpType - 1) << 1) + 1;
+      else
+        gBg0MapBuffer[(proc->infoWindowProc->y << 5) + xRight + i] = (scrEntry | 0x400) + ((proc->rightPairUpType - 1) << 1);
+    }
+  }
+  
+  EnableBgSyncByMask(BG0_SYNC_BIT);
+}
+
+void PAU_mapGaugeInit(struct PAU_mapGaugeProc* proc) {
+  proc->infoWindowProc = (struct MAInfoFrameProc*)proc->parent;
+  PAU_mapGaugeScrEntries(proc, 0);
+}

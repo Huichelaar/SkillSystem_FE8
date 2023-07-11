@@ -28,7 +28,7 @@
 	ORG $7AB8A
 	SHORT 0x2857 //cmp r0,#0x57 rather than 0x6F
 	ORG $7AB98
-	SHORT 0x3840 //sub r0,#0x40 rather than 0x28
+	SHORT 0x3838 //sub r0,#0x38 rather than 0x28
 	ORG $7ABA2
 	SHORT 0x2008 //mov r0,0x8; should cover all the funny cases
 	

@@ -10,8 +10,8 @@ TODO:
     - Test dual guard with enemy initiating (vantage+ for player phase?)
     - test pair-up with different weapons and corresponding anims.
     - Test pair-up banim when healing.
-    - Test pair-up banim when one anim, (fortify staff).
-    - Test pair-up being danced for.
+    - Test pair-up dancing and being danced for.
+    - Test pair-up banim when one anim, (fortify and latona staff).
     - Test dual strike triggering death quote. and non DS triggering death quote.
     - Test pair-up banim at 2-range (heal and combat).
     - Test pair-up banim at long-range (heal and combat).
@@ -21,9 +21,6 @@ TODO:
     - Test enemy proccing skill immediately after Dual Strike round.
     - Test Dual Strike round being the last round.
   - grepWin all TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
-  
-  - Level up uses BGPalette 0 (used for gauge icons). Undraw icons during level-up?
-  
 
 Notes:
   - Client mentioned not wanting str/mag split. Mention this has been set in config file.

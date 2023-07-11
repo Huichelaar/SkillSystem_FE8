@@ -45,12 +45,37 @@ void PAU_swapMSPlay(struct PAU_swapMapSpriteProc* proc);
 void PAU_swapMSLoop(struct PAU_swapMapSpriteProc* proc);
 void PAU_swapMSEnd(struct PAU_swapMapSpriteProc* proc);
 
+struct PAU_mapGaugeProc {     // Keeps track of gauge bar icon display.
+  /* 00 */ PROC_HEADER;
+  
+  /* 2A */ u16 timer;         // Unused.
+  /* 2C */ u16 limit;         // Unused.
+  
+  /* 2E */ u8 rightPairUpType;
+  /* 2F */ u8 leftPairUpType;
+  /* 30 */ u8 rightGaugeVal;
+  /* 31 */ u8 leftGaugeVal;
+  /* 34 */ struct MAInfoFrameProc* infoWindowProc;
+};
+const ProcInstruction PAU_mapGaugeProcInstr[];
+void PAU_mapGaugeScrEntries(struct PAU_mapGaugeProc* proc, u16 mask);
+void PAU_mapGaugeInit(struct PAU_mapGaugeProc* proc);
+
 extern s8 PAU_mapFrontOffsX;          // In PairUp.event
 extern s8 PAU_mapFrontOffsY;          // In PairUp.event
 extern s8 PAU_mapBackOffsX;           // In PairUp.event
 extern s8 PAU_mapBackOffsY;           // In PairUp.event
 
 // Vanilla
+struct MAInfoFrameProc {
+  /* 00 */ PROC_HEADER;
+
+  /* 2A */ short unk2A;
+  /* 2C */ u16 unk2C;
+  /* 2E */ u8 x;
+  /* 2F */ u8 y;
+  /* 30 */ struct Proc* maMain;
+};
 struct MapAnimActorState {
   /* 00 */ struct Unit* unit;
   /* 04 */ struct BattleUnit* bu;
