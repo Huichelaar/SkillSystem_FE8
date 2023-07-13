@@ -211,6 +211,7 @@ Select an area to Heal. Press L/R to Rotate.[X]
  Thunder[X]
 ## UM_AoEExcalibur
  Excalibur[X]
+
 ## UM_DrawBack
  Draw Back[X]
  
@@ -247,3 +248,51 @@ Select an ally to heal.[X]
 
 ## DrawBackTargetBottomText
 Select an ally to pull.[X]
+
+## UM_PairUp
+ Pair-up[X]
+
+## UM_PairUpDesc
+Pair-up with another unit,[N]
+providing certain bonuses.[X]
+
+## UM_PairUpBottom
+Select a unit to pair-up with.[X]
+
+## UM_Switch
+ Switch[X]
+
+## UM_SwitchDesc
+Switch which unit will be active.[X]
+
+## UM_PUTargetDesc
+The unit to pair-up with.[X]
+
+## UM_PUTargetSkillDSDesc
+Pairing up with this unit will enable[N]
+Dual Strike: If the pair-up gauge is full,[N]
+unit's attack will be followed-up.[X]
+
+## UM_PUTargetSkillDGDesc
+Pairing up with this unit will enable[N]
+Dual Guard: If the pair-up gauge is full,[N]
+next enemy attack will be blocked.[X]
+
+## UM_PUTargetStatDesc
+Pairing up boosts certain stats whilst[N]
+disabling support bonuses given to or[N]
+provided by the paired-up units.[X]
+
+## UM_PUTargetGaugeDSDesc
+The pair-up gauge. Each attack in[N]
+combat will fill this gauge. Once[N]
+it's full, Dual Strike can trigger.[X]
+
+## UM_PUTargetGaugeDGDesc
+The pair-up gauge. Each attack in[N]
+combat will fill this gauge. Once[N]
+it's full, Dual Guard can trigger.[X]
+
+## UM_PUTargetMoveDesc
+Paired-up units can only move as[N]
+far as the slowest unit allows.[X]

@@ -21,6 +21,8 @@ struct PAU_forecastProc {
   /* 53 */ s8 isEffectiveB;
 };
 const ProcInstruction PAU_forecastProcInstr[];
+int PAU_forecastStartHelpBox(Proc* parent);
+void PAU_forecastDrawIconHFlip(u16* BgOut, int IconIndex, int OamPalBase);
 void PAU_forecastDrawGaugeIcons(struct PAU_forecastProc* proc, u16* dest, Unit* unit, u8 pairupType, u8 right);
 void PAU_forecastDrawContentsStandard(struct PAU_forecastProc* proc);
 void PAU_forecastDrawContentsExtended(struct PAU_forecastProc* proc);

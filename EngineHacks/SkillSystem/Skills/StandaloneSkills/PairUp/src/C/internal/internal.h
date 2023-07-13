@@ -4,7 +4,9 @@
 // Pair-Up bits.
 enum {
   PAU_FLAG = 0x80,
-  PAU_GAUGE = 0x7F
+  PAU_SWAPFLAG = 0x80,
+  PAU_GAUGE = 0x7F,
+  PAU_BATTLEGAUGE = 0x7F
 };
 
 u8 PAU_isPairedUp(Unit* unit);
@@ -19,6 +21,9 @@ enum {
 void PAU_setPairUpFlag();
 void PAU_unsetPairUpFlag();
 u8 PAU_getPairUpFlag();
+void PAU_setSwitchFlag();
+void PAU_unsetSwitchFlag();
+u8 PAU_getSwitchFlag();
 u8 PAU_getPairUpGauge();
 void PAU_setPairUpGauge(u8 val);
 u8 PAU_getBattleGauge();

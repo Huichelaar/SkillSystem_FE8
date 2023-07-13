@@ -36,3 +36,6 @@ SwordAnim(NeomaSwordAnim)
 StaffAnim(0x82)
 UnarmedAnim(NeomaUnarmedAnim)
 EndAnim
+
+// Temp, make falcoknight use NeomaAnims
+PUSH; ORG 0x808938; POIN NeomaAnims; POP

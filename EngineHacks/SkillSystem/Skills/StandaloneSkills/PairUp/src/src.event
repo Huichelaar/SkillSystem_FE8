@@ -1,5 +1,7 @@
 #include "C/main.lyn.event"
 #include "asm/asm.event"
+#define helpWindowBasic(up, down, left, right, x, y, textID) "ALIGN 4; WORD up down left right; BYTE x y; SHORT textID; WORD 0 0"
+#define helpWindowAdv(up, down, left, right, x, y, func) "ALIGN 4; WORD up down left right; BYTE x y; SHORT 0 0 0; POIN func"
 
 PUSH
 
@@ -33,6 +35,9 @@ PUSH
     POIN PAU_forecastProcInstr
   ORG 0x5AA1B8
     POIN PAU_forecastProcInstr
+  // Replace helpbox-drawing function.
+  ORG 0x59D414
+    POIN PAU_forecastStartHelpBox
 
 POP
 
@@ -46,3 +51,20 @@ WORD 0                            // onSwitchOut.
 POIN PAU_selectionOnSelect        // onAPress.
 POIN PAU_selectionOnCancel        // onBPress.
 POIN PAU_selectionOnHelp          // onRPress.
+
+// HelpInfo struct instance for target selection info window.
+ALIGN 4; PAU_selectionHelpWindow:
+  ALIGN 4; PAU_selectionHelpWindowName:
+  helpWindowBasic(0, PAU_selectionHelpWindowStat|IsPointer, 0, PAU_selectionHelpWindowSkill|IsPointer, 8, 8, UM_PUTargetDesc)
+
+  ALIGN 4; PAU_selectionHelpWindowSkill:
+  helpWindowAdv(0, PAU_selectionHelpWindowGauge|IsPointer, PAU_selectionHelpWindowName|IsPointer, 0, 81, 8, PAU_selectionHelpWindowSkillFunc)
+
+  ALIGN 4; PAU_selectionHelpWindowStat:
+  helpWindowBasic(PAU_selectionHelpWindowName|IsPointer, PAU_selectionHelpWindowMov|IsPointer, 0, PAU_selectionHelpWindowGauge|IsPointer, 8, 24, UM_PUTargetStatDesc)
+
+  ALIGN 4; PAU_selectionHelpWindowGauge:
+  helpWindowAdv(PAU_selectionHelpWindowSkill|IsPointer, PAU_selectionHelpWindowMov|IsPointer, PAU_selectionHelpWindowStat|IsPointer, 0, 80, 24, PAU_selectionHelpWindowGaugeFunc)
+
+  ALIGN 4; PAU_selectionHelpWindowMov:
+  helpWindowBasic(PAU_selectionHelpWindowStat|IsPointer, 0, 0, PAU_selectionHelpWindowGauge|IsPointer, 8, 120, UM_PUTargetMoveDesc)

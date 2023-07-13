@@ -119,13 +119,13 @@
     // These determine how far paired-up mapsprites stray from the tile
     // a single mapsprite would stand on. Values are in pixels.
     // These won't affect anything if PAU_showBothMapSprites is set to 0.
-    PAU_mapFrontOffsX:
-    BYTE (-4)
-    PAU_mapFrontOffsY:
-    BYTE (-4)
     PAU_mapBackOffsX:
-    BYTE 4
+    BYTE (-4)
     PAU_mapBackOffsY:
+    BYTE (-4)
+    PAU_mapFrontOffsX:
+    BYTE 4
+    PAU_mapFrontOffsY:
     BYTE 4
   
   // Temp, give EirikaLord different movement. For testing purposes.

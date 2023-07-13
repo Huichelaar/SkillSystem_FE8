@@ -1,7 +1,5 @@
 @ Hooked at 0x81628. Where default map battle round happens.
 @ Updates gauge icons.
-@ Registers:
-@   r
 .thumb
 
 push  {r4-r5}
@@ -49,6 +47,13 @@ mov   r4, r0
 mov   r5, r1
 mov   r2, #0x0
 mov   r12, r2             @ Indicates we don't need to update screen entries.
+
+@ Don't change gauge values if solo animation.
+ldr   r1, =gMapAnimData
+mov   r2, #0x5E
+ldrb  r2, [r1, r2]
+cmp   r2, #0x1
+ble   Return2
 
 @ Don't change gauge values for certain spells.
 ldr   r1, =gMapAnimData

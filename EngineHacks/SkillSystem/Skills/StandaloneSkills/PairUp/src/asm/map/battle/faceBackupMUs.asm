@@ -16,13 +16,13 @@ ldr   r3, =SetBattleAnimActorFacing
 bl    GOTO_R3
 
 @ If triangle attack, don't do backup unit stuff.
-ldr   r0, =0x807B9B0            @ r0 = BattleRounds[]*.
-ldr   r0, [r0]                  @ r0 = BattleRounds[].
-ldr   r0, [r0]                  @ r0 = BattleRounds[0].
+ldr   r0, =0x807B9B0              @ r0 = BattleRounds[]*.
+ldr   r0, [r0]                    @ r0 = BattleRounds[].
+ldr   r0, [r0]                    @ r0 = BattleRounds[0].
 mov   r1, #0x80
 lsl   r1, #0x3
 tst   r0, r1
-bne   Return                    @ Vanilla, if first round is triangle attack.
+bne   Return                      @ Vanilla, if first round is triangle attack.
   ldr   r0, =PAU_showBothMapSprites
   ldrb  r0, [r0]
   cmp   r0, #0x0
@@ -31,7 +31,7 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
     mov   r2, #0x14
     mul   r0, r2
     ldr   r2, =gMapAnimData
-    ldr   r0, [r2, r0]          @ Actor or target.
+    ldr   r0, [r2, r0]            @ Actor or target.
     bl    PAU_isPairedUp
     cmp   r0, #0x0
     beq   Return
@@ -41,18 +41,18 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
       mov   r2, #0x14
       mul   r0, r2
       ldr   r2, =gMapAnimData
-      add   r0, r2              @ Actor or target.
+      add   r0, r2                @ Actor or target.
       ldr   r1, =gMapAnimData
-      mov   r6, #0x0            @ to be ID of backupUnit's actorState.
+      mov   r6, #0x0              @ to be ID of backupUnit's actorState.
       Loop:
-        ldr   r2, [r0, #0x4]    @ mainUnit's BattleUnit*
+        ldr   r2, [r0, #0x4]      @ mainUnit's BattleUnit*
         ldr   r3, [r1, #0x4]
         cmp   r2, r3
         bne   continue
-          ldr   r2, [r0]        @ mainUnit's Unit*
+          ldr   r2, [r0]          @ mainUnit's Unit*
           ldr   r3, [r1]
           cmp   r2, r3
-          bne   break           @ End loop if backup unit's actorState found.
+          bne   break             @ End loop if backup unit's actorState found.
         continue:
         add   r1, #0x14
         add   r6, #0x1
@@ -75,11 +75,11 @@ bne   Return                    @ Vanilla, if first round is triangle attack.
       mov   r2, #0x14
       mul   r2, r6
       add   r2, #0x8
-      ldr   r1, [r0, r2]        @ backupUnit's MUProc*.
+      ldr   r1, [r0, r2]          @ backupUnit's MUProc*.
       mov   r2, #0x14
       mul   r2, r4
       add   r2, #0x8
-      ldr   r0, [r0, r2]        @ mainUnit's MUProc*.
+      ldr   r0, [r0, r2]          @ mainUnit's MUProc*.
       
       @ Set MUs' offsets.
       ldr   r2, =PAU_mapFrontOffsX
@@ -116,7 +116,7 @@ pop   {r4, r6}
 ldr   r3, =0x807B4B7
 cmp   r0, #0x0
 bne   GOTO_R3
-  bl    PAU_muSortObjLayers     @ Set OBJLayers to ensure correct display order.
+  bl    PAU_battleMuSortObjLayers @ Set OBJLayers to ensure correct display order.
   ldr   r3, =0x807B4C1
 GOTO_R3:
 bx    r3

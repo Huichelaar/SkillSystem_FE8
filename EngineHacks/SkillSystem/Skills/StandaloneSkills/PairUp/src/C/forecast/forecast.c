@@ -24,21 +24,56 @@ const ProcInstruction PAU_forecastProcInstr[] = {
   PROC_END,
 };
 
-void PAU_forecastDrawIconHFlip(u16* BgOut, int IconIndex, int OamPalBase) 
-{
-    if (IconIndex < 0) {
-        BgOut[0]  = 0;
-        BgOut[1]  = 0;
-        BgOut[32] = 0;
-        BgOut[33] = 0;
-    } else {
-        u16 Tile = GetIconTileIndex(IconIndex) + OamPalBase;
+int PAU_forecastStartHelpBox(Proc* parent) {
+  int x, offs = 0;
 
-        BgOut[1]  = Tile++;
-        BgOut[0]  = Tile++;
-        BgOut[33] = Tile++;
-        BgOut[32] = Tile;
-    }
+  struct PAU_forecastProc* proc = (struct PAU_forecastProc*)ProcFind(PAU_forecastProcInstr);
+  if (proc == 0)
+    return 0;
+
+  if (proc->needContentUpdate != 0)
+    return 0;
+
+  if (proc->side < 0 && PAU_isPairedUp(&gBattleTarget.unit))
+    offs++;
+  if (proc->side >= 0 && PAU_isPairedUp(&gBattleActor.unit))
+    offs--;
+  
+  if (proc->side < 0)
+    x = 0;
+  else
+    x = 20;
+  x += offs;
+
+  LoadDialogueBoxGfx(0, -1);
+  
+  switch (proc->frameKind) {
+    case 1:
+      StartMovingHelpBoxExt((void*)0x8a00fec, parent, x, 0);
+      break;
+
+    case 2:
+      StartMovingHelpBoxExt((void*)0x8a01094, parent, x, 0);
+      break;
+  }
+
+  return 0;
+}
+
+void PAU_forecastDrawIconHFlip(u16* BgOut, int IconIndex, int OamPalBase) {
+  if (IconIndex < 0) {
+    BgOut[0]  = 0;
+    BgOut[1]  = 0;
+    BgOut[32] = 0;
+    BgOut[33] = 0;
+  } else {
+    u16 Tile = GetIconTileIndex(IconIndex) + OamPalBase;
+
+    BgOut[1]  = Tile++;
+    BgOut[0]  = Tile++;
+    BgOut[33] = Tile++;
+    BgOut[32] = Tile;
+  }
 }
 
 void PAU_forecastDrawGaugeIcons(struct PAU_forecastProc* proc, u16* dest, Unit* unit, u8 pairupType, u8 right) {

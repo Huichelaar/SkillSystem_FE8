@@ -3,6 +3,10 @@
 
 PUSH
   
+  // Un-switch units if they were switched, but canceled out of uncomitted action.
+  ORG 0x1D0B0
+    jumpToHack(PAU_unSwitch)
+  
   // Enable "Ride" command when unit is rescuing, if unit is also paired-up.
   ORG 0x248DC
     jumpToHack(PAU_mapRideUsability)
@@ -46,6 +50,7 @@ ALIGN 4; PAU_incrMisc: #include "incrMisc.lyn.event"
 ALIGN 4; PAU_writeBackMisc: #include "writeBackMisc.lyn.event"
 ALIGN 4; PAU_dropClearPairUpData: #include "dropClearPairUpData.lyn.event"
 ALIGN 4; PAU_canUnitRescue: #include "canUnitRescue.lyn.event"
+ALIGN 4; PAU_unSwitch: #include "unSwitch.lyn.event"
 
 // For use with MSG.
 ALIGN 4; prPAU_addAtk: #include "addPairUpBonus.lyn.event"

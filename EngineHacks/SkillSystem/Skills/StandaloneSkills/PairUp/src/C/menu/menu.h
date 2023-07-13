@@ -31,7 +31,14 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
 u8 PAU_selectionOnSelect(TargetSelectionProc* proc, TargetEntry* target);
 int PAU_selectionOnCancel(TargetSelectionProc* proc, TargetEntry* target);
 u8 PAU_selectionOnHelp();
+void PAU_selectionHelpWindowSkillFunc(Proc* proc);
+void PAU_selectionHelpWindowGaugeFunc(Proc* proc);
 extern TargetSelectionDefinition PAU_targetSelectionDefinition;   // Selection routine list.
+extern u32 PAU_selectionHelpWindow;                               // HelpInfo struct instance.
+const extern u16 UM_PUTargetSkillDSDesc;                          // textID.
+const extern u16 UM_PUTargetSkillDGDesc;                          // textID.
+const extern u16 UM_PUTargetGaugeDSDesc;                          // textID.
+const extern u16 UM_PUTargetGaugeDGDesc;                          // textID.
 
 // Action stuff.
 u8 PAU_actionPairUp(Proc* proc);
@@ -40,6 +47,8 @@ void PAU_postActionPairUp(Unit* unit);
 // Menu commands.
 u8 PAU_pairUpUsability(MenuCommandDefinition* command, u8 commandId);
 u8 PAU_pairUpEffect(MenuProc* menuProc, MenuCommandProc* commandProc);
+u8 PAU_switchUsability(MenuCommandDefinition* command, u8 commandId);
+u8 PAU_switchEffect(MenuProc* menuProc, MenuCommandProc* commandProc);
 
 const extern void* PAU_infoWindowTSA;
 
@@ -51,11 +60,14 @@ extern const void TryRemoveUnitFromBallista(Unit* unit); //! FE8U = 0x8037A6D
 extern const u8 GetSomeFacingDirection(s8 xSubject, s8 ySubject, s8 xTarget, s8 yTarget); //! FE8U = 0x801DBD5
 extern const void Make6CKOIDO(Unit* subjectUnit, u8 dir, u8 unk2, Proc* parent); //! FE8U = 0x801DC7D
 extern const void MU_EndAll(); //! FE8U = 0x80790A5
+extern const void StartMovingHelpBoxExt(void* info, Proc* parent, int x, int y); //! FE8U = 0x8089189
 extern Unit* gUnitSubject; //! FE8U = 0x2033F3C
 enum {
   CLASS_PHANTOM = 0x51,
 };
 extern const u16 gPal_UIFont[16]; //! FE8U = 0x859EF00
 extern const u16 gIconPalettes[16]; //! FE8U = 0x85996F4
+extern const MenuDefinition gMenu_UnitMenu; //! FE8U = 0x859D1F0
+extern const ProcInstruction gProc_Menu[]; //! FE8U = 0x85B64D0
 
 #endif // MENU_H

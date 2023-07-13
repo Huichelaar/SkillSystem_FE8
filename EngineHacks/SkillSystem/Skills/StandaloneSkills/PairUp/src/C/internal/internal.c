@@ -36,6 +36,20 @@ u8 PAU_getPairUpFlag() {
   return FALSE;
 }
 
+void PAU_setSwitchFlag() {
+  *PAU_pairUpBattleGaugeRAMAddress |= PAU_SWAPFLAG;
+}
+
+void PAU_unsetSwitchFlag() {
+  *PAU_pairUpBattleGaugeRAMAddress &= ~PAU_SWAPFLAG;
+}
+
+u8 PAU_getSwitchFlag() {
+  if (*PAU_pairUpBattleGaugeRAMAddress & PAU_SWAPFLAG)
+    return TRUE;
+  return FALSE;
+}
+
 // Return value of pair-up gauge.
 u8 PAU_getPairUpGauge() {
   return *PAU_pairUpBitsRAMAddress & PAU_GAUGE;
@@ -51,20 +65,23 @@ void PAU_setPairUpGauge(u8 val) {
 // Return value of battle pair-up gauge.
 // battle pair-up gauge is a copy of the actual pair-up gauge.
 u8 PAU_getBattleGauge() {
-  return *PAU_pairUpBattleGaugeRAMAddress;
+  return *PAU_pairUpBattleGaugeRAMAddress & PAU_BATTLEGAUGE;
 }
 
 // Set value of battle pair-up gauge.
 // battle pair-up gauge is a copy of the actual pair-up gauge.
 void PAU_setBattleGauge(u8 val) {
+  val &= PAU_BATTLEGAUGE;
   if (val > PAU_gaugeSize)
     val = PAU_gaugeSize;
-  *PAU_pairUpBattleGaugeRAMAddress = val;
+  *PAU_pairUpBattleGaugeRAMAddress &= ~PAU_BATTLEGAUGE;
+  *PAU_pairUpBattleGaugeRAMAddress |= val;
 }
 
-// Clears pair-up gauge, battle pair-up gauge and unsets pair-up flag.
+// Clears pair-up gauge, battle pair-up gauge and unsets both flags.
 void PAU_clearPairUpData() {
   PAU_setPairUpGauge(0);
   PAU_unsetPairUpFlag();
   PAU_setBattleGauge(0);
+  PAU_unsetSwitchFlag();
 }

@@ -88,15 +88,6 @@ This unit must escape last.[X]
 ## Mov_Text_ID
 Mov[X]
 
-## UM_PairUp
- Pair-up[X]
-
-## UM_PairUpDesc
-TODO Pair-up helptext here.[X]
-
-## UM_PairUpBottom
-Select a unit to pair-up with.[X]
-
 ## UM_GaidenBlackMagic
  B. Magic[X]
 

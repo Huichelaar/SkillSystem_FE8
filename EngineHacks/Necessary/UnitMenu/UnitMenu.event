@@ -189,6 +189,7 @@ UnitMenuTable:
  MenuCommand(UM_ReciprocalAid, UM_ReciprocalAidDesc, NormalText, ReciprocalAid_Usability, ReciprocalAid_Effect)
   
   MenuCommand(UM_PairUp,UM_PairUpDesc,GreenText,PAU_pairUpUsability,PAU_pairUpEffect)
+  MenuCommand(UM_Switch,UM_SwitchDesc,NormalText,PAU_switchUsability,PAU_switchEffect)
   UM_Rescue
   UM_Give
   UM_Take

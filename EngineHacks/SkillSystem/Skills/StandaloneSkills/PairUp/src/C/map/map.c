@@ -73,7 +73,10 @@ struct MUProc* PAU_MU_CreateTwo(Unit* mainUnit) {
     muProc1->ySubOffset = PAU_mapFrontOffsY<<4;
     muProc2->xSubOffset = PAU_mapBackOffsX<<4;
     muProc2->ySubOffset = PAU_mapBackOffsY<<4;
+    
+    PAU_muSortObjLayers();
   }
+  
   return muProc1;
 }
 
@@ -91,9 +94,60 @@ void PAU_ForEachProcExt(ProcInstruction* script, void func(Proc*, u8*), u8* comm
   }
 }
 
-// Mimics sub_807B4D0, not MU_SortObjLayers (0x8079BE0).
+// Mimics MU_SortObjLayers (0x8079BE0).
 // Takes ySubPosition and xSubPosition into account as well.
 void PAU_muSortObjLayers() {
+  struct MUProc* procs[4];
+
+  // Clear proc list
+  CpuFill32(0, procs, 4 * sizeof(struct MUProc*));
+  int count = 0;
+
+  // Building proc list
+  for (int i = 0; i < MU_MAX_COUNT; i++) {
+    struct MUProc* proc = MU_GetByIndex(i);
+    if (proc) {
+      procs[count] = proc;
+      count++;
+    }
+  }
+
+  // Sorting proc list
+  for (int i = 0; i < (count - 1); i++) {
+    for (int j = (i + 1); j < count; j++) {
+      int swap = FALSE;
+      
+      if (procs[i]->ySubPosition > procs[j]->ySubPosition)
+        swap = TRUE;
+      else if (procs[i]->ySubPosition < procs[j]->ySubPosition)
+        ;
+      else if (procs[i]->ySubOffset > procs[j]->ySubOffset)
+        swap = TRUE;
+      else if (procs[i]->ySubOffset < procs[j]->ySubOffset)
+        ;
+      else if (procs[i]->xSubPosition > procs[j]->xSubPosition)
+        swap = TRUE;
+      else if (procs[i]->xSubPosition < procs[j]->xSubPosition)
+        ;
+      else if (procs[i]->xSubOffset > procs[j]->xSubOffset)
+        swap = TRUE;
+
+      if (swap) {
+        struct MUProc* tmp = procs[i];
+        procs[i] = procs[j];
+        procs[j] = tmp;
+      }
+    }
+  }
+
+  // Set obj layer based on order
+  for (int i = 0; i < count; ++i)
+    procs[i]->pAPHandle->objLayer = 10 - i;
+}
+
+// Mimics sub_807B4D0, not MU_SortObjLayers (0x8079BE0).
+// Takes ySubPosition and xSubPosition into account as well.
+void PAU_battleMuSortObjLayers() {
   const u8 priority[4] = {10, 9, 8, 7};
   u8 array[4];
   int i, j, pu;
@@ -291,7 +345,7 @@ const ProcInstruction PAU_swapMapSpriteProcInstr[] = {
 u8 PAU_startSwapMSProc(u8 start, Proc* proc) {
   struct PAU_swapMapSpriteProc* proc2;
   
-  if (PAU_showBothMapSprites) {
+  if (PAU_showBothMapSprites && (!(battleBuffer[0].battleHit.attributes & BATTLE_HIT_ATTR_TATTACK))) {
     // Check if dual strike or dual guard triggered.
     u8 proccedSkillID = ((struct NewBattleRound*)(gMapAnimData.pCurrentRound)-1)->skillID;
     if (proccedSkillID == (((int)&DualStrikeID) & 0xFF)) {
@@ -374,7 +428,7 @@ void PAU_swapMSLoop(struct PAU_swapMapSpriteProc* proc) {
   // Halfway through change which sprite gets drawn over which.
   if (proc->timer == (proc->limit>>1)) {
     gMapAnimData.actor[proc->backID].mu->ySubPosition -= 1;   // Ensures sorting works.
-    PAU_muSortObjLayers();
+    PAU_battleMuSortObjLayers();
     gMapAnimData.actor[proc->backID].mu->ySubPosition += 1;
   }
   

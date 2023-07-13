@@ -10,6 +10,10 @@ void PAU_tryAddUnitToPairUpTargetList(struct Unit* unit) {
     return;
   }
   
+  // Fail if target is already paired-up.
+  if (PAU_isPairedUp(unit))
+    return;
+  
   // Check if target unit can pair-up.
   if (SkillTester(unit, (int)&DualStrikeID) ||
       SkillTester(unit, (int)&DualGuardID))
@@ -41,7 +45,7 @@ void PAU_infoWindowLoop(struct PAU_InfoWindowDisplayProc* proc) {
   PutUnitSpriteExt(2, proc->xUnitSprite, 8, 0, unit);
   
   // Skill Icon.
-  ObjInsertSafe(0, ((u16)proc->x)+0x51, 8, &gObj_16x16, 0x1180);
+  ObjInsertSafe(0, ((u16)proc->x)+0x51, 8, &gObj_16x16, 0x1680);
 }
 
 // Mostly copies UnitInfoWindow_PositionUnitName, 0x80347D4.
@@ -191,7 +195,7 @@ void PAU_selectionOnChange(struct PAU_TargetSelectionProc* proc, TargetEntry* ta
   }
   DrawIcon(gBg0MapBuffer + 106 + x, gaugeIconID, 0x0000);    // We do this merely to allocate this icon.
   DrawIcon(gBg0MapBuffer + 106 + x, gaugeIconID+1, 0x0000);  // We do this merely to allocate this icon.
-  CopyTileGfxForObj((void*)prGetSkillIconGfxThumb(skillIconID), (void*)0x6013000, 2, 2);
+  CopyTileGfxForObj((void*)prGetSkillIconGfxThumb(skillIconID), (void*)0x6015000, 2, 2);
 
   // Draw pair-up gauge icons.
   u16 scrEntry = GetIconTileIndex(gaugeIconID);
@@ -246,10 +250,27 @@ int PAU_selectionOnCancel(TargetSelectionProc* proc, TargetEntry* target) {
   return GenericSelection_BackToUM(proc, target);
 }
 
+// Display text for the correct skill.
+void PAU_selectionHelpWindowSkillFunc(Proc* proc) {
+  if (SkillTester(gActiveUnit, (int)&DualStrikeID))
+    *(u16*)(((u32)proc)+0x4C) = (u16)(u32)&UM_PUTargetSkillDSDesc;
+  else
+    *(u16*)(((u32)proc)+0x4C) = (u16)(u32)&UM_PUTargetSkillDGDesc;
+}
+
+// Display text for the correct skill.
+void PAU_selectionHelpWindowGaugeFunc(Proc* proc) {
+  if (SkillTester(gActiveUnit, (int)&DualStrikeID))
+    *(u16*)(((u32)proc)+0x4C) = (u16)(u32)&UM_PUTargetGaugeDSDesc;
+  else
+    *(u16*)(((u32)proc)+0x4C) = (u16)(u32)&UM_PUTargetGaugeDGDesc;
+}
+
 // Target select onRPress.
-// Same as RescueSelection_OnHelp, 0x80228a1, so far.
-// TODO, maybe start a help thingy?
-u8 PAU_selectionOnHelp() {
+// Starts a help info box.
+u8 PAU_selectionOnHelp(struct PAU_TargetSelectionProc* proc) {
+  LoadDialogueBoxGfx(0, -1);
+  StartMovingHelpBoxExt((void*)&PAU_selectionHelpWindow, (Proc*)proc, proc->infoWindowDisplayProc->x>>3, 0);
   return 0;
 }
 
@@ -282,17 +303,22 @@ void PAU_postActionPairUp(Unit* unit) {
   if (!(gActionData.unitActionType == PAU_actionID))
     return;
   
+  unit->state &= ~US_CANTOING;
   unit->state |= US_HIDDEN;
   unit->state |= US_UNSELECTABLE;
   unit->state |= US_RESCUED;
 }
 
-// Menu command usability.
+// Pair-up command usability.
 // Draws mostly from RescueUsability, 0x80228A5.
 u8 PAU_pairUpUsability(MenuCommandDefinition* command, u8 commandId) {
   if (gActiveUnit->state & (US_HAS_MOVED | US_IN_BALLISTA | US_RESCUING)) {
     return MCA_NONUSABLE;
   }
+  
+  // Fail if unit is already paired-up.
+  if (PAU_isPairedUp(gActiveUnit))
+    return MCA_NONUSABLE;
   
   // Check if gActiveUnit has pair-up skill (offense or defense).
   if (!(SkillTester(gActiveUnit, (int)&DualStrikeID) ||
@@ -308,11 +334,57 @@ u8 PAU_pairUpUsability(MenuCommandDefinition* command, u8 commandId) {
   return MCA_USABLE;
 }
 
-// Menu command effect.
+// Pair-up command effect.
 // Draws mostly from RescueEffect, 0x80228DD.
 u8 PAU_pairUpEffect(MenuProc* menuProc, MenuCommandProc* commandProc) {
   PAU_makePairUpTargetList(gActiveUnit);
   StartTargetSelection(&PAU_targetSelectionDefinition);
 
   return ME_DISABLE | ME_END | ME_PLAY_BEEP;
+}
+
+// Switch command usability.
+u8 PAU_switchUsability(MenuCommandDefinition* command, u8 commandId) {
+  if (PAU_getSwitchFlag() ||
+     (PAU_isPairedUp(gActiveUnit) == PAU_NOT_PAIREDUP) ||
+     (PAU_isPairedUp(gActiveUnit) == PAU_PAIRUP_BACKUP))
+    return MCA_NONUSABLE;
+  
+  // Disallow switching if inside ballista.
+  // We do this to prevent pair-up partner from also entering ballista.
+  if (gActiveUnit->state & US_IN_BALLISTA)
+    return MCA_NONUSABLE;
+  
+  return MCA_USABLE;
+}
+
+// Switch command effect.
+u8 PAU_switchEffect(MenuProc* menuProc, MenuCommandProc* commandProc) {
+  
+  Unit* unit1 = gActiveUnit;
+  Unit* unit2 = GetUnit(unit1->rescueOtherUnit);
+  
+  unit1->state &= ~US_RESCUING;
+  unit1->state |= US_RESCUED;
+  unit1->state |= US_HIDDEN;
+  unit1->state |= US_UNSELECTABLE;
+  
+  unit2->state |= US_RESCUING;
+  unit2->state &= ~US_RESCUED;
+  unit2->state &= ~US_HIDDEN;
+  unit2->state &= ~US_UNSELECTABLE;
+  
+  gActiveUnit = unit2;
+  gActionData.subjectIndex = unit2->index;
+  gActionData.targetIndex = unit2->index;
+  
+  if (PAU_getSwitchFlag()) {
+    PAU_unsetSwitchFlag();
+  } else {
+    PAU_setSwitchFlag();
+    int xSubject = *(s16*)(((u32)&gGameState)+0x1C) - *(s16*)(((u32)&gGameState)+0xC);
+    StartMenu_AndDoSomethingCommands(&gMenu_UnitMenu, xSubject, 1, 20);
+  }
+
+  return ME_DISABLE | ME_END | ME_PLAY_BEEP | ME_CLEAR_GFX;
 }

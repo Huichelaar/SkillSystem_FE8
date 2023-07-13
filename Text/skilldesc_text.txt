@@ -1639,7 +1639,9 @@ Reciprocal Aid: User and target[N]
 ally switch their current HP totals.[X]
 
 ## SD_DualStrike
-Dual Strike: TODO description.[X]
+Dual Strike: If the pair-up gauge[N]
+is full, unit's attack will be followed-up.[X]
 
 ## SD_DualGuard
-Dual Guard: TODO description.[X]
+Dual Guard: If the pair-up gauge[N]
+is full, next enemy attack will be blocked.[X]
