@@ -116,22 +116,16 @@
   PAU_showBothMapSprites:
   BYTE 1
   
-    // These determine how far paired-up mapsprites stray from the tile
+    // This determines how far paired-up mapsprites stray from the tile
     // a single mapsprite would stand on. Values are in pixels.
     // These won't affect anything if PAU_showBothMapSprites is set to 0.
-    PAU_mapBackOffsX:
-    BYTE (-4)
-    PAU_mapBackOffsY:
-    BYTE (-4)
-    PAU_mapFrontOffsX:
-    BYTE 4
-    PAU_mapFrontOffsY:
+    PAU_mapOffs:
     BYTE 4
   
   // Temp, give EirikaLord different movement. For testing purposes.
   // PUSH; ORG 0x8071CA; BYTE 3; POP
   // Temp, increase crit of KillerAxe to 'force' crits.
-  // PUSH; ORG 0x80A038; BYTE 127; POP
+  PUSH; ORG 0x80A038; BYTE 127; POP
   // Temp, give access to ballistae to Eirika & Ephraim
   // PUSH; ORG 0x803D8C; BYTE 0x80; ORG 0x804064; BYTE 0x80; POP
   // Temp, give access to staves to Eirika & Ephraim.

@@ -352,7 +352,8 @@ u8 PAU_switchUsability(MenuCommandDefinition* command, u8 commandId) {
   
   // Disallow switching if inside ballista.
   // We do this to prevent pair-up partner from also entering ballista.
-  if (gActiveUnit->state & US_IN_BALLISTA)
+  // Also disallow switching if cantoing.
+  if (gActiveUnit->state & (US_IN_BALLISTA | US_CANTOING))
     return MCA_NONUSABLE;
   
   return MCA_USABLE;
@@ -360,7 +361,6 @@ u8 PAU_switchUsability(MenuCommandDefinition* command, u8 commandId) {
 
 // Switch command effect.
 u8 PAU_switchEffect(MenuProc* menuProc, MenuCommandProc* commandProc) {
-  
   Unit* unit1 = gActiveUnit;
   Unit* unit2 = GetUnit(unit1->rescueOtherUnit);
   
@@ -374,9 +374,21 @@ u8 PAU_switchEffect(MenuProc* menuProc, MenuCommandProc* commandProc) {
   unit2->state &= ~US_HIDDEN;
   unit2->state &= ~US_UNSELECTABLE;
   
+  struct MUProc* muProc1 = MU_GetByIndex(0);
+  struct MUProc* muProc2 = MU_GetByIndex(1);
+  muProc1->xSubOffset ^= muProc2->xSubOffset;
+  muProc2->xSubOffset ^= muProc1->xSubOffset;
+  muProc1->xSubOffset ^= muProc2->xSubOffset;
+  muProc1->ySubOffset ^= muProc2->ySubOffset;
+  muProc2->ySubOffset ^= muProc1->ySubOffset;
+  muProc1->ySubOffset ^= muProc2->ySubOffset;
+  PAU_muSortObjLayers();
+  
   gActiveUnit = unit2;
   gActionData.subjectIndex = unit2->index;
   gActionData.targetIndex = unit2->index;
+  
+  Text_ResetTileAllocation();
   
   if (PAU_getSwitchFlag()) {
     PAU_unsetSwitchFlag();

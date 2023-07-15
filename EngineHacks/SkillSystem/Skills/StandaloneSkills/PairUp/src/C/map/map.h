@@ -38,6 +38,16 @@ struct PAU_swapMapSpriteProc {
   /* 2F */ u8 backID;
   /* 30 */ u8 frontAngle;
   /* 31 */ u8 backAngle;
+  /* 32 */ s8 xStart;
+  /* 33 */ s8 yStart;
+  /* 34 */ s8 xEnd;
+  /* 35 */ s8 yEnd;
+};
+enum {  // State flags.
+  PAU_MAPSWAP_START = 1 << 0,
+  PAU_MAPSWAP_DUALGUARD = 1 << 1,
+  PAU_MAPSWAP_TARGET = 1 << 2,
+  PAU_MAPSWAP_NODUAL = 1 << 3
 };
 const ProcInstruction PAU_swapMapSpriteProcInstr[];
 u8 PAU_startSwapMSProc(u8 start, Proc* proc);
@@ -62,10 +72,7 @@ const ProcInstruction PAU_mapGaugeProcInstr[];
 void PAU_mapGaugeScrEntries(struct PAU_mapGaugeProc* proc, u16 mask);
 void PAU_mapGaugeInit(struct PAU_mapGaugeProc* proc);
 
-extern s8 PAU_mapFrontOffsX;          // In PairUp.event
-extern s8 PAU_mapFrontOffsY;          // In PairUp.event
-extern s8 PAU_mapBackOffsX;           // In PairUp.event
-extern s8 PAU_mapBackOffsY;           // In PairUp.event
+extern s8 PAU_mapOffs;                // In PairUp.event
 
 // Vanilla
 struct MAInfoFrameProc {

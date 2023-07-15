@@ -82,33 +82,19 @@ bne   Return                      @ Vanilla, if first round is triangle attack.
       ldr   r0, [r0, r2]          @ mainUnit's MUProc*.
       
       @ Set MUs' offsets.
-      ldr   r2, =PAU_mapFrontOffsX
+      ldr   r2, =PAU_mapOffs
       mov   r3, #0x0
       ldsb  r2, [r2, r3]
       lsl   r2, #0x4
       mov   r3, #0x50
-      strh  r2, [r0, r3]
-      
-      ldr   r2, =PAU_mapFrontOffsY
-      mov   r3, #0x0
-      ldsb  r2, [r2, r3]
-      lsl   r2, #0x4
+      strh  r2, [r0, r3]          @ mainUnit X.
       mov   r3, #0x52
-      strh  r2, [r0, r3]
-      
-      ldr   r2, =PAU_mapBackOffsX
-      mov   r3, #0x0
-      ldsb  r2, [r2, r3]
-      lsl   r2, #0x4
+      strh  r2, [r0, r3]          @ mainUnit Y.
+      neg   r2, r2
       mov   r3, #0x50
-      strh  r2, [r1, r3]
-      
-      ldr   r2, =PAU_mapBackOffsY
-      mov   r3, #0x0
-      ldsb  r2, [r2, r3]
-      lsl   r2, #0x4
+      strh  r2, [r1, r3]          @ backupUnit X.
       mov   r3, #0x52
-      strh  r2, [r1, r3]
+      strh  r2, [r1, r3]          @ backupUnit Y.
 
 Return:
 mov   r0, r4

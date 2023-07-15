@@ -11,4 +11,9 @@ void SetMapAuraFxBlend(unsigned blend);
 void SetMapAuraFxPalette(const u16 palette[]);
 void AddMapAuraFxUnit(struct Unit* unit);
 
+// Pair-up stuff.
+extern u8 PAU_isPairedUp(Unit* unit);
+extern u8 PAU_showBothMapSprites;
+extern s8 PAU_mapOffs;
+
 #endif // MAP_AURA_FX_INCLUDED

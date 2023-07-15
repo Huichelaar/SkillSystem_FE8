@@ -58,7 +58,7 @@ static const struct ProcInstruction sProc_MapAuraFx_Unit[] = {
 
 void MapAuraFx_EnsureCameraOntoPosition(struct MapAuraFxUnitProc* proc)
 {
-	EnsureCameraOntoPosition(proc, proc->pUnit->xPos, proc->pUnit->yPos);
+	EnsureCameraOntoPosition((Proc*)proc, proc->pUnit->xPos, proc->pUnit->yPos);
 
 } 
 static void UnpackGraphics(void)
@@ -160,13 +160,30 @@ static void MapAuraFx_Unit_OnLoop(struct MapAuraFxUnitProc* proc)
 
 	// Display semi-transparent map sprite + obj window map sprite
 
-	SMS_DisplayWindowBlended(
-		11,
-		proc->pUnit->xPos * 16 - gGameState.cameraRealPos.x,
-		proc->pUnit->yPos * 16 - gGameState.cameraRealPos.y,
-		(proc->pUnit->pMapSpriteHandle->oam2Base &~ 0x3FF) | (2 << 10), // priority 2
-		proc->pUnit
-	);
+  if (!PAU_showBothMapSprites || !(PAU_isPairedUp(proc->pUnit))) {
+    SMS_DisplayWindowBlended(
+      11,
+      proc->pUnit->xPos * 16 - gGameState.cameraRealPos.x,
+		  proc->pUnit->yPos * 16 - gGameState.cameraRealPos.y,
+      (proc->pUnit->pMapSpriteHandle->oam2Base &~ 0x3FF) | (2 << 10), // priority 2
+      proc->pUnit
+    );
+  } else {
+    SMS_DisplayWindowBlended(
+      11,
+      proc->pUnit->xPos * 16 - gGameState.cameraRealPos.x - PAU_mapOffs,
+		  proc->pUnit->yPos * 16 - gGameState.cameraRealPos.y - PAU_mapOffs,
+      (GetUnit(proc->pUnit->rescueOtherUnit)->pMapSpriteHandle->oam2Base &~ 0x3FF) | (2 << 10), // priority 2
+      GetUnit(proc->pUnit->rescueOtherUnit)
+    );
+    SMS_DisplayWindowBlended(
+      11,
+      proc->pUnit->xPos * 16 - gGameState.cameraRealPos.x + PAU_mapOffs,
+		  proc->pUnit->yPos * 16 - gGameState.cameraRealPos.y + PAU_mapOffs,
+      (proc->pUnit->pMapSpriteHandle->oam2Base &~ 0x3FF) | (2 << 10), // priority 2
+      proc->pUnit
+    );
+  }
 }
 
 static void MapAuraFx_Unit_OnEnd(struct MapAuraFxUnitProc* proc)

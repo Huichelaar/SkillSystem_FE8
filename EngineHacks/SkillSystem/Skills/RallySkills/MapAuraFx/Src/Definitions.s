@@ -1,5 +1,5 @@
 
-.include "C:/devkitPro/FE-CLib/reference/FE8U-20190316.s"
+.include "C:/FE-CLib/reference/FE8U.s"
 SET_FUNC m4aSongNumStart, 0x80D01FD
 SET_FUNC Menu_Draw, 0x804EF71
 SET_FUNC GetChapterDefinition, 0x8034619

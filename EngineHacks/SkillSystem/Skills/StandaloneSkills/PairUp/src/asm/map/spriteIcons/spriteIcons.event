@@ -7,8 +7,32 @@ PUSH
   ORG 0x278AC
     jumpToHack(PAU_mapSpriteIconRescue)
   
-  // TODO more icons (poison, sleep, berserk, etc.)
+  // Poison status.
+  ORG 0x2770C
+    callHack_r3(PAU_mapSpriteIconStatus)
+    SHORT 0x46C0
+
+  // Silence status.
+  ORG 0x27760
+    callHack_r3(PAU_mapSpriteIconStatus)
+    SHORT 0x46C0
+
+  // Sleep/Freeze status.
+  ORG 0x277B4
+    callHack_r3(PAU_mapSpriteIconStatus)
+    SHORT 0x46C0
+  
+  // Berserk status.
+  ORG 0x27804
+    callHack_r3(PAU_mapSpriteIconStatus)
+    SHORT 0x46C0
+  
+  // Attack/Defense/Crit/Avoid status.
+  ORG 0x2786E
+    SHORT 0x46C0
+    callHack_r3(PAU_mapSpriteIconStatus)
 
 POP
 
 ALIGN 4; PAU_mapSpriteIconRescue: #include "rescue.lyn.event"
+ALIGN 4; PAU_mapSpriteIconStatus: #include "status.lyn.event"

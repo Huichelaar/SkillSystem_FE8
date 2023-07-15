@@ -20,7 +20,7 @@ TODO:
     - Test when DualGuard is triggered in the first round.
     - Test enemy proccing skill immediately after Dual Strike round.
     - Test Dual Strike round being the last round.
-  - grepWin all TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
+  - grepWin all temp, TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
 
 Notes:
   - Client mentioned not wanting str/mag split. Mention this has been set in config file.
