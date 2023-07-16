@@ -94,6 +94,42 @@ void PAU_ForEachProcExt(ProcInstruction* script, void func(Proc*, u8*), u8* comm
   }
 }
 
+// When recovering from status, display SMS at offset if paired-up.
+// Replaces function at 0x35BEC, StatusHealEffect_BlendedSprite_Loop.
+void PAU_mapStatusHealBothSMS(Proc* proc) {
+  s16 offs = 0;
+  if (PAU_showBothMapSprites) {
+    u8 pu = PAU_isPairedUp(gActiveUnit);
+    if (pu == PAU_PAIRUP_OFFENSE || pu == PAU_PAIRUP_DEFENSE) {
+      offs = PAU_mapOffs;
+      PutUnitSprite(
+        4,
+        gActiveUnit->xPos * 16 - gGameState.cameraRealPos.x - offs,
+        gActiveUnit->yPos * 16 - gGameState.cameraRealPos.y - offs,
+        GetUnit(gActiveUnit->rescueOtherUnit)
+      );
+    } else if (pu == PAU_PAIRUP_BACKUP)
+      offs = -PAU_mapOffs;
+  }
+  
+  SMS_DisplayWindowBlended(
+    4,
+    gActiveUnit->xPos * 16 - gGameState.cameraRealPos.x + offs,
+    gActiveUnit->yPos * 16 - gGameState.cameraRealPos.y + offs,
+    0x2800,
+    gActiveUnit
+  );
+
+  s16 timer = *(s16*)((u32)proc+0x4C);
+  timer--;
+  *(s16*)((u32)proc+0x4C) = timer;
+
+  if (timer < 0)
+    BreakProcLoop(proc);
+
+  return;
+}
+
 // Mimics MU_SortObjLayers (0x8079BE0).
 // Takes ySubPosition and xSubPosition into account as well.
 void PAU_muSortObjLayers() {

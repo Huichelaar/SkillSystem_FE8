@@ -4,6 +4,8 @@ TODO:
     - Put pair-up window TSA in messages.
     - Put statboost struct instances in messages.
   - Test without any pair-up active.
+  - Test heroes movement with and without PAU_showBothMapSprites.
+  - Test status recover (whether naturally or by staff works with PAU_showBothMapSprites and without).
   - Test in arena or disable arena option when paired-up?
   - Do these tests with and without BGs. 0x202bd32 unset 0x2 and 0x4 for no BGs, set both for BGS.
   - Do these tests with paired-up unit not having an equipped weapon.

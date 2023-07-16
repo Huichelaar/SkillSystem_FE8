@@ -5,7 +5,11 @@ PUSH
   // Clear backup Unit's MU if mainUnit dies.
   ORG 0x326A0
     jumpToHack(PAU_mapBattleDeathClearMU)
-
+  
+  // Update backup unit's coordinates early to ensure mapbattle won't look weird.
+  ORG 0x3A0A0
+    jumpToHack(PAU_mapBattleCpPerformFix)
+  
   // Start extra battle MUs for backup units of paired-up units.
   ORG 0x7B964
     jumpToHack(PAU_mapBattleInitBackupMUs)
@@ -64,3 +68,4 @@ ALIGN 4; PAU_mapBattleFaceBackupMUs: #include "faceBackupMUs.lyn.event"
 ALIGN 4; PAU_mapBattleDeathClearMU: #include "deathClearMU.lyn.event"
 ALIGN 4; PAU_mapBattlePickTSAArray: #include "pickTSAArray.lyn.event"
 ALIGN 4; PAU_mapBattleUpdateGaugeIcons: #include "updateGaugeIcons.lyn.event"
+ALIGN 4; PAU_mapBattleCpPerformFix: #include "cpPerformFix.lyn.event"

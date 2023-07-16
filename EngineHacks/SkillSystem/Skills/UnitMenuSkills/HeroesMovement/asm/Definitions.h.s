@@ -79,6 +79,7 @@
 .set prMOVEUNIT_SetMovement,     0x08078790 @ arguments: r0 = pointer to MOVEUNIT, r1 = pointer to movement buffer
 .set prMOVEUNIT_SetSprDirection, 0x08078694 @ arguments: r0 = pointer to MOVEUNIT, r1 = direction id (use prGetFacingDirectionId, or 0xB for idle)
 .set prMOVEUNIT_DeleteAll,       0x080790A4 @ none
+.set prMOVEUNIT_GetByUnit,       0x08079BB8 @ arguments: r0 = pointer to Unit Struct; returns: r0 = MOVEUNIT pointer
 
 .set pr6C_New,                   0x08002C7C @ arguments: r0 = pointer to ROM 6C code, r1 = parent; returns: r0 = new 6C pointer (0 if no space available)
 .set pr6C_NewBlocking,           0x08002CE0 @ same

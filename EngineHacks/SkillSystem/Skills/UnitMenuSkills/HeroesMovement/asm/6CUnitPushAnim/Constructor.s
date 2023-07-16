@@ -1,5 +1,5 @@
 .thumb
-.include "_Definitions.h.s"
+.include "../Definitions.h.s"
 
 .set p6CCode, EALiterals+0x00
 
@@ -33,12 +33,30 @@ UnitPushAnim_Constructor:
 	
 	@ Making Subject MOVEUNIT
 	mov r0, r4
-	_blh prMOVEUNIT_NewForMapUnit
+  _blh 0x8028128      @ For units that are paired up.
+	@_blh prMOVEUNIT_NewForMapUnit
 	
 	@ Field 0x2C = Subject MOVEUNIT
 	str r0, [r7, #0x2C]
 	
+  @ Field 0x3C = Rescuee MOVEUNIT
+  mov r1, #0x1B
+  ldrb r0, [r4, r1]
+  str r0, [r7, #0x3C]
+  cmp r0, #0x0
+  beq L1
+    _blh prUnit_GetStruct
+    _blh prMOVEUNIT_GetByUnit
+    str r0, [r7, #0x3C]
+    cmp r0, #0x0
+    beq L1
+      @ Facing Direction
+      mov r1, r5
+      _blh prMOVEUNIT_SetSprDirection
+  L1:
+  
 	@ Facing Direction
+  ldr r0, [r7, #0x2C]
 	mov r1, r5
 	_blh prMOVEUNIT_SetSprDirection
 

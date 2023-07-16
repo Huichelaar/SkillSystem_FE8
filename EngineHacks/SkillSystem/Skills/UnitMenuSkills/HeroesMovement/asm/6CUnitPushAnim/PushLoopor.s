@@ -1,5 +1,5 @@
 .thumb
-.include "_Definitions.h.s"
+.include "../Definitions.h.s"
 
 .set prMoveMOVEUNITTowards, EALiterals+0x00
 .set PUSH_MOVE_SPEED,       EALiterals+0x04
@@ -32,7 +32,39 @@ UnitPushAnim_PushLoopor:
 	mov  r2, #0x36
 	ldrh r2, [r4, r2]
 
+  @ Loading MOVEUNIT2 into r0
+	ldr r0, [r4, #0x3C]
+  cmp r0, #0x0
+  beq L1
+  
+    @ MOVE
+    .short 0xF800
+    
+    @ Prepare routine call
+    ldr r3, prMoveMOVEUNITTowards
+    mov lr, r3
+    
+    @ r3 = Speed
+    ldr r3, PUSH_MOVE_SPEED
+    
+    @ Loading fast anim option value
+    ldr  r0, =(pChapterDataStruct + 0x40)
+    ldrb r0, [r0]
+    lsr r0, r0, #7 @ r0 = 1 if fast anim is set, 0 otherwise
+    
+    @ add 1 to speed if fast speed is set
+    add r3, r0
+    
+    @ Getting Target X
+    mov  r1, #0x34
+    ldrh r1, [r4, r1]
+    
+    @ Getting Target Y
+    mov  r2, #0x36
+    ldrh r2, [r4, r2]
+
 	@ Loading MOVEUNIT into r0
+  L1:
 	ldr r0, [r4, #0x2C]
 	
 	@ MOVE

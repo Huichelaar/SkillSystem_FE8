@@ -350,6 +350,9 @@ u8 PAU_switchUsability(MenuCommandDefinition* command, u8 commandId) {
      (PAU_isPairedUp(gActiveUnit) == PAU_PAIRUP_BACKUP))
     return MCA_NONUSABLE;
   
+  if (!(CanUnitCrossTerrain(GetUnit(gActiveUnit->rescueOtherUnit), gMapTerrain[gActiveUnit->yPos][gActiveUnit->xPos])))
+    return MCA_NONUSABLE;
+  
   // Disallow switching if inside ballista.
   // We do this to prevent pair-up partner from also entering ballista.
   // Also disallow switching if cantoing.
