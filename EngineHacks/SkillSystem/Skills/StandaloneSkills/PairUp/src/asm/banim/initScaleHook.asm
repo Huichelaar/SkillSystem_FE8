@@ -48,22 +48,24 @@ lsl   r1, r5, #0x2
 add   r1, #0x5C
 str   r0, [r4, r1]        @ Clear +0x5C and +0x60.
 
-@ Check if unit enabled (will fail for monocombat, like fortify).
-ldr   r0, =0x203E104      @ gBattleAnimUnitEnabledLookup
-lsl   r1, r5, #0x1
+@ Don't show if promotion.
+ldr   r0, =gSomethingRelatedToAnimAndDistance
+mov   r1, #0x0
 ldsh  r0, [r0, r1]
-cmp   r0, #0x1
-beq   L5
+cmp   r0, #0x4            @ Promotion.
+bne   L5
   bl    notPairedUp
 L5:
 
-@ Check if promotion.
-ldr   r0, =gBattleStats
-ldrh  r0, [r0]
-ldr   r1, =0x110      @ 0x10 promo_prep (branch screen?), 0x100 promo.
-tst   r0, r1
+@ Don't show if unit not enabled, unless Latona/Fortify.
+ldr   r1, =0x203E104      @ gBattleAnimUnitEnabledLookup
+lsl   r2, r5, #0x1
+ldsh  r1, [r1, r2]
+cmp   r1, #0x1
 beq   L6
-  bl    notPairedUp
+  cmp   r0, #0x3          @ Latona/Fortify.
+  bne   L6
+    bl    notPairedUp
 L6:
 
 ldr   r0, =gpUnitLeft_BattleStruct

@@ -11,6 +11,7 @@ TODO:
   - Do these tests with paired-up unit not having an equipped weapon.
     - Test dual guard with enemy initiating (vantage+ for player phase?)
     - test pair-up with different weapons and corresponding anims.
+    - test fog bump.
     - Test pair-up banim when healing.
     - Test pair-up dancing and being danced for.
     - Test pair-up banim when one anim, (fortify and latona staff).
@@ -19,9 +20,9 @@ TODO:
     - Test pair-up banim at long-range (heal and combat).
     - Test Silencer and Triangle attack I guess.
     - Test with paired-up unit missing attack and with non-paired-up unit missing attack.
-    - Test when DualGuard is triggered in the first round.
     - Test enemy proccing skill immediately after Dual Strike round.
     - Test Dual Strike round being the last round.
+  - Delete unnecessary anim stuff, like bishop. Unset str/mag split, don't give eirika or ephraim staff ranks.
   - grepWin all temp, TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
 
 Notes:
@@ -32,7 +33,6 @@ Notes:
   - Mention last four bytes in banim name string need to be left alone.
   - Mention that animDistX & animDistY should be even numbers or battle anims might misalign a little when swapping.
   - If pair-up unit has weapon equipped, priority is given to item-specific banims. If pair-up unit is unarmed, priority is given to whatever armed anim is first in the list. If you put handaxe anims before 1-range axe anims, you won't need magic axe anims.
-  - Mention it's best for C06 and C0D to not be far apart in Neoma and Kylorde battle animations, depending on length of swaptime.
     
 Credits TODO:
   - Sme for her Refuge patch.

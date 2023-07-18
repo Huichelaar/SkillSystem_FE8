@@ -32,6 +32,14 @@ beq   Return
     strb  r1, [r5, r0]    @ Set LASTROUND.
   L3:
   
+  @ Unset ANIMNOTENDED bit, to indicate swap can end.
+  mov   r0, #0x2B
+  ldrb  r1, [r5, r0]    @ proc->state.
+  mov   r2, #0x40
+  mvn   r2, r2
+  and   r1, r2
+  strb  r1, [r5, r0]    @ Unset ANIMNOTENDED.
+  
   @ Halt bAnim if it's swapped out.
   mov   r0, r7
   ldr   r3, =GetAISSubjectId

@@ -64,8 +64,10 @@ extern const void PlaySoundAt(u16 songID, u16 unk1, s16 x, u8 unk3); //! FE8U = 
 extern const void SwitchAISFrameDataFromBARoundType(AIStruct* ais, u8 roundType); //! FE8U = 0x805A07D
 extern const u16 GetBattleAnimationId(Unit* unit, const void* pBattleAnimDef, u16 item, u32 *unk3); //! FE8U = 0x8058849
 extern AIStruct* GetOpponentFrontAIS(AIStruct* ais); //! FE8U = 0x805A2B5
-extern const s16 GetAISNextBattleAnimRoundType(AIStruct* ais); //! FE8U = 0x805A2F1
-extern const s16 GetAISCurrentRoundType(AIStruct* ais); //! FE8U = 0x805A311
+extern const s16 GetAISCurrentRoundType(AIStruct* ais); //! FE8U = 0x805A2D1
+extern const s16 GetAISNextRoundType(AIStruct* ais); //! FE8U = 0x805A2F1
+extern const s16 GetOppositeAISCurrentRoundType(AIStruct* ais); //! FE8U = 0x805A311
+extern const s16 GetOppositeAISNextRoundType(AIStruct* ais); //! FE8U = 0x805A335
 extern const u8 IsRoundTypeOffensive (s16 roundType); //! FE8U = 0x805A21D
 extern const void MoveBattleCameraOnto(AIStruct* ais, s16 speed); //! FE8U = 0x80533D1
 extern const ProcInstruction gProc_efxFarAttack[]; //! FE8U = 0x85B97C4
@@ -136,7 +138,8 @@ enum
 	SWAPPINGRIGHT = (1 << 2),
   SWAPPEDRIGHT = (1 << 3),
   DUALGUARDACTIVE = (1 << 4),
-  LASTROUND = (1 << 5)        // Set by C0D.
+  LASTROUND = (1 << 5),       // Set by C0D.
+  ANIMNOTENDED = (1 << 6)     // Set by C06, unset by C0D.
 };
 const ProcInstruction PAU_aisProcInstr[];
 void PAU_haltBAnims(struct PAU_aisProc* proc);

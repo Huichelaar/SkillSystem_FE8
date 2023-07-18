@@ -440,8 +440,25 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
       yOffs = -gSinLookup[(angle + proc->leftBackAngle) & 0xFF] / proc->slope;
       backupFrontAIS->yPosition = proc->leftOriginY + yOffs;
     }
+  } else if (proc->timer == proc->limit) {
+    if (right) {
+      mainFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
+      mainFrontAIS->yPosition = proc->rightOriginY + (PAU_bAnimDistY>>1);
+      backupFrontAIS->xPosition = proc->rightOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
+      backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
+    } else {
+      mainFrontAIS->xPosition = proc->leftOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
+      mainFrontAIS->yPosition = proc->leftOriginY + (PAU_bAnimDistY>>1);
+      backupFrontAIS->xPosition = proc->leftOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
+      backupFrontAIS->yPosition = proc->leftOriginY - (PAU_bAnimDistY>>1);
+    }
+    mainBackAIS->xPosition = mainFrontAIS->xPosition;
+    mainBackAIS->yPosition = mainFrontAIS->yPosition;
+    backupBackAIS->xPosition = backupFrontAIS->xPosition;
+    backupBackAIS->yPosition = backupFrontAIS->yPosition;
   }
-  else {    // Finish up.
+  
+  if ((proc->timer >= proc->limit) && (!(proc->state & ANIMNOTENDED))) {    // Finish up.
     // Change some relevant RAM locations on end.
     // Swap out AISes in 0x2000000
     *(AIStruct**)(0x2000000 + (right<<3)) = backupFrontAIS;
@@ -482,7 +499,7 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
       backupBackAIS->nextRoundId = mainBackAIS->nextRoundId;
       
       if (gSomethingRelatedToAnimAndDistance && 
-          IsRoundTypeOffensive(GetAISCurrentRoundType(backupFrontAIS))) {
+          IsRoundTypeOffensive(GetAISCurrentRoundType(GetOpponentFrontAIS(backupFrontAIS)))) {
         MoveBattleCameraOnto(backupFrontAIS, -1);
         ProcGoto(ProcStart(PAU_delayAISProcInstr, (Proc*)proc), 1);
       }
@@ -497,27 +514,12 @@ void PAU_swapBAnimLocs(struct PAU_aisProc* proc, u8 right) {
     
     proc->timer = 0;
     if (right) {
-      mainFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
-      mainFrontAIS->yPosition = proc->rightOriginY + (PAU_bAnimDistY>>1);
-      backupFrontAIS->xPosition = proc->rightOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
-      backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
-      
       proc->state &= ~SWAPPINGRIGHT;
       proc->state ^= SWAPPEDRIGHT;
-    }
-    else {
-      mainFrontAIS->xPosition = proc->leftOriginX - (PAU_bAnimDistX>>1) + cameraOffs;
-      mainFrontAIS->yPosition = proc->leftOriginY + (PAU_bAnimDistY>>1);
-      backupFrontAIS->xPosition = proc->rightOriginX + (PAU_bAnimDistX>>1) + cameraOffs;
-      backupFrontAIS->yPosition = proc->rightOriginY - (PAU_bAnimDistY>>1);
-      
+    } else {
       proc->state &= ~SWAPPINGLEFT;
       proc->state ^= SWAPPEDLEFT;
     }
-    mainBackAIS->xPosition = mainFrontAIS->xPosition;
-    mainBackAIS->yPosition = mainFrontAIS->yPosition;
-    backupBackAIS->xPosition = backupFrontAIS->xPosition;
-    backupBackAIS->yPosition = backupFrontAIS->yPosition;
   }
 };
 

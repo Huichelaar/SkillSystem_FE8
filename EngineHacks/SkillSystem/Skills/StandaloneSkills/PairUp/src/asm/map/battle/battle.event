@@ -6,6 +6,11 @@ PUSH
   ORG 0x326A0
     jumpToHack(PAU_mapBattleDeathClearMU)
   
+  // Grab correct MU when applying death effect to combat actor.
+  ORG 0x327DE
+    SHORT 0x1C38          // mov r0, r7       @ Unit* actor. Actually a bu*.
+    SHORT 0xF047 0xF9EA   // bl MU_GetByUnit
+  
   // Update backup unit's coordinates early to ensure mapbattle won't look weird.
   ORG 0x3A0A0
     jumpToHack(PAU_mapBattleCpPerformFix)

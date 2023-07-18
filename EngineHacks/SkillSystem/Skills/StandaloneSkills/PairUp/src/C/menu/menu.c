@@ -377,15 +377,24 @@ u8 PAU_switchEffect(MenuProc* menuProc, MenuCommandProc* commandProc) {
   unit2->state &= ~US_HIDDEN;
   unit2->state &= ~US_UNSELECTABLE;
   
-  struct MUProc* muProc1 = MU_GetByIndex(0);
-  struct MUProc* muProc2 = MU_GetByIndex(1);
-  muProc1->xSubOffset ^= muProc2->xSubOffset;
-  muProc2->xSubOffset ^= muProc1->xSubOffset;
-  muProc1->xSubOffset ^= muProc2->xSubOffset;
-  muProc1->ySubOffset ^= muProc2->ySubOffset;
-  muProc2->ySubOffset ^= muProc1->ySubOffset;
-  muProc1->ySubOffset ^= muProc2->ySubOffset;
-  PAU_muSortObjLayers();
+  if (PAU_showBothMapSprites) {
+    struct MUProc* muProc1 = MU_GetByUnit(unit1);
+    struct MUProc* muProc2 = MU_GetByUnit(unit2);
+    muProc1->xSubOffset ^= muProc2->xSubOffset;
+    muProc2->xSubOffset ^= muProc1->xSubOffset;
+    muProc1->xSubOffset ^= muProc2->xSubOffset;
+    muProc1->ySubOffset ^= muProc2->ySubOffset;
+    muProc2->ySubOffset ^= muProc1->ySubOffset;
+    muProc1->ySubOffset ^= muProc2->ySubOffset;
+    PAU_muSortObjLayers();
+  } else {
+    struct MUProc* muProc1 = MU_GetByUnit(unit1);
+    s8 facingId = muProc1->facingId;
+    MU_End(muProc1);
+    struct MUProc* muProc2 = MU_Create(unit2);
+    muProc2->facingId = facingId;
+    AP_SetAnimation(muProc2->pAPHandle, facingId);
+  }
   
   gActiveUnit = unit2;
   gActionData.subjectIndex = unit2->index;

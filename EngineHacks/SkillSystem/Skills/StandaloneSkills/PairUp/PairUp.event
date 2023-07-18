@@ -127,7 +127,7 @@
   // Temp, increase crit of KillerAxe to 'force' crits.
   PUSH; ORG 0x80A038; BYTE 127; POP
   // Temp, give access to ballistae to Eirika & Ephraim
-  // PUSH; ORG 0x803D8C; BYTE 0x80; ORG 0x804064; BYTE 0x80; POP
+  PUSH; ORG 0x803D8C; BYTE 0x80; ORG 0x804064; BYTE 0x80; POP
   // Temp, give access to staves to Eirika & Ephraim.
   PUSH; ORG 0x803D7C; BYTE 0xFF; ORG 0x804054; BYTE 0xFF; POP
 

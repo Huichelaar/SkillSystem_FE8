@@ -41,6 +41,13 @@ bne   Return        @ Ignore if back layer.
     lsl   r3, r0              @ or SWAPPEDRIGHT.
     tst   r3, r2
     beq   Return              @ If proc->state SWAPPEDLEFT or SWAPPEDRIGHT bit not set, do nothing.
+    
+      @ Set ANIMNOTENDED bit, to indicate swap can not yet end.
+      mov   r3, #0x40
+      orr   r2, r3
+      strb  r2, [r5, r1]
+      @ Camera stuff.
+      
       ldr   r3, =gSomethingRelatedToAnimAndDistance
       ldrh  r3, [r3]
       cmp   r3, #0x0
