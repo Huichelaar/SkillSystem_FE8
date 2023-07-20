@@ -19,9 +19,11 @@ A paired-up unit can switch which unit is backup and which unit is main at any t
 In order to get both the main unit and the backup unit's battle animation sprite to show, I had to use a custom program, [AAA](../../../../../banims/anims/AAA.exe) (also has its [own repository](https://github.com/Huichelaar/AAA) on github),  to prepare battle animations. Any battle animation that can end up being used by a unit that can pair up, needs to be assembled through AAA to properly display in-game during pair-up.
 
 You need to add the following options to the start of the script to ensure the animation displays correctly when paired-up:
-`@ UNCOMPFRAMEDATA`
-`@ UNCOMPOAMDATA`
-`@ HALFSIZESHEETS`
+```
+@ UNCOMPFRAMEDATA
+@ UNCOMPOAMDATA
+@ HALFSIZESHEETS
+```
 Then, you can drag'n'drop the script's `.txt` file to `AAA.bat` which will run AAA on the script and produce a `<scriptname>Installer.event` file which you can `#include` in [AnimInstaller.event](../../../../../banims/anims/AnimInstaller.event). You'll also want to change the default value in the `AnimTableEntry` macro in the `<scriptname>Installer.event` file to the slot you want to replace.
 
 The resulting entry in the battle animation table will have some bits set at +0x8. These might be read as a character of the name of the battle animation, but they're actually there so the game can identify how to treat these animations, so don't change their values.
@@ -30,8 +32,8 @@ The resulting entry in the battle animation table will have some bits set at +0x
 Now, if you're using buildfiles everything so far should cover most needs. If you wish to continue working on the built ROM in [FEBuilderGBA](https://github.com/FEBuilderGBA/FEBuilderGBA), there's a few more things to keep in mind:
 -  I'll point to the MESSAGEs in [PairUp.event](PairUp.event) again. Keep note of where these parameters are stored in ROM, so that if you wish to change them after the ROM's been built, you can find them easily.
 - The pairup battle animations will likely not display correctly in FEBuilderGBA's preview, as their framedata and oamdata is not compressed. I had to leave this data uncompressed for technical reasons, but it does mean you can't preview the animations in FEBuilderGBA. I'm not in charge of the tool though, so this information may be outdated when you're reading this.
-- Due to changes I made to ../../../Internals/activationanims.s, FEBuilderGBA may not be able to find skills, preventing you from changing which characters/classes get what skills. This information may be outdated when you're reading this.
+- Due to changes I made to [activationanims.s](../../../Internals/activationanims.s), FEBuilderGBA may not be able to find skills, preventing you from changing which characters/classes get what skills. This information may be outdated when you're reading this.
 - Note that fixing bugs is a lot harder when not having the option to re-build. A project of this scale is bound to have a few bugs that I've missed. I'd appreciate it if you reconsider working with buildfiles instead, and using this as your base buildfile, instead of as your base ROM.
 
 ## Credits
-The usual SkillSys credits found in the top directory apply of course. Also thanks to Sme for her [Refuge patch](https://drive.google.com/file/d/14g97lHRbISstcD4OxbfKXguc3pMg_zKh/view), which I referenced for the PairUp action.
+The usual [SkillSys credits](../../../../../CREDITS.md) apply of course. Also thanks to Sme for her [Refuge patch](https://drive.google.com/file/d/14g97lHRbISstcD4OxbfKXguc3pMg_zKh/view), which I referenced for the PairUp action.
