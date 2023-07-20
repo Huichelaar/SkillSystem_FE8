@@ -121,33 +121,88 @@
     // These won't affect anything if PAU_showBothMapSprites is set to 0.
     PAU_mapOffs:
     BYTE 4
-  
-  // Temp, give EirikaLord different movement. For testing purposes.
-  // PUSH; ORG 0x8071CA; BYTE 3; POP
-  // Temp, increase crit of KillerAxe to 'force' crits.
-  PUSH; ORG 0x80A038; BYTE 127; POP
-  // Temp, give access to ballistae to Eirika & Ephraim
-  PUSH; ORG 0x803D8C; BYTE 0x80; ORG 0x804064; BYTE 0x80; POP
-  // Temp, give access to staves to Eirika & Ephraim.
-  PUSH; ORG 0x803D7C; BYTE 0xFF; ORG 0x804054; BYTE 0xFF; POP
 
 // Includes.
 #include "src/src.event"
 #include "gfx/gfx.event"
-/*
 
-// Messages. Helps keep track where everything is,
-// should things need to move again.
-// Reference README for which messages to put here.
+// Messages. Helps keep track where parameters
+// are in ROM should things need to move again.
 PUSH
 
-  // For adding pair-up command to menu.
-  ORG PAU_pairUpUsability
-  MESSAGE "PairUp usability at:" CurrentOffset
-  ORG PAU_pairUpEffect
-  MESSAGE "PairUp effect at:" CurrentOffset
-  // TODO MESSAGE about where menu TSA is.
-  // go over everything that might need to be MESSAGED for future changes.
+  // Parameters.
+  ORG PAU_pairUpBitsRAMAddress
+  MESSAGE "PAU_pairUpBitsRAMAddress at: " CurrentOffset
+  ORG PAU_pairUpBattleGaugeRAMAddress
+  MESSAGE "PAU_pairUpBattleGaugeRAMAddress at: " CurrentOffset
+  ORG PAU_gaugeSize
+  MESSAGE "PAU_gaugeSize at: " CurrentOffset
+  ORG PAU_actionID
+  MESSAGE "PAU_actionID at: " CurrentOffset
+  ORG PAU_offStatBoost
+  MESSAGE "PAU_offStatBoost at: " CurrentOffset
+  ORG PAU_defStatBoost
+  MESSAGE "PAU_defStatBoost at: " CurrentOffset
+  ORG PAU_bAnimDistX
+  MESSAGE "PAU_bAnimDistX at: " CurrentOffset
+  ORG PAU_bAnimDistY
+  MESSAGE "PAU_bAnimDistY at: " CurrentOffset
+  ORG PAU_backupBAnimRoundScripts
+  MESSAGE "PAU_backupBAnimRoundScripts at: " CurrentOffset
+  ORG PAU_dualStrikeSkillActivationSound
+  MESSAGE "PAU_dualStrikeSkillActivationSound at: " CurrentOffset
+  ORG PAU_dualGuardSkillActivationSound
+  MESSAGE "PAU_dualGuardSkillActivationSound at: " CurrentOffset
+  ORG PAU_swapBackActivationSound
+  MESSAGE "PAU_swapBackActivationSound at: " CurrentOffset
+  ORG PAU_dualBAnimSwapTime
+  MESSAGE "PAU_dualBAnimSwapTime at: " CurrentOffset
+  ORG PAU_statusSpellAffectGaugeList
+  MESSAGE "PAU_statusSpellAffectGaugeList at: " CurrentOffset
+  ORG PAU_defaultMagicAnimsTable
+  MESSAGE "PAU_defaultMagicAnimsTable at: " CurrentOffset
+  ORG PAU_nosferatuReplacementSpellID
+  MESSAGE "PAU_nosferatuReplacementSpellID at: " CurrentOffset
+  ORG PAU_showBothMapSprites
+  MESSAGE "PAU_showBothMapSprites at: " CurrentOffset
+  ORG PAU_mapOffs
+  MESSAGE "PAU_mapOffs at: " CurrentOffset
+  
+  // Graphics.
+  // Forecast.
+  ORG PAU_infoWindowTSA
+  MESSAGE "PAU_infoWindowTSA at:" CurrentOffset
+  ORG PAU_forecastWindowLeftTSA
+  MESSAGE "PAU_forecastWindowLeftTSA at:" CurrentOffset
+  ORG PAU_forecastWindowRightTSA
+  MESSAGE "PAU_forecastWindowRightTSA at:" CurrentOffset
+  ORG PAU_forecastWindowBothTSA
+  MESSAGE "PAU_forecastWindowBothTSA at:" CurrentOffset
+  ORG PAU_forecastWindowExtLeftTSA
+  MESSAGE "PAU_forecastWindowExtLeftTSA at:" CurrentOffset
+  ORG PAU_forecastWindowExtRightTSA
+  MESSAGE "PAU_forecastWindowExtRightTSA at:" CurrentOffset
+  ORG PAU_forecastWindowExtBothTSA
+  MESSAGE "PAU_forecastWindowExtBothTSA at:" CurrentOffset
+  
+  // Anims off battle window.
+  ORG PAU_mapBattleWindowSoloTSA
+  MESSAGE "PAU_mapBattleWindowSoloTSA at:" CurrentOffset
+  ORG PAU_mapBattleWindowSoloPUTSA
+  MESSAGE "PAU_mapBattleWindowSoloPUTSA at:" CurrentOffset
+  #ifndef BATTLE_STATS
+    ORG PAU_mapBattleWindowLeftTSA
+    MESSAGE "PAU_mapBattleWindowLeftTSA at:" CurrentOffset
+    ORG PAU_mapBattleWindowLeftPUTSA
+    MESSAGE "PAU_mapBattleWindowLeftPUTSA at:" CurrentOffset
+    ORG PAU_mapBattleWindowRightTSA
+    MESSAGE "PAU_mapBattleWindowRightTSA at:" CurrentOffset
+    ORG PAU_mapBattleWindowRightPUTSA
+    MESSAGE "PAU_mapBattleWindowRightPUTSA at:" CurrentOffset
+  #endif // BATTLE_STATS
+  ORG PAU_mapBattleWindowGfx
+  MESSAGE "PAU_mapBattleWindowGfx at:" CurrentOffset
+  ORG PAU_mapBattleWindowTSAArray
+  MESSAGE "PAU_mapBattleWindowTSAArray at:" CurrentOffset
 
 POP
-*/

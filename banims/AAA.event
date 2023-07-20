@@ -1,9 +1,8 @@
-// If you don't use two-palette animations, you don't need to install this patch.
-//
-// This patch will allow battle animations to use two palettes instead of one. To enable two palettes,
-// set bit 0 of animstruct +0x8w. This word is empty in vanilla, and probably used as padding.
-// For two-palette battle animations, ensure the battle animation palette is uncompressed.
-// Single-palette battle animations still need to use compressed palettes.
+// This patch will allow battle animations to use:
+//   - two palettes instead of one,
+//   - uncompressed palettes,
+//   - uncompressed frameData and
+//   - uncompressed OAMData.
 //
 // This patch will break the ballista palette for animation 0x9F, archer with ballista.
 // However, you can create individual animentries for each ballista's palette,

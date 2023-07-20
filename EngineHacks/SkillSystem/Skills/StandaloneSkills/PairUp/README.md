@@ -1,38 +1,37 @@
-TODO:
-  - Client mentioned customizing statscreen, should be able to use MSS far more easily now that we're using buildfile.
-  - Expand MESSAGES to help find stuff (parameters) if anything moves at later points in ROMhack.
-    - Put pair-up window TSA in messages.
-    - Put statboost struct instances in messages.
-  - Test without any pair-up active.
-  - Test heroes movement with and without PAU_showBothMapSprites.
-  - Test status recover (whether naturally or by staff works with PAU_showBothMapSprites and without).
-  - Test in arena or disable arena option when paired-up?
-  - Do these tests with and without BGs. 0x202bd32 unset 0x2 and 0x4 for no BGs, set both for BGS.
-  - Do these tests with paired-up unit not having an equipped weapon.
-    - Test dual guard with enemy initiating (vantage+ for player phase?)
-    - test pair-up with different weapons and corresponding anims.
-    - test fog bump.
-    - Test pair-up banim when healing.
-    - Test pair-up dancing and being danced for.
-    - Test pair-up banim when one anim, (fortify and latona staff).
-    - Test dual strike triggering death quote. and non DS triggering death quote.
-    - Test pair-up banim at 2-range (heal and combat).
-    - Test pair-up banim at long-range (heal and combat).
-    - Test Silencer and Triangle attack I guess.
-    - Test with paired-up unit missing attack and with non-paired-up unit missing attack.
-    - Test enemy proccing skill immediately after Dual Strike round.
-    - Test Dual Strike round being the last round.
-  - Delete unnecessary anim stuff, like bishop. Unset str/mag split, don't give eirika or ephraim staff ranks.
-  - grepWin all temp, TODO and FIXME in PairUp directory to make sure you're not forgetting anything.
+# Pair-Up
+This directory contains most of the stuff to do with the implementation of Pair-Up. Granted, there's a lot of systems outside this directory that needed to change as well to properly get Pair-Up to work, so not everything is here.
 
-Notes:
-  - Client mentioned not wanting str/mag split. Mention this has been set in config file.
-  - Replaced these skills:
-    - Dragon Fang has been replaced with offensive pair up/Dual Strike skill.
-    - Great Shield has been replaced with defensive pair up/Dual Guard skill.
-  - Mention last four bytes in banim name string need to be left alone.
-  - Mention that animDistX & animDistY should be even numbers or battle anims might misalign a little when swapping.
-  - If pair-up unit has weapon equipped, priority is given to item-specific banims. If pair-up unit is unarmed, priority is given to whatever armed anim is first in the list. If you put handaxe anims before 1-range axe anims, you won't need magic axe anims.
-    
-Credits TODO:
-  - Sme for her Refuge patch.
+The main important file to keep an eye on is [PairUp.event](PairUp.event). There are a number of parameters in here that you might wish to change. Details on what these parameters do and affect can also be found in the same file. This file also contains MESSAGEs which will display where the values of these parameters are stored in the ROM once you build it. You can comment these out if you don't need the info/it's too much clutter.
+
+## Implementation/Features/Limitations
+A unit with the Dual Strike skill, and another unit with the Dual Guard skill can pair-up, similar to FE Fates system of pair-up. This pairup features a backup unit, a mostly passive unit like a rescuee, and a main unit, the one that mostly receives and deals damage, etc. Instead of a shield gauge, the two units now have a pair-up gauge which when filled up triggers Dual Guard (the next incoming attack is blocked) or Dual Strike (the next outgoing attack is followed-up by another attack with the same damage, and a guaranteed hit), depending on whether the backup unit (which I also refer to as the backupUnit in code comments) has the Dual Strike or the Dual Guard skill. The idea is to combine both FE Fates' Pair-Up and Tag Team into one system.
+
+Only one unit can have the Dual Strike skill, only one unit can have the Dual Guard skill and these should not be the same unit. As there is only one location in RAM used to keep track of the pair-up gauge, it's not possible to have multiple paired-up units. PairUp is not made with enemy AI in mind, so only give the two skills to ally units.
+
+Paired-up units neither receive nor provide support bonuses to one another or any other units. Instead they get certain boosts to their stats as set by the `PAU_offStatBoost` and `PAU_defStatBoost` tables in [PairUp.event](PairUp.event). If the backup unit has Dual Strike, they'll provide the boosts in `PAU_offStatBoost`, `PAU_defStatBoost` for Dual Guard. The main unit's movement will be set to the minimum of the two units' movement, as long as they're paired up.
+
+Pair-up is implemented as a special form of rescue, without the stat-lowering effect that comes with rescue. This means that a paired-up unit can not rescue other units.
+
+A paired-up unit can switch which unit is backup and which unit is main at any time, as long as the terrain the main unit stands on currently is also accessible by the backup unit. This action is free, so you can still perform an attack or some such after switching.
+
+### Battle animations
+
+In order to get both the main unit and the backup unit's battle animation sprite to show, I had to use a custom program, [AAA](../../../../../banims/anims/AAA.exe) (also has its [own repository](https://github.com/Huichelaar/AAA) on github),  to prepare battle animations. Any battle animation that can end up being used by a unit that can pair up, needs to be assembled through AAA to properly display in-game during pair-up.
+
+You need to add the following options to the start of the script to ensure the animation displays correctly when paired-up:
+`@ UNCOMPFRAMEDATA`
+`@ UNCOMPOAMDATA`
+`@ HALFSIZESHEETS`
+Then, you can drag'n'drop the script's `.txt` file to `AAA.bat` which will run AAA on the script and produce a `<scriptname>Installer.event` file which you can `#include` in [AnimInstaller.event](../../../../../banims/anims/AnimInstaller.event). You'll also want to change the default value in the `AnimTableEntry` macro in the `<scriptname>Installer.event` file to the slot you want to replace.
+
+The resulting entry in the battle animation table will have some bits set at +0x8. These might be read as a character of the name of the battle animation, but they're actually there so the game can identify how to treat these animations, so don't change their values.
+
+### For use with FEBuilderGBA
+Now, if you're using buildfiles everything so far should cover most needs. If you wish to continue working on the built ROM in [FEBuilderGBA](https://github.com/FEBuilderGBA/FEBuilderGBA), there's a few more things to keep in mind:
+-  I'll point to the MESSAGEs in [PairUp.event](PairUp.event) again. Keep note of where these parameters are stored in ROM, so that if you wish to change them after the ROM's been built, you can find them easily.
+- The pairup battle animations will likely not display correctly in FEBuilderGBA's preview, as their framedata and oamdata is not compressed. I had to leave this data uncompressed for technical reasons, but it does mean you can't preview the animations in FEBuilderGBA. I'm not in charge of the tool though, so this information may be outdated when you're reading this.
+- Due to changes I made to ../../../Internals/activationanims.s, FEBuilderGBA may not be able to find skills, preventing you from changing which characters/classes get what skills. This information may be outdated when you're reading this.
+- Note that fixing bugs is a lot harder when not having the option to re-build. A project of this scale is bound to have a few bugs that I've missed. I'd appreciate it if you reconsider working with buildfiles instead, and using this as your base buildfile, instead of as your base ROM.
+
+## Credits
+The usual SkillSys credits found in the top directory apply of course. Also thanks to Sme for her [Refuge patch](https://drive.google.com/file/d/14g97lHRbISstcD4OxbfKXguc3pMg_zKh/view), which I referenced for the PairUp action.
