@@ -11,6 +11,7 @@ POIN RangeSkillList
 
 ALIGN 4
 RangeSkillList:
+RangeSkill(LongswordID, LongswordBonus)
 RangeSkill(BowRangeUpID, BowRangeBonus)
 RangeSkill(StaffSavantID, StaffSavantBonus)
 RangeSkill(PointBlankID, PointBlankBonus)

@@ -13,3 +13,7 @@ PointBlankBonus:
 ALIGN 4
 TomeRangeBonus:
 #incbin "TomeRange/TomeRange.dmp"
+
+ALIGN 4
+LongswordBonus:
+#incbin "Longsword/Longsword.dmp"
