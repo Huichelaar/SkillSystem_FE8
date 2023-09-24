@@ -22,7 +22,7 @@
   
   // Pair-up action index. This is used by action data and PostActionCalcLoop.
   // This should be an unused actionID. If changing this, need to change UnitActionRework.event to match.
-  #define PAU_actionIDdef 0x28
+  #define PAU_actionIDdef 0x2C
   PAU_actionID:
   BYTE PAU_actionIDdef
   
@@ -128,6 +128,7 @@
 
 // Messages. Helps keep track where parameters
 // are in ROM should things need to move again.
+/*
 PUSH
 
   // Parameters.
@@ -206,3 +207,4 @@ PUSH
   MESSAGE "PAU_mapBattleWindowTSAArray at:" CurrentOffset
 
 POP
+*/

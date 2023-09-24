@@ -1645,3 +1645,11 @@ is full, unit's attack will be followed-up.[X]
 ## SD_DualGuard
 Dual Guard: If the pair-up gauge[N]
 is full, next enemy attack will be blocked.[X]
+
+## SD_NegativeGrowths
+Negative Growths: This unit's[N]
+stat growths are multiplied by -1.[X]
+
+## SD_Longsword
+Longsword: All swords have[N]
+range 1-2.[X]

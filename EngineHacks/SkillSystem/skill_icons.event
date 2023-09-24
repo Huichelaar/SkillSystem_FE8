@@ -1101,6 +1101,10 @@ ORG SkillIcon(DualStrikeID)
 #incbin "SkillIcons/DualStrike.dmp"
 ORG SkillIcon(DualGuardID)
 #incbin "SkillIcons/DualGuard.dmp"
+ORG SkillIcon(NegativeGrowthsID)
+#incbin "SkillIcons/NegativeGrowths.dmp"
+ORG SkillIcon(LongswordID)
+#incbin "SkillIcons/Longsword.dmp"
 
 ORG SkillIcons+0x8000
 

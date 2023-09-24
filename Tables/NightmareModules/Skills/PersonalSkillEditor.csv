@@ -1,9 +1,9 @@
 INLINE PersonalSkillTable,Skill
 None,0x0
 Eirika,DualGuardID
-Seth,SaviorID
+Seth,NegativeGrowthsID
 Gilliam,RallyDefID
-Franz,SealStrID
+Franz,LongswordID
 Moulder,RallyResID
 Vanessa,RepositionID
 Ross,ParagonID

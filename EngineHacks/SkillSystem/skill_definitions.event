@@ -1229,11 +1229,11 @@
 
 //Poise: +1 Move. Negates enemy hit bonus from weapon triangle advantage.
 //By Zeta
-#define PoiseID 144
+#define PoiseID 255
 
 //Amische: This unit's religion disallows them from using non-Iron weaponry.
 //By Sme
-#define AmischeID 131
+#define AmischeID 255
 
 //Triangle Attack: Allows this unit to perform a triangle attack with 2 other units who have this skill.
 #define TriangleAttackID 6
@@ -1241,6 +1241,12 @@
 // Shrewd Potential: Stat boosters provide +1 more than usual. 
 // Author: Vesly 
 #define ShrewdPotentialID 255
+
+// Negative Growths: This unit's stat growths are multiplied by -1.
+#define NegativeGrowthsID 144
+
+// Longsword: All swords have range 1-2.
+#define LongswordID 131
 
 
 //Biorhythm Skills: Double or halve biorhythm effects.
