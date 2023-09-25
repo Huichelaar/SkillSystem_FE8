@@ -104,6 +104,8 @@
 	#endif // USE_STRMAG_SPLIT
 	POIN Get_Skl_Growth Get_Spd_Growth Get_Def_Growth Get_Res_Growth Get_Luk_Growth
     WORD Growth_Options
+  POIN SkillTester
+  BYTE NegativeGrowthsID 0 0 0
 
   ALIGN 4
   Enemy_Autolevel:

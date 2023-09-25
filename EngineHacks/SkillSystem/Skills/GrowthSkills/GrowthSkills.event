@@ -9,3 +9,6 @@ AptitudeGrowthModifier:
 #incbin "Aptitude/Aptitude.dmp"
 POIN SkillTester
 WORD AptitudeID
+
+ALIGN 4
+#include "NegativeGrowths/NegativeGrowths.event"

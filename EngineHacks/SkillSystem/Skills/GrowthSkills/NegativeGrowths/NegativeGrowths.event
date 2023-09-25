@@ -1,0 +1,20 @@
+// Hooks to enable Negative Growths skill.
+
+PUSH
+
+  // Set minimum stat value after level up to zero.
+  ORG 0x2BF24
+    jumpToHack(NTG_statMins)
+
+  // Allow GetStatIncrease to also decrease stat if growth is negative.
+  ORG 0x2B9A0
+    jumpToHack(NTG_decreaseStat)
+
+POP
+
+ALIGN 4
+NTG_decreaseStat:
+#incbin "decreaseStat.dmp"
+ALIGN 4
+NTG_statMins:
+#include "statMins.lyn.event"

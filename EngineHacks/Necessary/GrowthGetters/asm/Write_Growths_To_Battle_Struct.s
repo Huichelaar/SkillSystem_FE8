@@ -11,11 +11,15 @@
 .equ Get_Res_Growth, Class_Level_Cap_Table+28
 .equ Get_Luk_Growth, Class_Level_Cap_Table+32
 .equ Growth_Options, Class_Level_Cap_Table+36
+.equ SkillTester, Class_Level_Cap_Table+40
+.equ NegativeGrowthsID, Class_Level_Cap_Table+44
 
 @jumped here from 2BA28
 @r0=battle struct of person who's levelling up
 
 push	{r4-r7,r14}		@ save the usual registers by pushing them to the stack
+mov   r4, r8
+push  {r4}
 mov		r7,r0			@ save battle struct ptr by mov-ing it from r0 to a saved register (r7)
 ldr		r1,Can_Gain_Exp	
 mov		r14,r1			@ this is a function call to Can_Gain_Exp routine, which is out of normal BL range
@@ -48,6 +52,15 @@ mov		r0,#0xFF		@ put 0xFF in r0
 Label3:
 strb	r0,[r7,#0x9]	@ store the new exp. If the unit is capped, then we stored 0xFF (because we didn't skip the branch above), otherwise, we stored (exp - 100)
 
+@ Invert growths if unit has NegativeGrowths skill.
+ldr   r0, SkillTester
+mov   r14, r0
+mov   r0, r7
+ldr   r1, NegativeGrowthsID
+.short 0xF800
+lsl   r0, #0x1
+mov   r8, r0      @ r8 == 0 means don't invert, otherwise do.
+
 @This next part is writing the growths.
 @The vanilla growth function is designed so that it's hard to get no-stat level-ups if none are capped. First, we go through all the stats and see whether any leveled up. If none did, then we do another pass until either a) a stat procs, or b) we looped through all stats again. Once done, we check if the level-up makes the stat go over its cap, and set that accordingly.
 
@@ -74,7 +87,11 @@ ldr		r0,Get_Hp_Growth
 mov		r14,r0			@ use the longcalling trick to bl to Get_Hp_Growth, whose location will be determined in the EA file
 mov		r0,r7			@ that function takes the character struct as a parameter (character data forms the first 0x48 bytes of the battle struct, so it doesn't matter which one is used)
 .short	0xF800			@ when we return, r0 will have the hp growth (which takes into account metis tome and any growth boosters the character has)
-mov		r14,r6			@ now we call the function Calc_Level_Up
+mov   r1, r8        @ Invert growth  
+mul   r1, r0        @ if unit has
+sub   r0, r1        @ NegativeGrowths skill.
+@ now we call the function Calc_Level_Up
+mov		r14,r6			
 .short	0xF800			@ which returns the actual level-up number
 mov		r1,r7
 add		r1,#0x73
@@ -91,6 +108,9 @@ ldr		r0,Get_Str_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -112,6 +132,9 @@ beq		SklGrowth @ If Get_Mag_Growth is 0, str/mag isn't enabled.
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -129,6 +152,9 @@ ldr		r0,Get_Skl_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -146,6 +172,9 @@ ldr		r0,Get_Spd_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -163,6 +192,9 @@ ldr		r0,Get_Def_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -180,6 +212,9 @@ ldr		r0,Get_Res_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -197,6 +232,9 @@ ldr		r0,Get_Luk_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
+mov   r1, r8
+mul   r1, r0
+sub   r0, r1
 mov		r14,r6
 .short	0xF800
 mov		r1,r7
@@ -233,11 +271,14 @@ ldr		r0,Get_Hp_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0			@ save the growth, we'll need it
+mov   r4,r0         @ save the growth, we'll need it
 mul		r0,r6			@ multiply growth by # of levels
 bl		DivideBy100		@ growth*level mod 100
 add		r0,r4			@ add growth to remainder (if this >100, stat increases)
 bl		DivideBy100		@ gotta do this just in case it goes over 200
+mov   r0,r8         @ Invert stat gain
+mul   r0,r1         @ if unit has 
+sub   r1,r0         @ NegativeGrowths skill.
 mov		r0,r7
 add		r0,#0x73
 strb	r1,[r0]
@@ -247,11 +288,14 @@ ldr		r0,Get_Str_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x74
 strb	r1,[r0]
@@ -263,11 +307,14 @@ beq		FixedSklGrowth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x7A
 strb	r1,[r0]
@@ -277,11 +324,14 @@ ldr		r0,Get_Skl_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x75
 strb	r1,[r0]
@@ -291,11 +341,14 @@ ldr		r0,Get_Spd_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x76
 strb	r1,[r0]
@@ -305,11 +358,14 @@ ldr		r0,Get_Def_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x77
 strb	r1,[r0]
@@ -319,11 +375,14 @@ ldr		r0,Get_Res_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x78
 strb	r1,[r0]
@@ -333,11 +392,14 @@ ldr		r0,Get_Luk_Growth
 mov		r14,r0
 mov		r0,r7
 .short	0xF800
-mov		r4,r0
+mov   r4,r0
 mul		r0,r6
 bl		DivideBy100
 add		r0,r4
 bl		DivideBy100
+mov   r0,r8
+mul   r0,r1
+sub   r1,r0
 mov		r0,r7
 add		r0,#0x79
 strb	r1,[r0]
@@ -366,7 +428,9 @@ mov		r1,r7
 .short	0xF800
 
 GoBack:
-pop		{r4-r7}				@ pop the saved registers off the stack (that we pushed at the top)
+pop   {r4}        @ pop the saved registers off the stack (that we pushed at the top)
+mov   r8, r4
+pop		{r4-r7}
 pop		{r0}				@ pop the return address
 bx		r0					@ and branch to it
 
