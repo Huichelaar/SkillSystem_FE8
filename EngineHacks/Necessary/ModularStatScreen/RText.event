@@ -101,7 +101,7 @@
 
 
   ST_Name:
-    RMenu(0,ST_Class,0,ST_Luck,0x18,0x50,0x0,NameDescGetter)
+    RMenu(0,ST_Class,0,ST_Cond,0x18,0x50,0x0,NameDescGetter)
 
   ST_Class:
     RMenu(ST_Name,ST_Level,0,ST_Res,0x6,0x68,0x6E8,ClassDescGetter)
@@ -110,40 +110,40 @@
     RMenu(ST_Class,ST_HP,0,ST_Exp,0x6,0x78,0x542)
 
   ST_Exp:
-    RMenu(ST_Class,ST_HP,ST_Level,ST_Mov,0x26,0x78,0x543)
+    RMenu(ST_Class,ST_HP,ST_Level,ST_Res,0x26,0x78,0x543)
 
   ST_HP:
-    RMenu(ST_Level,0,0,ST_Con,0x6,0x88,0x544)
+    RMenu(ST_Level,0,0,ST_SkillLeft1,0x6,0x88,0x544)
 
   ST_Str:
-    RMenu(PersonalDataRText,ST_Skl,ST_Name,ST_Aid,0x66,0x18,0x546,StrMagGetter)
+    RMenu(PersonalDataRText,ST_Skl,ST_Cond,ST_Mov,0x66,0x18,0x546,StrMagGetter)
 
   ST_Skl:
-    RMenu(ST_Str,ST_Spd,ST_Name,ST_Trv,0x66,0x28,0x548)
+    RMenu(ST_Str,ST_Spd,ST_Cond,ST_Con,0x66,0x28,0x548)
 
   ST_Spd:
-    RMenu(ST_Skl,ST_Luck,ST_Name,ST_Affin,0x66,0x38,0x549)
+    RMenu(ST_Skl,ST_Luck,ST_Cond,ST_Aid,0x66,0x38,0x549)
 
   ST_Luck:
-    RMenu(ST_Spd,ST_Def,ST_Name,ST_Cond,0x66,0x48,0x54a)
+    RMenu(ST_Spd,ST_Def,ST_Cond,ST_Talk,0x66,0x48,0x54a)
 
   ST_Def:
-    RMenu(ST_Luck,ST_Res,ST_Class,ST_Talk,0x66,0x58,0x54b)
+    RMenu(ST_Luck,ST_Res,ST_Class,ST_Affin,0x66,0x58,0x54b)
 
   ST_Res:
-    RMenu(ST_Def,ST_Mov,ST_Exp,ST_Skills,0x66,0x68,0x54c)
+    RMenu(ST_Def,ST_SkillLeft2,ST_Exp,ST_Trv,0x66,0x68,0x54c)
 
   ST_Mov:
-    RMenu(ST_Res,ST_Con,ST_Exp,ST_Skill1,0x66,0x78,0x54d,MovHPDescGetter)
+    RMenu(PersonalDataRText,ST_Con,ST_Str,0,0xa6,0x18,0x54d,MovHPDescGetter)
 
   ST_Con:
-    RMenu(ST_Mov,0,ST_HP,ST_Skill4,0x66,0x88,0x54e)
+    RMenu(ST_Mov,ST_Aid,ST_Skl,0,0xa6,0x28,0x54e)
 
   ST_Aid:
-    RMenu(PersonalDataRText,ST_Trv,ST_Str,0,0xa6,0x18,0x54F)
+    RMenu(ST_Con,ST_Talk,ST_Spd,0,0xa6,0x38,0x54F)
   
   ST_Trv:
-    RMenu(ST_Aid,ST_Affin,ST_Skl,0,0xa6,0x28,0x550)
+    RMenu(ST_Affin,ST_SkillRight,ST_Res,0,0xa6,0x68,0x550)
 
   ST_Affin:
     #ifdef LEADERSHIP_STARS
@@ -152,34 +152,89 @@
 	#ifdef BIORHYTHM
 	   RMenu(ST_Trv,ST_Cond,ST_Spd,0,0xa6,0x38,SS_BiorhythmRText)
 	#endif //BIORHYTHM
-       RMenu(ST_Trv,ST_Cond,ST_Spd,0,0xa6,0x38,0x551)
+       RMenu(ST_Talk,ST_Trv,ST_Res,0,0xa6,0x58,0x551)
 
   ST_Cond:
-    RMenu(ST_Affin,ST_Talk,ST_Luck,0,0xA6,0x48,0x552,ConditionGetter)
+    RMenu(ST_Str,ST_Res,ST_Name,ST_Def,0x50,0x50,0x552,ConditionGetter)
 
   ST_Talk:
-    RMenu(ST_Cond,ST_Skills,ST_Def,0,0xA6,0x58,SS_TalkRText)
+    RMenu(ST_Aid,ST_Affin,ST_Luck,0,0xA6,0x48,SS_TalkRText)
 
-  ST_Skills:
-    RMenu(ST_Talk,ST_Skill1,ST_Res,0,0xA6,0x68,SS_SkillsRText)
+  ALIGN 4; ST_Skills:
+    POIN ST_Skill1_1 ST_Skill1_2 ST_Skill1_3 ST_Skill1_4 ST_Skill1_5 ST_Skill1_6    // Start from left.
+    POIN ST_Skill1_1 ST_Skill2_2 ST_Skill2_3 ST_Skill3_4 ST_Skill3_5 ST_Skill6_6    // Start from right.
 
-  ST_Skill1:
-    RMenu(ST_Skills,ST_Skill4,ST_Mov,ST_Skill2,0xa6,0x78,0,RTextLoop,SkillDescGetter)
+  ST_SkillLeft1:
+    RMenu(0,0,ST_HP,0,0,0,0,RTextLoop1,0)
+    
+  ST_SkillLeft2:
+    RMenu(ST_Res,0,0,0,0,0,1,RTextLoop1,0)
+    
+  ST_SkillRight:
+    RMenu(ST_Trv,0,0,0,0,0,2,RTextLoop1,0)
 
-  ST_Skill2:
-    RMenu(ST_Skills,ST_Skill5,ST_Skill1,ST_Skill3,0xbe,0x78,1,RTextLoop,SkillDescGetter+4)
+  ST_Skill1_1:
+    RMenu(ST_Trv,0,ST_HP,0,0x9E,0x88,0x10,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill1_2:
+    RMenu(ST_Res,0,ST_HP,ST_Skill2_2,0x86,0x88,0x20,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill2_2:
+    RMenu(ST_Trv,0,ST_Skill1_2,0,0xBE,0x88,0x21,RTextLoop2,SkillDescGetter+4)
+  
+  ST_Skill1_3:
+    RMenu(ST_Res,0,ST_HP,ST_Skill2_3,0x76,0x88,0x30,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill2_3:
+    RMenu(ST_Trv,0,ST_Skill1_3,ST_Skill3_3,0x9E,0x88,0x31,RTextLoop2,SkillDescGetter+4)
+  
+  ST_Skill3_3:
+    RMenu(ST_Trv,0,ST_Skill2_3,0,0xC6,0x88,0x32,RTextLoop2,SkillDescGetter+8)
+  
+  ST_Skill1_4:
+    RMenu(ST_Res,0,ST_HP,ST_Skill2_4,0x6E,0x88,0x40,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill2_4:
+    RMenu(ST_Res,0,ST_Skill1_4,ST_Skill3_4,0x8E,0x88,0x41,RTextLoop2,SkillDescGetter+4)
+  
+  ST_Skill3_4:
+    RMenu(ST_Trv,0,ST_Skill2_4,ST_Skill4_4,0xAE,0x88,0x42,RTextLoop2,SkillDescGetter+8)
+  
+  ST_Skill4_4:
+    RMenu(ST_Trv,0,ST_Skill3_4,0,0xCE,0x88,0x43,RTextLoop2,SkillDescGetter+12)
+  
+  ST_Skill1_5:
+    RMenu(ST_Res,0,ST_HP,ST_Skill2_5,0x6E,0x88,0x50,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill2_5:
+    RMenu(ST_Res,0,ST_Skill1_5,ST_Skill3_5,0x86,0x88,0x51,RTextLoop2,SkillDescGetter+4)
+  
+  ST_Skill3_5:
+    RMenu(ST_Trv,0,ST_Skill2_5,ST_Skill4_5,0x9E,0x88,0x52,RTextLoop2,SkillDescGetter+8)
+  
+  ST_Skill4_5:
+    RMenu(ST_Trv,0,ST_Skill3_5,ST_Skill5_5,0xB6,0x88,0x53,RTextLoop2,SkillDescGetter+12)
+  
+  ST_Skill5_5:
+    RMenu(ST_Trv,0,ST_Skill4_5,0,0xCE,0x88,0x54,RTextLoop2,SkillDescGetter+16)
 
-  ST_Skill3:
-    RMenu(ST_Skills,ST_Skill6,ST_Skill2,0,0xd6,0x78,2,RTextLoop,SkillDescGetter+8)
-
-  ST_Skill4:
-    RMenu(ST_Skill1,0,ST_Con,ST_Skill5,0xa6,0x88,3,RTextLoop,SkillDescGetter+12)
-
-  ST_Skill5:
-    RMenu(ST_Skill2,0,ST_Skill4,ST_Skill6,0xbe,0x88,4,RTextLoop,SkillDescGetter+16)
-
-  ST_Skill6:
-    RMenu(ST_Skill3,0,ST_Skill5,0,0xd6,0x88,5,RTextLoop,SkillDescGetter+20)
+  ST_Skill1_6:
+    RMenu(ST_Res,0,ST_HP,ST_Skill2_6,0x66,0x88,0x60,RTextLoop2,SkillDescGetter)
+  
+  ST_Skill2_6:
+    RMenu(ST_Res,0,ST_Skill1_6,ST_Skill3_6,0x7E,0x88,0x61,RTextLoop2,SkillDescGetter+4)
+  
+  ST_Skill3_6:
+    RMenu(ST_Res,0,ST_Skill2_6,ST_Skill4_6,0x96,0x88,0x62,RTextLoop2,SkillDescGetter+8)
+  
+  ST_Skill4_6:
+    RMenu(ST_Res,0,ST_Skill3_6,ST_Skill5_6,0xAE,0x88,0x63,RTextLoop2,SkillDescGetter+12)
+  
+  ST_Skill5_6:
+    RMenu(ST_Res,0,ST_Skill4_6,ST_Skill6_6,0xC6,0x88,0x64,RTextLoop2,SkillDescGetter+16)
+  
+  ST_Skill6_6:
+    RMenu(ST_Res,0,ST_Skill5_6,0,0xDE,0x88,0x65,RTextLoop2,SkillDescGetter+20)
   
 
 #else // USE_STRMAG_SPLIT

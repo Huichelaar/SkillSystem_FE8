@@ -1,6 +1,6 @@
 .thumb
-.equ SkillGetter, SkillDescTable+4
-.equ SS_SkillsDefaultRText, SkillGetter+4
+.equ Skill_Getter_NoClass, SkillDescTable+4
+.equ SS_SkillsDefaultRText, Skill_Getter_NoClass+4
 @given a skill number in r0, get the corresponding text ID
 mov r1, #1
 b Routine_Start
@@ -17,16 +17,19 @@ b Routine_Start
 
 Routine_Start:
 push {r4-r5,lr}
+sub sp, #8
 mov r4, r0 @6c struct
 mov r5, r1 @nth skill
 ldr r0, =0x2003bfc @current viewed unit
 ldr r0, [r0, #0xc]
-ldr r1, SkillGetter
-mov lr, r1
+mov r1, sp
+ldr r2, Skill_Getter_NoClass
+mov lr, r2
 .short 0xf800
-cmp r1, r5
+cmp r0, r5
 blt NoText
 sub r5, #1
+mov r0, sp
 ldrb r0,[r0,r5] @nth skill
 
 ldr r1, SkillDescTable
@@ -42,6 +45,7 @@ mov r1,r4
 add r1, #0x4c
 strh r0, [r1]
 NoText:
+add sp, #8
 pop {r4-r5}
 pop {r0}
 bx r0
@@ -49,5 +53,5 @@ bx r0
 .ltorg
 SkillDescTable:
 @POIN SkillDescTable
-@POIN SkillGetter
+@POIN Skill_Getter_NoClass
 @WORD SS_SkillsDefaultRText

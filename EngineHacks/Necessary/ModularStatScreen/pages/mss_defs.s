@@ -1149,10 +1149,13 @@
 .endm
 
 @requires alternateicondraw
-.macro draw_skill_icon_at, tile_x, tile_y, number=0
+.macro draw_skill_icon_at, tile_y, tile_x=0, number=0
     .if NoAltIconDraw
         .if \number
             mov     r0, #\number
+        .endif
+        .if \tile_x
+            mov     r3, #\tile_x
         .endif
         
         @ r1 = 0x0100
@@ -1166,7 +1169,9 @@
         mov     r2, #0x40
         lsl     r2, #8
         
-        ldr     r0, =(tile_origin+(0x20*2*\tile_y)+(2*\tile_x))
+        ldr     r0, =(tile_origin+(0x20*2*\tile_y))
+        lsl     r3, #0x1
+        add     r0, r3
         
         blh     DrawIcon
     .else
@@ -1174,8 +1179,13 @@
         .if \number
             mov     r0, #\number
         .endif
+        .if \tile_x
+            mov     r3, #\tile_x
+        .endif
         
-        ldr     r4, =(tile_origin+(0x20*2*\tile_y)+(2*\tile_x))
+        ldr     r4, =(tile_origin+(0x20*2*\tile_y))
+        lsl     r3, #0x1
+        add     r4, r3
         mov     r1, r0      
         mov     r2, #0x80
         lsl     r2, r2, #0x7      

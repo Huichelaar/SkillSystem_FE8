@@ -110,20 +110,24 @@ __TEXTPROCESS04F:
 setText($4F, __TEXTPROCESS04F)
 
 __TEXTPROCESS050:
-#incext ParseFile ".TextEntries/text_buildfileLikesDesc.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileSS_PowStat.fetxt"
 setText($50, __TEXTPROCESS050)
 
 __TEXTPROCESS051:
-#incext ParseFile ".TextEntries/text_buildfileDislikesDesc.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileLikesDesc.fetxt"
 setText($51, __TEXTPROCESS051)
 
 __TEXTPROCESS052:
-#incext ParseFile ".TextEntries/text_buildfileAgeDesc.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileDislikesDesc.fetxt"
 setText($52, __TEXTPROCESS052)
 
 __TEXTPROCESS053:
-#incext ParseFile ".TextEntries/text_buildfileHeightDesc.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileAgeDesc.fetxt"
 setText($53, __TEXTPROCESS053)
+
+__TEXTPROCESS054:
+#incext ParseFile ".TextEntries/text_buildfileHeightDesc.fetxt"
+setText($54, __TEXTPROCESS054)
 
 __TEXTPROCESSD4C:
 #incext ParseFile ".TextEntries/text_buildfileLikesText.fetxt"
@@ -2150,28 +2154,32 @@ __TEXTPROCESSF45:
 setText($F45, __TEXTPROCESSF45)
 
 __TEXTPROCESSF46:
-#incext ParseFile ".TextEntries/text_buildfileEirikaLike1ID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileSD_Longsword.fetxt"
 setText($F46, __TEXTPROCESSF46)
 
 __TEXTPROCESSF47:
-#incext ParseFile ".TextEntries/text_buildfileEirikaLike2ID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileEirikaLike1ID.fetxt"
 setText($F47, __TEXTPROCESSF47)
 
 __TEXTPROCESSF48:
-#incext ParseFile ".TextEntries/text_buildfileEirikaDislike1ID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileEirikaLike2ID.fetxt"
 setText($F48, __TEXTPROCESSF48)
 
 __TEXTPROCESSF49:
-#incext ParseFile ".TextEntries/text_buildfileEirikaDislike2ID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileEirikaDislike1ID.fetxt"
 setText($F49, __TEXTPROCESSF49)
 
 __TEXTPROCESSF4A:
-#incext ParseFile ".TextEntries/text_buildfileEirikaAgeID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileEirikaDislike2ID.fetxt"
 setText($F4A, __TEXTPROCESSF4A)
 
 __TEXTPROCESSF4B:
-#incext ParseFile ".TextEntries/text_buildfileEirikaHeightID.fetxt"
+#incext ParseFile ".TextEntries/text_buildfileEirikaAgeID.fetxt"
 setText($F4B, __TEXTPROCESSF4B)
+
+__TEXTPROCESSF4C:
+#incext ParseFile ".TextEntries/text_buildfileEirikaHeightID.fetxt"
+setText($F4C, __TEXTPROCESSF4C)
 
 }
 

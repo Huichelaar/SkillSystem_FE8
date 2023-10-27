@@ -27,18 +27,11 @@ mov r0,#0
 IsPlayerUnit:
 str r0,[sp,#0x14]
 
-@draw str or mag
-  mov r0, r8
-  blh     MagCheck      @r0 = 1 if mag should show
-  cmp     r0,#0x0       
-  beq     NotMag        
-    @draw Mag at 13, 3. colour defaults to yellow.
-    draw_textID_at 13, 3, textID=0x4ff, growth_func=2
-    b       MagStrDone    
-  NotMag:
-    @draw Str at 13, 3
-    draw_textID_at 13, 3, textID=0x4fe, growth_func=2
-  MagStrDone:
+@draw pow
+ldr r0, =SS_PowStat
+lsl r0, #0x5
+lsr r0, #0x5
+draw_textID_at 13, 3, growth_func=2 @pow
 
 draw_textID_at 13, 5, textID=0x4EC, growth_func=3 @skl
 draw_textID_at 13, 7, textID=0x4ED, growth_func=4 @spd
@@ -96,8 +89,8 @@ ldr		r0,[r0,#24]		@res growth getter
 draw_growth_at 18, 13
 ldr		r0,[sp,#0xC]
 ldr		r0,[r0]			@hp growth getter (not displaying because there's no room atm)
-draw_growth_at 18, 15
-draw_textID_at 13, 15, textID=0x4E9, growth_func=1 @hp name
+draw_growth_at 26, 3
+draw_textID_at 21, 3, textID=0x4E9, growth_func=1 @hp name
 
 b		literalJump2
 .ltorg
@@ -112,8 +105,8 @@ draw_luck_bar_at 16, 9
 draw_def_bar_at 16, 11
 draw_res_bar_at 16, 13
 
-draw_textID_at 13, 15, 0x4f6 @move
-draw_move_bar_with_getter_at 16, 15
+draw_textID_at 21, 3, 0x4f6 @move
+draw_move_bar_with_getter_at 24, 3
 
 b literalJump2
 
@@ -124,19 +117,19 @@ literalJump2:
 
 
 
-draw_textID_at 13, 17, textID=0x4f7 @con
-draw_con_bar_with_getter_at 16, 17
+draw_textID_at 21, 5, textID=0x4f7 @con
+draw_con_bar_with_getter_at 24, 5
 
-draw_textID_at 21, 3, textID=0x4f8 @aid
-draw_number_at 25, 3, 0x80189B8, 2 @aid getter
-draw_aid_icon_at 26, 3
+draw_textID_at 21, 7, textID=0x4f8 @aid
+draw_number_at 25, 7, 0x80189B8, 2 @aid getter
+draw_aid_icon_at 26, 7
 
-draw_trv_text_at 21, 5
+draw_trv_text_at 21, 13
 
-draw_textID_at 21, 7, textID=0x4f1 @affin
-draw_affinity_icon_at 24, 7
+draw_textID_at 21, 11, textID=0x4f1 @affin
+draw_affinity_icon_at 24, 11
 
-draw_status_text_at 21, 9
+@draw_status_text_at 21, 9
 
 b exitVanillaStatStuff
 
@@ -147,7 +140,7 @@ exitVanillaStatStuff:
 
 ldr r0,=TalkTextIDLink
 ldrh r0,[r0]
-draw_talk_text_at 21, 11
+draw_talk_text_at 21, 9
 
 b startSkills
 
@@ -158,46 +151,32 @@ startSkills:
 
 .set NoAltIconDraw, 1 @this is the piece that makes them use a separate sheet
 
-ldr r0,=SkillsTextIDLink
-ldrh r0, [r0]
-draw_textID_at 21, 13, colour=White @skills
+@ldr r0,=SkillsTextIDLink
+@ldrh r0, [r0]
+@draw_textID_at 21, 13, colour=White @skills
 
 
-mov r0,r8
-ldr r1,=Skill_Getter
-mov r14,r1
-.short 0xF800
+sub   sp, #0x8
+mov   r0, r8
+mov   r1, sp
+bl    Skill_Getter_NoClass
+mov   r6, sp
 
-mov r6,r0
-ldrb r0,[r6]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 21, 15
+lsl   r0, #0x3      @ buffer size.
+ldr   r1, =MSS_SkillPlacementArr
+add   r4, r0, r1    @ Skill X-location.
 
-ldrb r0,[r6,#1]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 24, 15
-
-ldrb r0,[r6,#2]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 27, 15
-
-ldrb r0,[r6,#3]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 21, 17
-
-ldrb r0,[r6,#4]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 24, 17
-
-ldrb r0,[r6,#5]
-cmp r0,#0
-beq SkillsEnd
-draw_skill_icon_at 27, 17
+mov   r5, #0x0
+LoopSkillPlacement:
+  ldrb  r0, [r6, r5]
+  cmp   r0, #0x0
+  beq   LoopSkillPlacementEnd
+    ldrb  r3, [r4, r5]
+    draw_skill_icon_at 17
+    add   r5, #0x1
+    b     LoopSkillPlacement
+LoopSkillPlacementEnd:
+add   sp, #0x8
 b SkillsEnd
 
 .ltorg

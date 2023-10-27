@@ -69,6 +69,9 @@ Bad[X]
 ## SS_BiorhythmWorst
 Worst[X]
 
+## SS_PowStat
+Pow[X]
+
 ## LikesDesc
 A list of things this[N]
 character enjoys.[X]

@@ -27,10 +27,11 @@
 #define SS_BiorhythmPoor $04D
 #define SS_BiorhythmBad $04E
 #define SS_BiorhythmWorst $04F
-#define LikesDesc $050
-#define DislikesDesc $051
-#define AgeDesc $052
-#define HeightDesc $053
+#define SS_PowStat $050
+#define LikesDesc $051
+#define DislikesDesc $052
+#define AgeDesc $053
+#define HeightDesc $054
 #define LikesText $D4C
 #define DislikesText $D4D
 #define HeightText $D4E
@@ -537,11 +538,12 @@
 #define SD_DualStrike $F43
 #define SD_DualGuard $F44
 #define SD_NegativeGrowths $F45
-#define EirikaLike1ID $F46
-#define EirikaLike2ID $F47
-#define EirikaDislike1ID $F48
-#define EirikaDislike2ID $F49
-#define EirikaAgeID $F4A
-#define EirikaHeightID $F4B
+#define SD_Longsword $F46
+#define EirikaLike1ID $F47
+#define EirikaLike2ID $F48
+#define EirikaDislike1ID $F49
+#define EirikaDislike2ID $F4A
+#define EirikaAgeID $F4B
+#define EirikaHeightID $F4C
 
 #endif // TEXT_DEFINITIONS_TEXT_BUILDFILE_TXT

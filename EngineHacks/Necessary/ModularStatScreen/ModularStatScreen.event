@@ -7,18 +7,34 @@
 // Skill System Stat Screen by circleseverywhere with additions by Tequila, and probably more people too
 
 #ifdef _FE8_
-
+  
+  #define Page_Arrow_Y 0x3
+  
   #define Skl_Arrow_X 0x78
   #define Skl_Arrow_Y 0x28
   #define Spd_Arrow_X 0x78
   #define Spd_Arrow_Y 0x38
   #define Trv_Icon_X 0xB8
-  #define Trv_Icon_Y 0x2E
+  #define Trv_Icon_Y 0x6E
+  
+  #define Page_Name_Y 0
+  
+  #define Page_Num_X 215
+  #define Page_Num_Y 17
   
   #include "DisplayGrowthsOptions/DisplayGrowthsOptions.event"
   #include "WeaponRankStatScreen/WeaponRankStatScreen.event"
   #include "Background/Background.event"
- 
+  
+  ALIGN 4; MSS_SkillPlacementArr:
+  BYTE 00 00 00 00 00 00 00 00
+  BYTE 20 00 00 00 00 00 00 00
+  BYTE 17 24 00 00 00 00 00 00
+  BYTE 15 20 25 00 00 00 00 00
+  BYTE 14 18 22 26 00 00 00 00
+  BYTE 14 17 20 23 26 00 00 00
+  BYTE 13 16 19 22 25 28 00 00
+  
   PUSH
     ORG 0x205b24 //24 for stat screen
       POIN MSS_page1|1 MSS_page2|1 MSS_page3|1 MSS_page4|1
@@ -38,8 +54,43 @@
     ORG $87f40
       POIN NewPageNamePalette
 
-    // Make all the arrows line up with the stats and stuff
+    // Place page name sprite.
+    
+    ORG $87ECA
+      BYTE (0-(1+Page_Name_Y)) 0x3A
+    
+    ORG $87EE6
+      SHORT 0x581B    // We make use of redundancy here to free up an instruction.
+      BYTE (0-Page_Name_Y) 0x3A
+    
+    // Place Page number sprite.
+    
+    ORG $882EE
+      BYTE Page_Num_X+13
+    
+    ORG $882F4
+      BYTE Page_Num_Y
+    
+    ORG $8830C
+      BYTE Page_Num_X+7
+    
+    ORG $88312
+      BYTE Page_Num_Y
+    
+    ORG $88324
+      BYTE Page_Num_X
+    
+    ORG $8832A
+      BYTE Page_Num_Y
 
+    // Make all the arrows line up with the stats and stuff
+    
+    ORG $8828C    // Left page arrow.
+      BYTE Page_Arrow_Y 0x22
+    
+    ORG $882BE    // Right page arrow.
+      BYTE Page_Arrow_Y 0x22
+    
     ORG $883C0
       BYTE Skl_Arrow_X 0x20 Skl_Arrow_Y
  
@@ -110,23 +161,23 @@
   
   #ifndef USE_STRMAG_SPLIT
   
-  #ifdef LEADERSHIP_STARS
-	#include "pages/mss_page1_skills_leadership.lyn.event"
-  #else // LEADERSHIP_STARS
-    #ifdef BIORHYTHM
-	  #include "pages/mss_page1_skills_biorhythm.lyn.event"
-	#else // BIORHYTHM
-	  #include "pages/mss_page1_skills.lyn.event"
-	#endif // BIORHYTHM
-  #endif // LEADERSHIP_STARS
+    #ifdef LEADERSHIP_STARS
+      #include "pages/mss_page1_skills_leadership.lyn.event"
+    #else // LEADERSHIP_STARS
+      #ifdef BIORHYTHM
+        #include "pages/mss_page1_skills_biorhythm.lyn.event"
+      #else // BIORHYTHM
+        #include "pages/mss_page1_skills.lyn.event"
+      #endif // BIORHYTHM
+    #endif // LEADERSHIP_STARS
   
   #else // USE_STRMAG_SPLIT
   
-  #ifdef LEADERSHIP_STARS
-	#include "pages/strmag/mss_page1_skills_leadership.lyn.event"
-  #else // LEADERSHIP_STARS
-	#include "pages/strmag/mss_page1_skills.lyn.event"
-  #endif // LEADERSHIP_STARS  
+    #ifdef LEADERSHIP_STARS
+      #include "pages/strmag/mss_page1_skills_leadership.lyn.event"
+    #else // LEADERSHIP_STARS
+      #include "pages/strmag/mss_page1_skills.lyn.event"
+    #endif // LEADERSHIP_STARS  
   
   #endif // USE_STRMAG_SPLIT
   

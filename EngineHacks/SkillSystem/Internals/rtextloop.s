@@ -1,70 +1,71 @@
-@loop for r-text
+@ Skills RTextLooper, when moving from other RText to skills.
+@   r0: helpBoxProc*
 .thumb
-.macro blh to, reg=r3
-  ldr \reg, =\to
-  mov lr, \reg
-  .short 0xf800
-.endm
 
-push {r4-r7,lr}
-mov r4,r0
-ldr r5, =0x2003bfc
-ldr r0, [r5, #0xc]
-ldr r1, SkillGetter
-mov lr,r1
-.short 0xf800
-mov r6, r0 @save skill buffer
-mov r7, r1 @save number of skills 
-ldrb r2, [r0] @first skill
-cmp r2, #0
-bne HasSkills
-mov r0, r4
-blh      0x80893B4  @change to next one left
-cmp r0, #1 @can it loop again?
-beq End
+push  {r4-r5, r14}
+sub   sp, #0x8
+mov   r4, r0
 
-HasSkills:
-mov r1, r6
-ldr     r0,[r4,#0x2C]     @current position           @ 08088B56 6AE0     
-ldrh    r0,[r0,#0x12]     @slot number           @ 08088B58 8A40  
-cmp r7, r0 @skill number vs total skills
-ble CheckDir
+@ Find number of skills.
+ldr   r0, =0x2003bfc      @ StatScreenStruct
+ldr   r0, [r0, #0xc]      @ Unit*
+mov   r1, sp
+ldr   r3, =Skill_Getter_NoClass+0x1
+bl    GOTO_R3
+mov   r5, r0              @ Number of skills.
 
-add     r1,r1,r0                @ 08088B5E 1809     
-ldrb    r0,[r1]           @skill number     @ 08088B60 8808     
-cmp     r0,#0x0                @ 08088B62 2800     
-bne     End       @has item, we're done here         @ 08088B64 D113     
-CheckDir:
-mov     r0,r4                @ 08088B66 1C20     
-add     r0,#0x50                @ 08088B68 3050     
-ldrh    r0,[r0]        @direction        @ 08088B6A 8800     
-cmp     r0,#0x0                @ 08088B6C 2800     
-beq     GoLeft                @ 08088B6E D003     
-cmp     r0,#0x10    @right            @ 08088B70 2810     
-beq     GoUp                @ 08088B72 D001     
-cmp     r0,#0x40    @up            @ 08088B74 2840     
-bne     GoLeft                @ 08088B76 D105
+@ If number of skills = 0, return to previous entry.
+cmp   r5, #0x0
+bne   L1
+  ldr   r0, [r4, #0x2C]   @ Current helpBox entry.
+  ldrh  r0, [r0, #0x12]   @ helpBox slot number.
+  cmp   r0, #0x0
+  beq   goLeft
+    @ Go back up.
+    mov   r0, r4
+    ldr   r3, =0x8089355  @ TryRelocateHbUp
+    bl    GOTO_R3
+    b     Return
+  goLeft:
+    mov   r0, r4
+    ldr   r3, =0x80893B5  @ TryRelocateHbLeft
+    bl    GOTO_R3
+    b     Return
 
-GoUp:
-mov r0,r4
-blh      #0x8089354    @change to next one up           @ 08088B7A F000FBEB 
-b       End                @ 08088B7E E006     
+L1:
+@ Use slot to determine which key should be stored.
+ldr   r0, [r4, #0x2C]     @ Current helpBox entry.
+ldrh  r0, [r0, #0x12]     @ helpBox slot number.
+cmp   r0, #0x0
+bne   keyDown
+@ keyRight
+  mov   r1, #0x10
+  b     L2
+keyDown:
+  mov   r1, #0x80
+L2:
+mov   r2, #0x50
+strh  r1, [r4, r2]
+  
+@ Use slot to determine if starting from left or right.
+lsr   r0, #0x1            @ slots 0 and 1 are for left, 2 for right.
+lsl   r1, r0, #0x3
+lsl   r0, #0x4
+add   r0, r1
+ldr   r1, =ST_Skills
+add   r0, r1
 
-GoLeft:     
-mov     r0,r4                @ 08088B78 1C20     
-blh 0x80893b4 @goes left
-b End
+@ Update helpBox entry to next entry.
+@ This one won't have a looper/redirect so we won't bother checking or calling it.
+sub   r1, r5, #0x1
+lsl   r1, #0x2
+ldr   r0, [r0, r1]
+str   r0, [r4, #0x2C]
 
-@ loc_0x8088B84:
-@ cmp     r0,#0x80   @down             @ 08088B84 2880     
-@ bne     End                @ 08088B86 D102     
-@ mov     r0,r4                @ 08088B88 1C20     
-@ blh      0x8089384    @change to next one down            @ 08088B8A F000FBFB 
-End:
-pop     {r4-r7}                @ 08088B8E BC30     
-pop     {r0}                @ 08088B90 BC01     
-bx      r0                @ 08088B92 4700     
-
-.ltorg
-SkillGetter:
-@POIN SkillGetter
+Return:
+add   sp, #0x8
+pop   {r4-r5}
+pop   {r0}
+bx    r0
+GOTO_R3:
+bx    r3

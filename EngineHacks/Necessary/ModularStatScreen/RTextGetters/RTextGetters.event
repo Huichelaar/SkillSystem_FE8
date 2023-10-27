@@ -12,5 +12,5 @@ ALIGN 4
 SkillDescGetter: //given skill number, get description text ID
 #incbin "SkillDescGetter/SkillDescGetter.dmp"
 POIN SkillDescTable
-POIN Skill_Getter
+POIN Skill_Getter_NoClass
 WORD SS_SkillsDefaultRText

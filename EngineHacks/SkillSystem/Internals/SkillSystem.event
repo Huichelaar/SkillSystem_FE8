@@ -108,6 +108,9 @@ Skill_Getter: // gets a list of skills
 	POIN ClassSkillTable
 	POIN (GetInitialSkillList|1)
 
+ALIGN 4
+Skill_Getter_NoClass: // gets a list of skills, but ignores class and class lvup skills.
+  #include "asm/GetSkillsNoClass.lyn.event"
 
 #include "NewSkillTester/_src/SkillTester.lyn.event"
 
@@ -359,9 +362,11 @@ GetUnitLevelSkills:
 	POIN ClassLevelUpSkillTable
 	POIN CharLevelUpSkillTable
 
-RTextLoop:
-#incbin "rtextloop.dmp"
-POIN Skill_Getter
+ALIGN 4; RTextLoop1:
+#include "rtextloop.lyn.event"
+ALIGN 4; RTextLoop2:
+#include "rtextloop2.lyn.event"
+
 
 Rerun_Battle_Calcs:
 #incbin "Rerun_Battle_Calcs.dmp"

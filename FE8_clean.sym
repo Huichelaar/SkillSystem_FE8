@@ -913,7 +913,7 @@
 08012FF4 .thumb
 08012FF4 changeTiles_void_void_*src,_void_*dst,_int_width,_int_height
 08005428 .thumb
-08005428 RegisterObject_(ye_idk_names_anymore)_Registers_object_attributes_to_intermediate_buffers
+08005428 RegisterObject
 0202BE4C gUnitArray
 0202BE50 Unit@Player[0].ClassPointer
 0202BE54 Unit@Player[0].Level
@@ -12455,7 +12455,7 @@
 08005458 .thumb
 08005458 FlushIntermediateOAMBuffer
 080053E8 .thumb
-080053E8 RegisterObjectSafe_I_don't_see_any_difference_with_above,_except_that_x_&_y_are_truncated_properly_(it's_"Safe")
+080053E8 RegisterObjectSafe
 080053A4 .thumb
 080053A4 ClearIntermediateOAMBuffer_DON'T_CALL_THIS_YOURSELF_(called_in_main_loop);_resets_buffers
 0801C090 .thumb
