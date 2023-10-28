@@ -27,6 +27,7 @@
   //#include "EAstdlib.event"
   
   #include "RTextGetters/RTextGetters.event"
+  #include "RTextLoopers/RTextLoopers.event"
 
   #define RMenu(up,down,left,right,xcoord,ycoord,TID) "POIN up down left right;BYTE xcoord ycoord; SHORT TID; WORD 0 0;"
   #define RMenu(up,down,left,right,xcoord,ycoord,TID,Getter) "POIN up down left right; BYTE xcoord ycoord; SHORT TID; POIN 0 Getter|1"
@@ -93,7 +94,7 @@
 
   #ifdef PRESS_SELECT_TO_VIEW_GROWTHS
     PersonalDataRText:
-      RMenu(0,ST_Str,ST_Name,0,0x76,0x4,PersonalDataDesc1)
+      RMenu(0,ST_Str,ST_Cond1,0,0x76,0x4,PersonalDataDesc1)
   #else
     PersonalDataRText:
       RMenu(0,ST_Str,ST_Name,0,0x76,0x4,PersonalDataDesc2)
@@ -101,7 +102,7 @@
 
 
   ST_Name:
-    RMenu(0,ST_Class,0,ST_Cond,0x18,0x50,0x0,NameDescGetter)
+    RMenu(0,ST_Class,0,ST_Cond1,0x18,0x50,0x0,NameDescGetter)
 
   ST_Class:
     RMenu(ST_Name,ST_Level,0,ST_Res,0x6,0x68,0x6E8,ClassDescGetter)
@@ -116,16 +117,16 @@
     RMenu(ST_Level,0,0,ST_SkillLeft1,0x6,0x88,0x544)
 
   ST_Str:
-    RMenu(PersonalDataRText,ST_Skl,ST_Cond,ST_Mov,0x66,0x18,0x546,StrMagGetter)
+    RMenu(PersonalDataRText,ST_Skl,ST_Cond1,ST_Mov,0x66,0x18,SS_PowDesc)
 
   ST_Skl:
-    RMenu(ST_Str,ST_Spd,ST_Cond,ST_Con,0x66,0x28,0x548)
+    RMenu(ST_Str,ST_Spd,ST_Cond1,ST_Con,0x66,0x28,0x548)
 
   ST_Spd:
-    RMenu(ST_Skl,ST_Luck,ST_Cond,ST_Aid,0x66,0x38,0x549)
+    RMenu(ST_Skl,ST_Luck,ST_Cond1,ST_Aid,0x66,0x38,0x549)
 
   ST_Luck:
-    RMenu(ST_Spd,ST_Def,ST_Cond,ST_Talk,0x66,0x48,0x54a)
+    RMenu(ST_Spd,ST_Def,ST_Cond1,ST_Talk,0x66,0x48,0x54a)
 
   ST_Def:
     RMenu(ST_Luck,ST_Res,ST_Class,ST_Affin,0x66,0x58,0x54b)
@@ -147,15 +148,15 @@
 
   ST_Affin:
     #ifdef LEADERSHIP_STARS
-      RMenu(ST_Trv,ST_Cond,ST_Spd,0,0xa6,0x38,LeadRText)
+      RMenu(ST_Trv,ST_Cond1,ST_Spd,0,0xa6,0x38,LeadRText)
     #endif //LEADERSHIP_STARS
 	#ifdef BIORHYTHM
-	   RMenu(ST_Trv,ST_Cond,ST_Spd,0,0xa6,0x38,SS_BiorhythmRText)
+	   RMenu(ST_Trv,ST_Cond1,ST_Spd,0,0xa6,0x38,SS_BiorhythmRText)
 	#endif //BIORHYTHM
        RMenu(ST_Talk,ST_Trv,ST_Res,0,0xa6,0x58,0x551)
 
-  ST_Cond:
-    RMenu(ST_Str,ST_Res,ST_Name,ST_Def,0x50,0x50,0x552,ConditionGetter)
+  ST_Cond1:
+    RMenu(ST_Str,ST_Name,ST_Name,ST_Def,0x50,0x50,0x552,CondLooper,ConditionGetter)
 
   ST_Talk:
     RMenu(ST_Aid,ST_Affin,ST_Luck,0,0xA6,0x48,SS_TalkRText)
@@ -350,19 +351,19 @@
 
 
   ST_Inventory1: 
-  RMenu(0,ST_Inventory2,ST_Name2,0,0x68,0x18,0,ItemDescLooper,ItemDescGetter)
+  RMenu(0,ST_Inventory2,ST_Cond2,0,0x68,0x18,0,ItemDescLooper,ItemDescGetter)
 
   ST_Inventory2: 
-  RMenu(ST_Inventory1,ST_Inventory3,ST_Name2,0,0x68,0x28,1,ItemDescLooper,ItemDescGetter)
+  RMenu(ST_Inventory1,ST_Inventory3,ST_Cond2,0,0x68,0x28,1,ItemDescLooper,ItemDescGetter)
 
   ST_Inventory3: 
-  RMenu(ST_Inventory2,ST_Inventory4,ST_Name2,0,0x68,0x38,2,ItemDescLooper,ItemDescGetter)
+  RMenu(ST_Inventory2,ST_Inventory4,ST_Cond2,0,0x68,0x38,2,ItemDescLooper,ItemDescGetter)
 
   ST_Inventory4: 
-  RMenu(ST_Inventory3,ST_Inventory5,ST_Name2,0,0x68,0x48,3,ItemDescLooper,ItemDescGetter)
+  RMenu(ST_Inventory3,ST_Inventory5,ST_Cond2,0,0x68,0x48,3,ItemDescLooper,ItemDescGetter)
 
   ST_Inventory5: 
-  RMenu(ST_Inventory4,ST_Atk,ST_Name2,ST_Rng,0x68,0x58,4,ItemDescLooper,ItemDescGetter)
+  RMenu(ST_Inventory4,ST_Atk,ST_Cond2,ST_Rng,0x68,0x58,4,ItemDescLooper,ItemDescGetter)
 
   ST_Atk: 
   RMenu(ST_Inventory5,ST_Hit,ST_Exp2,ST_Crit,0x76,0x78,0x55C)
@@ -380,8 +381,11 @@
   RMenu(ST_Crit,0,ST_Hit,0,0xAE,0x88,0x560)
 
   
+  ST_Cond2:
+  RMenu(0,ST_Class2,ST_Name2,ST_Inventory4,0x50,0x50,0x552,CondLooper,ConditionGetter)
+  
   ST_Name2: 
-  RMenu(0,ST_Class2,0,ST_Inventory4,0x18,0x50,0,NameDescGetter)
+  RMenu(0,ST_Class2,0,ST_Cond2,0x18,0x50,0,NameDescGetter)
 
   ST_Class2: 
   RMenu(ST_Name2,ST_Level2,0,ST_Atk,0x6,0x68,0x6E8,ClassDescGetter)
@@ -406,10 +410,10 @@
 #ifndef ONLY_SHOW_USED_RANKS
 
   ST_WRank1:
-  RMenu(0,ST_WRank2,ST_Name3,ST_WRank3,0x68,0x18,0,WRankGetter)
+  RMenu(0,ST_WRank2,ST_Cond3,ST_WRank3,0x68,0x18,0,WRankGetter)
 
   ST_WRank2:
-  RMenu(ST_WRank1,ST_Supports,ST_Name3,ST_WRank4,0x68,0x28,1,WRankGetter)
+  RMenu(ST_WRank1,ST_Supports,ST_Cond3,ST_WRank4,0x68,0x28,1,WRankGetter)
 
   ST_WRank3:
   RMenu(0,ST_WRank4,ST_WRank1,0,0xA8,0x18,2,WRankGetter)
@@ -420,13 +424,13 @@
 #else // ONLY_SHOW_USED_RANKS
 
   ST_WRank1:
-  RMenu(0,ST_WRank3,ST_Name3,ST_WRank2,0x68,0x18,0,WeaponDescLooper,WeaponDescGetter)
+  RMenu(0,ST_WRank3,ST_Cond3,ST_WRank2,0x68,0x18,0,WeaponDescLooper,WeaponDescGetter)
 
   ST_WRank2:
   RMenu(0,ST_WRank4,ST_WRank1,0,0xA8,0x18,1,WeaponDescLooper,WeaponDescGetter)
 
   ST_WRank3:
-  RMenu(ST_WRank1,ST_Supports,ST_Name3,ST_WRank4,0x68,0x28,2,WeaponDescLooper,WeaponDescGetter)
+  RMenu(ST_WRank1,ST_Supports,ST_Cond3,ST_WRank4,0x68,0x28,2,WeaponDescLooper,WeaponDescGetter)
 
   ST_WRank4:
   RMenu(ST_WRank2,ST_Supports,ST_WRank3,0,0xA8,0x28,3,WeaponDescLooper,WeaponDescGetter)
@@ -434,11 +438,14 @@
 #endif // ONLY_SHOW_USED_RANKS
 
   ST_Supports:
-  RMenu_Cond(ST_WRank2,ST_Name3,ST_Name3,0,0x80,0x40,0x569,SupportsConditional) 
+  RMenu_Cond(ST_WRank3,ST_Cond3,ST_Cond3,0,0x80,0x40,0x569,SupportsConditional) 
 
-
+  
+  ST_Cond3:
+  RMenu(0,ST_Class3,ST_Name3,ST_Supports,0x50,0x50,0x552,CondLooper,ConditionGetter)
+  
   ST_Name3:
-  RMenu(0,ST_Class3,0,ST_Supports,0x18,0x50,0,NameDescGetter)
+  RMenu(0,ST_Class3,0,ST_Cond3,0x18,0x50,0,NameDescGetter)
 
   ST_Class3:
   RMenu(ST_Name3,ST_Level3,0,ST_Supports,0x6,0x68,0x6E8,ClassDescGetter)
@@ -462,13 +469,16 @@
   RText_Page4:
   
   ST_Name4:
-    RMenu(0,ST_Class4,0,ST_Dislikes,0x18,0x50,0x0,NameDescGetter)
+    RMenu(0,ST_Class4,0,ST_Cond4,0x18,0x50,0x0,NameDescGetter)
+  
+  ST_Cond4:
+    RMenu(0,ST_Class4,ST_Name4,ST_Dislikes,0x50,0x50,0x552,CondLooper,ConditionGetter)
 
   ST_Class4:
 	#ifdef GAIDEN_MAGIC
 	  RMenu(ST_Name4,ST_Level4,0,ST_Spell1,0x6,0x68,0x6E8,ClassDescGetter)
 	#else
-	  RMenu(ST_Name4,ST_Level4,0,0,0x6,0x68,0x6E8,ClassDescGetter)
+	  RMenu(ST_Name4,ST_Level4,0,ST_Age,0x6,0x68,0x6E8,ClassDescGetter)
 	#endif
 
   ST_Level4:
@@ -478,21 +488,21 @@
 	#ifdef GAIDEN_MAGIC
       RMenu(ST_Class4,ST_HP4,ST_Level4,ST_Spell3,0x26,0x78,0x543)
     #else
-	  RMenu(ST_Class4,ST_HP4,0,0,0x26,0x78,0x543)
+	  RMenu(ST_Class4,ST_HP4,0,ST_Age,0x26,0x78,0x543)
 	#endif
 
   ST_HP4:
 	#ifdef GAIDEN_MAGIC
       RMenu(ST_Level4,0,0,ST_Spell5,0x6,0x88,0x544)
 	#else
-	  RMenu(ST_Level4,0,0,0,0x6,0x88,0x544)
+	  RMenu(ST_Level4,0,0,ST_Age,0x6,0x88,0x544)
 	#endif
 
   ST_Likes:
-    RMenu(0,ST_Dislikes,ST_Name4,ST_Height,0x66,0x18,LikesDesc)
+    RMenu(0,ST_Dislikes,ST_Cond4,ST_Height,0x66,0x18,LikesDesc)
 	
   ST_Dislikes:
-    RMenu(ST_Likes,ST_Age,ST_Name4,ST_Height,0x66,0x38,DislikesDesc)
+    RMenu(ST_Likes,ST_Age,ST_Cond4,ST_Height,0x66,0x38,DislikesDesc)
 	
   ST_Age:
 	#ifdef GAIDEN_MAGIC
@@ -511,6 +521,9 @@
 #else // ENABLE_PERSONAL_INFO
 
   RText_Page4:
+
+  ST_Cond4:
+    RMenu(0,ST_Class4,ST_Name4,ST_Donate,0x50,0x50,0x552,CondLooper,ConditionGetter)
 
   ST_Name4:
     RMenu(0,ST_Class4,0,ST_Donate,0x18,0x50,0x0,NameDescGetter)
@@ -541,9 +554,9 @@
     
   ST_Donate:
 	#ifdef GAIDEN_MAGIC
-      RMenu(0,ST_Spell1,ST_Name4,0,0x86,0x48,DonateURL)
+      RMenu(0,ST_Spell1,ST_Cond4,0,0x86,0x48,DonateURL)
 	#else
-	  RMenu(0,0,ST_Name4,0,0x86,0x48,DonateURL)
+	  RMenu(0,0,ST_Cond4,0,0x86,0x48,DonateURL)
 	#endif
 	
 #endif // ENABLE_PERSONAL_INFO

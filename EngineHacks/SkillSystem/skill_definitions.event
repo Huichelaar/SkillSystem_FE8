@@ -1221,7 +1221,7 @@
 
 //Synchronize: Statuses are also applied to the attacker.
 //By Sme
-#define SynchronizeID 96
+#define SynchronizeID 255
 
 //Bargain: Halves prices in shops.
 //By Sme
@@ -1245,8 +1245,11 @@
 // Negative Growths: This unit's stat growths are multiplied by -1.
 #define NegativeGrowthsID 144
 
-// Longsword: All swords have range 1-2.
-#define LongswordID 131
+// Longsword: On unit's phase, all swords have range 1-2.
+#define LongswordID 96
+
+// Longsword+: All swords have range 1-2.
+#define LongswordPlusID 131
 
 
 //Biorhythm Skills: Double or halve biorhythm effects.

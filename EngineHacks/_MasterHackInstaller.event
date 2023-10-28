@@ -53,6 +53,9 @@ POP
 
 ////////////////////////////////FREE SPACE OUT OF BL RANGE
 
+  // Magic sword changes.
+  #include "ExternalHacks/MagicSwordChanges/MagicSwordChanges.event"
+
   // Expand unit promotion list
   #include "ExternalHacks/ClassChgExpansion/ClassChgExpansion.event"
 

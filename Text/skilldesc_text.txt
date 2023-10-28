@@ -1651,5 +1651,9 @@ Negative Growths: During level up,[N]
 stat growths are multiplied by -1.[X]
 
 ## SD_Longsword
-Longsword: All swords have[N]
+Longsword: On this unit's phase,[N]
+All swords have range 1-2.[X]
+
+## SD_LongswordPlus
+Longsword+: All swords have[N]
 range 1-2.[X]

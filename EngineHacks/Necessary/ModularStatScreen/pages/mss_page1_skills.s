@@ -142,7 +142,64 @@ ldr r0,=TalkTextIDLink
 ldrh r0,[r0]
 draw_talk_text_at 21, 9
 
+@ Draw pair-up gauge icons.
+sub   sp, #0x4
+
+mov   r0, r8
+bl    PAU_isPairedUp
+cmp   r0, #0x0
+beq   endPairUpStuff
+  cmp   r0, #0x3
+  bne   loadPAUicon
+    @ Get inverse of partner's pair-up mode.
+    mov   r0, r8
+    ldrb  r0, [r0, #0x1B]   @ Pair-up partner allegiance byte.
+    ldr   r3, =0x8019431    @ GetUnit
+    bl    GOTO_R3
+    bl    PAU_isPairedUp
+    mov   r1, #0x3          @ Result is either 1 or 2,
+    eor   r0, r1            @ we want to invert them to 2 or 1.
+  loadPAUicon:
+  mov   r1, #0x2            @ Result is either 1 or 2,
+  and   r0, r1              @ we want either 0 or 2.
+  str   r0, [sp]
+  ldr   r0, =0x604
+  ldr   r3, =0x8003651      @ GetIconTileIndex
+  bl    GOTO_R3
+  ldr   r1, [sp]
+  add   r0, r1
+  str   r0, [sp]
+
+  @ drawPAUicon
+  bl    PAU_getPairUpGauge
+  ldr   r1, =gpStatScreenPageBg0Map
+  mov   r2, #10             @ X.
+  mov   r3, #13             @ Y. Change these if desired.
+  lsl   r2, #0x1
+  lsl   r3, #0x6
+  add   r1, r2
+  add   r1, r3              @ TileMapOffset.
+  ldr   r2, [sp]            @ Icon index.
+  ldr   r3, =PAU_gaugeSize
+  ldrb  r3, [r3]            @ Gauge length.
+  
+  PAUiconLoop:
+    cmp   r0, #0x0
+    bne   L1
+      add   r2, #0x1        @ Draw empty icons from here on.
+    L1:
+    strh  r2, [r1]
+    add   r1, #0x2
+    sub   r0, #0x1
+    sub   r3, #0x1
+    cmp   r3, #0x0
+    bgt   PAUiconLoop
+
+endPairUpStuff:
+add   sp, #0x4
 b startSkills
+GOTO_R3:
+bx    r3
 
 .ltorg
 .align

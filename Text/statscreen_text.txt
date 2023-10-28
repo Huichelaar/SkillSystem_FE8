@@ -72,6 +72,10 @@ Worst[X]
 ## SS_PowStat
 Pow[X]
 
+## SS_PowDesc
+Power. The higher the number,[N]
+the more damage you inflict.[X]
+
 ## LikesDesc
 A list of things this[N]
 character enjoys.[X]

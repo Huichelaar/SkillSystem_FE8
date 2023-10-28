@@ -35,6 +35,31 @@
   BYTE 14 17 20 23 26 00 00 00
   BYTE 13 16 19 22 25 28 00 00
   
+  #define MSS_StatusIconPlacementEntry(x,y,OAM2,OAMData) "SHORT x y OAM2 0; WORD OAMData 0"
+  #define gObj_8x8 0x8590F44
+  #define gObj_16x8 0x8590F7C
+  #define gObj_16x16 0x8590F4C
+  #define gObj_16x16_HFlip 0x8AA6C8A
+  
+  ALIGN 4; MSS_StatusIconPlacementArr:
+  MESSAGE StatScreenStatusIconPlacement at CurrentOffset
+  WORD 00 00 00 00                                            // No Status.
+  MSS_StatusIconPlacementEntry(80,82,0x1840,gObj_16x16)       // Poison.
+  MSS_StatusIconPlacementEntry(80,83,0x184A,gObj_16x16)       // Sleep/Can't move.
+  MSS_StatusIconPlacementEntry(75,82,0x1848,gObj_16x16_HFlip) // Silenced.
+  MSS_StatusIconPlacementEntry(80,86,0x1842,gObj_16x8)        // Berserk.
+  MSS_StatusIconPlacementEntry(82,86,0x1830,gObj_8x8)         // Filla's Might buff.
+  MSS_StatusIconPlacementEntry(82,86,0x1830,gObj_8x8)         // Ninis's Grace buff.
+  MSS_StatusIconPlacementEntry(82,86,0x1830,gObj_8x8)         // Thor's Ire buff.
+  MSS_StatusIconPlacementEntry(82,86,0x1830,gObj_8x8)         // Set's Litany buff.
+  WORD 00 00 00 00                                            // No Status.
+  WORD 00 00 00 00                                            // No Status.
+  MSS_StatusIconPlacementEntry(80,81,0x1A4C,gObj_16x16)       // Stone/Petrified.
+  WORD 00 00 00 00                                            // No Status.
+  MSS_StatusIconPlacementEntry(80,81,0x1A4C,gObj_16x16)       // Stone/Petrified again?
+  WORD 00 00 00 00                                            // No Status.
+  WORD 00 00 00 00                                            // No Status.
+  
   PUSH
     ORG 0x205b24 //24 for stat screen
       POIN MSS_page1|1 MSS_page2|1 MSS_page3|1 MSS_page4|1
@@ -102,6 +127,9 @@
 
     ORG $883B4
       jumpToHack(Rescue_Arrows)
+    
+    ORG $88400
+      jumpToHack(Condition_Icon)
 
     // Display growths hack
 
@@ -264,6 +292,10 @@
   ALIGN 4
   Rescue_Arrows:
     #include "asm/CheckRescueArrows.lyn.event"
+  
+  ALIGN 4
+  Condition_Icon:
+    #include "asm/DrawConditionIcon.lyn.event"
 
   ALIGN 4
   Get_Palette_Index:

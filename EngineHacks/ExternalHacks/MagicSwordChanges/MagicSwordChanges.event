@@ -1,0 +1,39 @@
+// Make magic swords no longer halve strength when dealing damage.
+//
+// By default, all magic swords and only magic swords have "Magic Damage" AKA "IA_MAGICDAMAGE" bit (ROM) set.
+// This bit is copied over into the battle unit's weaponAttributes (RAM).
+// If set, the ROM bit:
+//    - targets enemy resistance.
+// If set, the RAM bit:
+//    - halves str.
+//    - sets crit rate to 0.
+//    - awards no weapon exp.
+// However, the RAM bit will be unset for Light Brand and Wind Sword if not attacking from 2-range.
+// This removes the above three effects (halving str, setting crit to 0, awarding no wep exp).
+//
+// In other terms:
+//
+//    At any range other than 2-range (so at 1-range in vanilla):
+//      Runesword:      target enemy resistance, halves str, sets crit rate to 0, award no weapon exp.
+//      Light Brand:    target enemy resistance.
+//      Wind Sword:     target enemy resistance.
+//    At 2-range:
+//      Runesword:      target enemy resistance, halves str, sets crit rate to 0, award no weapon exp.
+//      Light Brand:    target enemy resistance, halves str, sets crit rate to 0, award no weapon exp.
+//      Wind Sword:     target enemy resistance, halves str, sets crit rate to 0, award no weapon exp.
+
+
+PUSH
+
+  // UIBattle.
+  // Make RuneSword no longer halve strength.
+  // Light Brand and Wind Sword don't because assumption is you're at 1-range.
+  ORG 0x2A4D0
+    SHORT 0x46C0
+  
+  // RealBattle.
+  // Make RuneSword, Light Brand and Wind Sword no longer halve strength.
+  ORG 0x2AE06
+    SHORT 0x46C0
+
+POP

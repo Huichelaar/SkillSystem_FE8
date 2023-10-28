@@ -1,5 +1,10 @@
+@ Hooked at 0x883B4.
+@ Check if rescue arrows should be drawn according to savior & pair-up.
+@   r4: gStatScreen struct. +0xC is a Unit*.
+@   r5: 1 if icons are to display, 0 otherwise.
 .thumb
 
+@ Check for rescue arrows.
 ldr   r0, [r4, #0xC]
 ldr   r0, [r0, #0xC]
 mov   r1, #0x10
