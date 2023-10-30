@@ -706,6 +706,56 @@
   NoStatusCount:
 .endm
 
+.macro load_status_count
+  mov     r0, r4
+  add     r0, #0x30
+  ldrb    r0, [r0]
+  cmp     r0, #0
+  beq     NoStatusCount2
+    ldr     r1, =gGenericBuffer
+    ldr     r0, =0x8A16D6C      @ Small UI numbers made for textpalette.
+    blh     Decompress, r2
+    mov     r1, r4
+    add     r1, #0x30
+    ldrb    r1, [r1]
+    lsr     r1, #0x4
+    cmp     r1, #0xA
+    blt     oneDigit
+      @ Two digits. Draw the most significant one first.
+      ldr     r0, =gGenericBuffer
+      add     r0, #0x20
+      ldr     r1, =0x6015100
+      ldmia   r0!, {r2, r3}
+      stmia   r1!, {r2, r3}
+      ldmia   r0!, {r2, r3}
+      stmia   r1!, {r2, r3}
+      ldmia   r0!, {r2, r3}
+      stmia   r1!, {r2, r3}
+      ldmia   r0!, {r2, r3}
+      stmia   r1!, {r2, r3}
+      
+      @ Prepare least significant digit.
+      mov     r1, r4
+      add     r1, #0x30
+      ldrb    r1, [r1]
+      lsr     r1, #0x4
+      sub     r1, #0xA
+    oneDigit:
+    ldr     r0, =gGenericBuffer
+    lsl     r1, #0x5
+    add     r0, r1
+    ldr     r1, =0x6015500
+    ldmia   r0!, {r2, r3}
+    stmia   r1!, {r2, r3}
+    ldmia   r0!, {r2, r3}
+    stmia   r1!, {r2, r3}
+    ldmia   r0!, {r2, r3}
+    stmia   r1!, {r2, r3}
+    ldmia   r0!, {r2, r3}
+    stmia   r1!, {r2, r3}
+  NoStatusCount2:
+.endm
+
 .macro draw_affinity_icon_at, tile_x, tile_y
   ldr     r4, =(tile_origin+(0x20*2*\tile_y)+(2*\tile_x))
   mov     r0, r8

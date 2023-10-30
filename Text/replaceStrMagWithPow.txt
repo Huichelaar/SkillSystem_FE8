@@ -1,0 +1,26 @@
+## SS_PowStat
+Pow[X]
+
+## SS_PowDesc
+Power. The higher the number,[N]
+the more damage you inflict.[X]
+
+## UM_PowDesc
+Power.[N]
+This affects attack ability.[X]
+
+## EnergyRingDesc
+Raises power.[X]
+
+## EnergyRingDesc2
+Increases Pow by 2 points.[N]
+Vanishes after use.[X]
+
+## EnergyRingUse
+Power increased.[X]
+
+## SieglindeDesc
+The Sacred Twin storm blade. Pow +5.[X]
+
+## SiegmundDesc
+The Sacred Twin fire lance. Pow +5.[X]

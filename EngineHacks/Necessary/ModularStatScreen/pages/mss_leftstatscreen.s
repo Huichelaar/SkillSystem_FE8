@@ -10,6 +10,7 @@ MSS_leftpage:
 
 leftpage_start
 
+load_status_count
 draw_character_name_at 3,10
 draw_class_name_at 1,13
 

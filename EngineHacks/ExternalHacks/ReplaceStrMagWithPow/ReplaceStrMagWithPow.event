@@ -1,0 +1,26 @@
+// Replaces all relevant instances of "Str" and "Mag" with "Pow".
+// Replaces all relevant instances of "Strength" and "Magic" with "Power".
+
+PUSH
+
+  // Upon promotion and lvup, replace "Str"/"Mag" stat with "Pow" stat.
+  ORG 0xA01164
+    WORD SS_PowStat SS_PowStat
+  
+  // Prepscreen item use, replace "Str"/"Mag" stat with "Pow" stat.
+  ORG 0x9BF84
+    WORD SS_PowStat
+  ORG 0x9C090
+    WORD SS_PowStat
+  
+  // Energy ring item use description.
+  ORG 0x80A804
+    SHORT EnergyRingDesc
+  
+  // Unit menu.
+  ORG 0xA17D7C
+    WORD SS_PowStat
+  ORG CurrentOffset+4
+    WORD UM_PowDesc
+
+POP

@@ -61,10 +61,6 @@
   WORD 00 00 00 00                                            // No Status.
   
   PUSH
-    
-    // Upon promotion and lvup, replace "Mag"/"Str" with "Pow".
-    ORG 0xA01164
-      WORD SS_PowStat SS_PowStat
   
     ORG 0x205b24 //24 for stat screen
       POIN MSS_page1|1 MSS_page2|1 MSS_page3|1 MSS_page4|1

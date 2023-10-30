@@ -52,7 +52,10 @@ ORG FreeSpaceBLRange //defined in custom definitions
 POP
 
 ////////////////////////////////FREE SPACE OUT OF BL RANGE
-
+  
+  // Replace "Str" and "Mag" with "Pow".
+  #include "ExternalHacks/ReplaceStrMagWithPow/ReplaceStrMagWithPow.event"
+  
   // Magic sword changes.
   #include "ExternalHacks/MagicSwordChanges/MagicSwordChanges.event"
 
