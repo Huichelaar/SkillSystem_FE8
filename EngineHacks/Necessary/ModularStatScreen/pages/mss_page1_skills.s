@@ -89,8 +89,8 @@ ldr		r0,[r0,#24]		@res growth getter
 draw_growth_at 18, 13
 ldr		r0,[sp,#0xC]
 ldr		r0,[r0]			@hp growth getter (not displaying because there's no room atm)
-draw_growth_at 26, 3
-draw_textID_at 21, 3, textID=0x4E9, growth_func=1 @hp name
+draw_growth_at 25, 3
+draw_textID_at 21, 3, textID=0x4E9, width=2, growth_func=1 @hp name
 
 b		literalJump2
 .ltorg

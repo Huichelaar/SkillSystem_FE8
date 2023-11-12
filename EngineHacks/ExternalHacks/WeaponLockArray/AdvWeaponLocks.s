@@ -1,7 +1,7 @@
 .thumb
 .align
 
-
+.equ WeaponLockArrayPointerTable, LockIDGetter+4
 .global AdvWeaponLocks
 .type AdvWeaponLocks, %function
 AdvWeaponLocks: @return usability bool in r0
@@ -12,13 +12,14 @@ mov r5,r1 @item halfword
 mov r6,r2 @character wrank
 
 mov r0,r5
-bl LockIDGetter
+ldr r1,LockIDGetter
+bl GOTO_R1
 cmp r0,#0
 beq RetTrue
 
 @get array pointer
 lsl r0,#2 @x4
-ldr r1,=WeaponLockArrayPointerTable
+ldr r1,WeaponLockArrayPointerTable
 add r7,r0,r1
 ldr r0,[r7]
 cmp r0,#0
@@ -110,9 +111,10 @@ mov r0,#0
 GoBack:
 pop {r4-r7}
 pop {r1}
+GOTO_R1:
 bx r1
 
 
 .ltorg
 .align
-
+LockIDGetter:

@@ -1201,11 +1201,11 @@
 
 //Shadowgift: Allows the user to use Dark Magic. (Uses highest Magic Rank)
 //By Leonarth
-#define ShadowgiftID 103
+#define ShadowgiftID 255
 
 //Lumina: Allows the user to use Light Magic. (Uses highest Magic Rank)
 //By Leonarth
-#define LuminaID 102
+#define LuminaID 255
 
 //Discipline+: Weapon experience gains are doubled. Unit may S-Rank multiple weapon types.
 //By Zeta
@@ -1221,7 +1221,7 @@
 
 //Synchronize: Statuses are also applied to the attacker.
 //By Sme
-#define SynchronizeID 255
+#define SynchronizeID 102
 
 //Bargain: Halves prices in shops.
 //By Sme
@@ -1229,7 +1229,7 @@
 
 //Poise: +1 Move. Negates enemy hit bonus from weapon triangle advantage.
 //By Zeta
-#define PoiseID 255
+#define PoiseID 103
 
 //Amische: This unit's religion disallows them from using non-Iron weaponry.
 //By Sme
